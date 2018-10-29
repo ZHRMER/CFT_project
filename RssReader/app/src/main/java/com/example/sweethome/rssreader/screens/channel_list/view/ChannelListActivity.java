@@ -2,6 +2,7 @@ package com.example.sweethome.rssreader.screens.channel_list.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -34,19 +35,22 @@ public final class ChannelListActivity extends AppCompatActivity implements ICha
     }
 
     private void initToolBar() {
-        Toolbar toolbar = findViewById(R.id.toolbar_channel_list_activity);
+        Toolbar toolbar = findViewById(R.id.toolbar_add_channel_activity);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
     }
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(final Context context) {
         return new Intent(context, ChannelListActivity.class);
     }
 
     @Override
-    public void setChannelListAdapter(ArrayList<Channel> channelList) {
+    public void setChannelListAdapter(final ArrayList<Channel> channelList) {
         mRecyclerView.setAdapter(new ChannelListAdapter(channelList));
     }
 

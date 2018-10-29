@@ -19,12 +19,12 @@ public final class NewsListView {
     private DrawerLayout mDrawerLayout;
     private Activity mActivity;
 
-    public NewsListView(final Activity activity) {
+    NewsListView(final Activity activity) {
         mActivity = activity;
         mDrawerLayout = mActivity.findViewById(R.id.drawer_layout);
     }
 
-    public boolean onBackPressed() {
+    boolean onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
             return false;
@@ -33,15 +33,15 @@ public final class NewsListView {
         }
     }
 
-    public void onConfigurationChanged(Configuration newConfig, ActionBarDrawerToggle mToggle) {
+    void onConfigurationChanged(final ActionBarDrawerToggle mToggle) {
         mToggle.syncState();
     }
 
-    public void onPostCreate(Bundle savedInstanceState, ActionBarDrawerToggle mToggle) {
+    void onPostCreate(final ActionBarDrawerToggle mToggle) {
         mToggle.syncState();
     }
 
-    public void onNavigationItemSelected(@NonNull MenuItem menuItem) {
+    void onNavigationItemSelected(@NonNull MenuItem menuItem) {
         switch (menuItem.getItemId()) {
             case R.id.add_links_item: {
                 Intent addChannelIntent = AddChannelActivity.newIntent(mActivity);
@@ -56,11 +56,11 @@ public final class NewsListView {
         }
     }
 
-    public void detach() {
+    void detach() {
         mActivity = null;
     }
 
-    public void attach(Activity activity) {
+    void attach(final Activity activity) {
         mActivity = activity;
     }
 

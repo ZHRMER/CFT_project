@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 
 import com.example.sweethome.rssreader.common_model.MyService;
 import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
@@ -23,18 +24,16 @@ public final class AddChannelPresenter {
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
 
-    public AddChannelPresenter(IAddChannelPresenterContract view, Context context) {
+    public AddChannelPresenter(final IAddChannelPresenterContract view, final Context context) {
         mView = view;
         mContext = context;
         mChannelDBPresenter = new ChannelDBPresenter(context);
-        bindToService();
-        registerBroadcastReceiver();
     }
 
     private void registerBroadcastReceiver() {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(final Context context, final Intent intent) {
                 boolean isAdd = intent.getBooleanExtra(KEY_ADD_INTENT_RESULT, false);
                 if (isAdd) {
                     mView.addLinkSuccess();
@@ -66,7 +65,7 @@ public final class AddChannelPresenter {
         mMyService.addChannelToDB(mChannelDBPresenter, mView.getName(), mView.getLink());
     }
 
-    public void attach(IAddChannelPresenterContract view, Context context) {
+    public void attach(final IAddChannelPresenterContract view, final Context context) {
         mView = view;
         mContext = context;
         bindToService();

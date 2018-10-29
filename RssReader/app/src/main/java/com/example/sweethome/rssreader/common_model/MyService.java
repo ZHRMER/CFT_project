@@ -38,14 +38,14 @@ public final class MyService extends android.app.Service {
     }
 
     //region addChannel region
-    public void addChannelToDB(ChannelDBPresenter channelDBPresenter, String name, String url) {
+    public void addChannelToDB(final ChannelDBPresenter channelDBPresenter, final String name, final String url) {
         mExecutorService.execute(new addChanelRun(channelDBPresenter, name, url));
     }
 
     private class addChanelRun implements Runnable {
-        private ChannelDBPresenter mChannelDBPresenter;
-        private String mURL;
-        private String mName;
+        private final ChannelDBPresenter mChannelDBPresenter;
+        private final String mURL;
+        private final String mName;
 
         addChanelRun(ChannelDBPresenter channelDBPresenter, String name, String url) {
             mChannelDBPresenter = channelDBPresenter;
@@ -61,14 +61,14 @@ public final class MyService extends android.app.Service {
     //endregion
 
     //region getChannelList region
-    public void getChannelListFromDB(ChannelDBPresenter channelDBPresenter) {
+    public void getChannelListFromDB(final ChannelDBPresenter channelDBPresenter) {
         mExecutorService.execute(new getChannelListRun(channelDBPresenter));
     }
 
     private class getChannelListRun implements Runnable {
-        private ChannelDBPresenter mChannelDBPresenter;
+        private final ChannelDBPresenter mChannelDBPresenter;
 
-        getChannelListRun(ChannelDBPresenter channelDBPresenter) {
+        getChannelListRun(final ChannelDBPresenter channelDBPresenter) {
             mChannelDBPresenter = channelDBPresenter;
         }
 

@@ -8,19 +8,19 @@ import static com.example.sweethome.rssreader.common_model.Constants.*;
 
 public final class ChannelDBHelper extends SQLiteOpenHelper {
 
-    public ChannelDBHelper(Context context) {
+    ChannelDBHelper(Context context) {
         super(context, KEY_DATABASE_NAME, null, 2);
     }
 
     @Override
-    public void onCreate(SQLiteDatabase db) {
+    public void onCreate(final SQLiteDatabase db) {
         db.execSQL("create table "+KEY_TABLE_NAME+" ("
                 + KEY_NAME+" text ,"
                 + KEY_LINK +" text primary key" + ");");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+    public void onUpgrade(final SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("drop table "+KEY_TABLE_NAME+";");
         onCreate(db);
     }

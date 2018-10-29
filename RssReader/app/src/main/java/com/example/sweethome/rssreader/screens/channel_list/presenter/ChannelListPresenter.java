@@ -25,19 +25,17 @@ public final class ChannelListPresenter {
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
 
-    public ChannelListPresenter(IChannelListPresenterContract view, Context context) {
+    public ChannelListPresenter(final IChannelListPresenterContract view, final Context context) {
         mView = view;
         mContext = context;
         mChannelDBPresenter = new ChannelDBPresenter(mContext);
-        bindToService();
-        registerBroadcastReceiver();
     }
 
     private void bindToService() {
         Intent intent = new Intent(mContext, MyService.class);
         mServiceConnection = new ServiceConnection() {
             @Override
-            public void onServiceConnected(ComponentName name, IBinder binder) {
+            public void onServiceConnected(final ComponentName name, final IBinder binder) {
                 mMyService = ((MyService.MyBinder) binder).getService();
                 getChannelList();
             }
@@ -61,7 +59,7 @@ public final class ChannelListPresenter {
         mContext.registerReceiver(mBroadcastReceiver, intentFilter);
     }
 
-    public void getChannelList() {
+    private void getChannelList() {
         mMyService.getChannelListFromDB(mChannelDBPresenter);
     }
 
@@ -72,7 +70,7 @@ public final class ChannelListPresenter {
         mView = null;
     }
 
-    public void attach(IChannelListPresenterContract view, Context context) {
+    public void attach(final IChannelListPresenterContract view, final Context context) {
         mView = view;
         mContext = context;
         bindToService();

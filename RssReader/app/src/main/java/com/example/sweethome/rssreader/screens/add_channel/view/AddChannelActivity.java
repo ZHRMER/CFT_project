@@ -2,9 +2,11 @@ package com.example.sweethome.rssreader.screens.add_channel.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -42,16 +44,19 @@ public final class AddChannelActivity extends AppCompatActivity implements IAddC
 
     }
 
-    public static Intent newIntent(Context context) {
+    public static Intent newIntent(final Context context) {
         return new Intent(context, AddChannelActivity.class);
     }
 
     private void initToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar_add_channel_activity);
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayShowTitleEnabled(false);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
+        ActionBar actionBar=getSupportActionBar();
+        if(actionBar!=null) {
+            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setDisplayShowHomeEnabled(true);
+        }
     }
 
     //region IAddChannelPresenterContract override

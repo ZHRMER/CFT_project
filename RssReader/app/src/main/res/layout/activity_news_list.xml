@@ -6,7 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".screens.news_list.view.NewsListActivity">
+    tools:context=".screens.news_list.view.NewsListActivity"
+    tools:ignore="GoogleAppIndexingWarning">
 
 
     <android.support.v7.widget.Toolbar

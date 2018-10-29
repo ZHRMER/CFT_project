@@ -17,17 +17,17 @@ import java.util.ArrayList;
 import static com.example.sweethome.rssreader.common_model.Constants.*;
 
 public final class ChannelDBPresenter {
-    private ChannelDBHelper mChannelDBHelper;
+    private final ChannelDBHelper mChannelDBHelper;
     private SQLiteDatabase mSQLiteDataBase;
-    private Context mContext;
+    private final Context mContext;
 
-    public ChannelDBPresenter(Context context) {
+    public ChannelDBPresenter(final Context context) {
         mChannelDBHelper = new ChannelDBHelper(context);
         mContext = context;
     }
 
     //region addChanel region
-    public void addChannelToDB(String nameChannel, String linkChannel) {
+    public void addChannelToDB(final String nameChannel, final String linkChannel) {
         try {
             mSQLiteDataBase = mChannelDBHelper.getWritableDatabase();
             if (!isURLLink(linkChannel)) {
@@ -48,7 +48,7 @@ public final class ChannelDBPresenter {
     }
 
 
-    private void sendIsAddBroadcast(boolean isAdd) {
+    private void sendIsAddBroadcast(final boolean isAdd) {
         Intent intent = new Intent(BROADCAST_ADD_ACTION);
         intent.putExtra(KEY_ADD_INTENT_RESULT, isAdd);
         mContext.sendBroadcast(intent);
@@ -73,16 +73,16 @@ public final class ChannelDBPresenter {
         sendGetListBroadcast(channelList);
     }
 
-    private void sendGetListBroadcast(ArrayList<Channel> channelList) {
+    private void sendGetListBroadcast(final ArrayList<Channel> channelList) {
         Intent intent = new Intent(BROADCAST_GET_CHANNEL_LIST_ACTION);
         intent.putParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT, channelList);
         mContext.sendBroadcast(intent);
     }
     //endregion
 
-    private boolean isURLLink(String url) {
+    private boolean isURLLink(final String url) {
         try {
-            URL mUrl = new URL(url);
+            new URL(url);
             return true;
         } catch (MalformedURLException e) {
             return false;

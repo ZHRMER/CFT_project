@@ -6,9 +6,9 @@ import android.os.Parcelable;
 import java.util.UUID;
 
 public final class Channel implements Parcelable {
-    private UUID mUUID;
-    private String mName;
-    private String mLinkString;
+    private final UUID mUUID;
+    private final String mName;
+    private final String mLinkString;
 
 
     public Channel(String name, String linkString) {
@@ -18,7 +18,8 @@ public final class Channel implements Parcelable {
     }
 
     //region Parcelable methods region
-    protected Channel(Parcel in) {
+    private Channel(Parcel in) {
+        mUUID=UUID.fromString(in.readString());
         mName = in.readString();
         mLinkString = in.readString();
     }
@@ -42,6 +43,7 @@ public final class Channel implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mUUID.toString());
         dest.writeString(mName);
         dest.writeString(mLinkString);
     }
@@ -58,16 +60,6 @@ public final class Channel implements Parcelable {
 
     public String getLinkString() {
         return mLinkString;
-    }
-    //endregion
-
-    //region Setters region
-    public void setName(String name) {
-        mName = name;
-    }
-
-    public void setLinkString(String linkString) {
-        mLinkString = linkString;
     }
     //endregion
 }

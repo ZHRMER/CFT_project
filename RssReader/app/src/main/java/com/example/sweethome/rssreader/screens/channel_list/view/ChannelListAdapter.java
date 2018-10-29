@@ -15,7 +15,7 @@ import java.util.List;
 public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelViewHolder> {
     private List<Channel> mChannelList;
 
-    public ChannelListAdapter(List<Channel> rssNewsModelList) {
+    ChannelListAdapter(final List<Channel> rssNewsModelList) {
         mChannelList = rssNewsModelList;
     }
 
