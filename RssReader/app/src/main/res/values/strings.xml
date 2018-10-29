@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">RssReader</string>
+    <string name="add_text">Добавить источник</string>
+    <string name="list_links_text">Список источников</string>
+    <string name="settings">Настройки</string>
+    <string name="navigation_drawer_open">open</string>
+    <string name="navigation_drawer_close">close</string>
+    <string name="add_links_TextView_hint">Адрес канала</string>
+    <string name="add_links_Button_text">Добавить</string>
+    <string name="add_name_TextView_hint">Название канала</string>
+</resources>
