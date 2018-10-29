@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context=".screens.channel_list.view.ChannelListActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_channel_list_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <android.support.v7.widget.RecyclerView
         android:id="@+id/channel_recycler_view"
         android:layout_width="match_parent"

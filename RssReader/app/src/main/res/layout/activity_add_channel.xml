@@ -7,6 +7,14 @@
     android:orientation="vertical"
     tools:context=".screens.add_channel.view.AddChannelActivity">
 
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_add_channel_activity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+
     <TextView
         android:id="@+id/add_name_TextView"
         android:layout_width="match_parent"

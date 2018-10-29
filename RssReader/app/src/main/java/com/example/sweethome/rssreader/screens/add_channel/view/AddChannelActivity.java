@@ -4,10 +4,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
 
 import com.example.sweethome.rssreader.R;
 import com.example.sweethome.rssreader.screens.add_channel.presenter.AddChannelPresenter;
@@ -28,7 +30,7 @@ public final class AddChannelActivity extends AppCompatActivity implements IAddC
         nameEditText = findViewById(R.id.add_name_EditText);
 
         Button addLinkButton = findViewById(R.id.add_links_Button);
-
+        initToolBar();
         addLinkButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,6 +44,14 @@ public final class AddChannelActivity extends AppCompatActivity implements IAddC
 
     public static Intent newIntent(Context context) {
         return new Intent(context, AddChannelActivity.class);
+    }
+
+    private void initToolBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar_add_channel_activity);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     //region IAddChannelPresenterContract override
@@ -69,7 +79,7 @@ public final class AddChannelActivity extends AppCompatActivity implements IAddC
 
     @Override
     protected void onResume() {
-        mAddChannelPresenter.attach(this,this);
+        mAddChannelPresenter.attach(this, this);
         super.onResume();
     }
 
@@ -77,5 +87,11 @@ public final class AddChannelActivity extends AppCompatActivity implements IAddC
     protected void onPause() {
         mAddChannelPresenter.detach();
         super.onPause();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

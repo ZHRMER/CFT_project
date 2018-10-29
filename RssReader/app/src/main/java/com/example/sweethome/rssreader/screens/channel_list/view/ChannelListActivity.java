@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 
 import com.example.sweethome.rssreader.R;
 import com.example.sweethome.rssreader.common_model.Channel;
@@ -24,10 +25,20 @@ public final class ChannelListActivity extends AppCompatActivity implements ICha
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_channel_list);
 
+        initToolBar();
+
         mChannelListPresenter = new ChannelListPresenter(this, this);
 
         mRecyclerView = findViewById(R.id.channel_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+    }
+
+    private void initToolBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar_channel_list_activity);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
     }
 
     public static Intent newIntent(Context context) {
@@ -42,12 +53,18 @@ public final class ChannelListActivity extends AppCompatActivity implements ICha
     @Override
     protected void onResume() {
         super.onResume();
-        mChannelListPresenter.attach(this,this);
+        mChannelListPresenter.attach(this, this);
     }
 
     @Override
     protected void onPause() {
         mChannelListPresenter.detach();
         super.onPause();
+    }
+
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }

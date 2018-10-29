@@ -31,8 +31,9 @@ public final class NewsListActivity extends AppCompatActivity implements Navigat
 
         mNewsListView = new NewsListView(this);
 
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_news_list);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
         toolbar.setOnMenuItemClickListener(this);
 
         DrawerLayout drawerLayout = findViewById(R.id.drawer_layout);

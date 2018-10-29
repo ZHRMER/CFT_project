@@ -69,6 +69,8 @@ public final class AddChannelPresenter {
     public void attach(IAddChannelPresenterContract view, Context context) {
         mView = view;
         mContext = context;
+        bindToService();
+        registerBroadcastReceiver();
     }
 
     public void detach() {

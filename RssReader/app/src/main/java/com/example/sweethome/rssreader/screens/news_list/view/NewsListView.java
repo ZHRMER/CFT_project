@@ -56,12 +56,12 @@ public final class NewsListView {
         }
     }
 
-    public void detach(){
-        mActivity=null;
+    public void detach() {
+        mActivity = null;
     }
 
-    public void attach(Activity activity){
-        mActivity=activity;
+    public void attach(Activity activity) {
+        mActivity = activity;
     }
 
     public boolean onMenuItemClick(MenuItem menuItem) {
