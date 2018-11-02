@@ -10,7 +10,9 @@ public final class Constants {
 
     public static final String KEY_ADD_INTENT_RESULT = "resultOfAddChannel";
     public static final String KEY_GET_CHANNEL_LIST_INTENT_RESULT = "resultOfGetChannelList";
+    public static final String KEY_GET_ARTICLE_LIST_INTENT_RESULT = "resultOfGetArticleList";
 
     public static final String BROADCAST_ADD_ACTION = "com.example.sweethome.rssreader.add_broadcast";
     public static final String BROADCAST_GET_CHANNEL_LIST_ACTION = "com.example.sweethome.rssreader.get_channel_list_broadcast";
+    public static final String BROADCAST_GET_ARTICLE_LIST_ACTION = "com.example.sweethome.rssreader.get_article_list_broadcast";
 }

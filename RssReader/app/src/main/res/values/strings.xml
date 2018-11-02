@@ -8,4 +8,7 @@
     <string name="add_links_TextView_hint">Адрес канала</string>
     <string name="add_links_Button_text">Добавить</string>
     <string name="add_name_TextView_hint">Название канала</string>
+    <string name="add_channel_successful_toast">Канал добавлен</string>
+    <string name="add_channel_fail_toast">Канал уже существует или неправильный адрес канала</string>
+
 </resources>

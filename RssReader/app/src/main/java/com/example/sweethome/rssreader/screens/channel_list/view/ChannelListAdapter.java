@@ -21,14 +21,14 @@ public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAd
 
     @NonNull
     @Override
-    public ChannelListAdapter.ChannelViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+    public ChannelListAdapter.ChannelViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.channel_view, viewGroup, false);
         return new ChannelViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ChannelListAdapter.ChannelViewHolder newsViewHolder, int i) {
+    public void onBindViewHolder(@NonNull final ChannelListAdapter.ChannelViewHolder newsViewHolder, final int i) {
         final Channel rssNewsModel = mChannelList.get(i);
         ((TextView) newsViewHolder.mNewsTitle.findViewById(R.id.channel_name)).setText(rssNewsModel.getName());
         ((TextView) newsViewHolder.mNewsDescription.findViewById(R.id.channel_link)).setText(rssNewsModel.getLinkString());
@@ -43,7 +43,7 @@ public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAd
         private TextView mNewsTitle;
         private TextView mNewsDescription;
 
-        ChannelViewHolder(@NonNull View itemView) {
+        ChannelViewHolder(@NonNull final View itemView) {
             super(itemView);
             mNewsTitle = itemView.findViewById(R.id.channel_name);
             mNewsDescription = itemView.findViewById(R.id.channel_link);

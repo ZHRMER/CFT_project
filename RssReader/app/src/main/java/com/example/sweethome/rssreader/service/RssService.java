@@ -1,20 +1,23 @@
-package com.example.sweethome.rssreader.common_model;
+package com.example.sweethome.rssreader.service;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 
+import com.example.sweethome.rssreader.common_model.Channel;
 import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
+import com.example.sweethome.rssreader.web_work.WebWorker;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-
 import static com.example.sweethome.rssreader.common_model.Constants.NUMBER_OF_THREADS;
 
-public final class MyService extends android.app.Service {
+public final class RssService extends android.app.Service {
     private ExecutorService mExecutorService;
-    public MyBinder binder = new MyBinder();
+    public RssBinder binder = new RssBinder();
 
     public void onCreate() {
         super.onCreate();
@@ -31,9 +34,9 @@ public final class MyService extends android.app.Service {
         return binder;
     }
 
-    public class MyBinder extends Binder {
-        public MyService getService() {
-            return MyService.this;
+    public class RssBinder extends Binder {
+        public RssService getService() {
+            return RssService.this;
         }
     }
 
@@ -48,6 +51,7 @@ public final class MyService extends android.app.Service {
         private final String mName;
 
         addChanelRun(ChannelDBPresenter channelDBPresenter, String name, String url) {
+            //mChannelDBPresenter=new ChannelDBPresenter(getApplicationContext());
             mChannelDBPresenter = channelDBPresenter;
             mURL = url;
             mName = name;
@@ -78,4 +82,27 @@ public final class MyService extends android.app.Service {
         }
     }
     //endregion
+
+    //region downloadArticle region
+    public void downloadArticles(final ArrayList<Channel> channelArrayList, Context context) {
+        mExecutorService.execute(new downloadArticleRun(channelArrayList,context));
+    }
+
+    private class downloadArticleRun implements Runnable {
+        private ArrayList<Channel> mChannelArrayList;
+        private Context mContext;
+
+        downloadArticleRun(final ArrayList<Channel> channelArrayList, Context context) {
+            mChannelArrayList = channelArrayList;
+            mContext=context;
+        }
+
+        @Override
+        public void run() {
+            WebWorker worker = new WebWorker(mChannelArrayList,mContext);
+            worker.downloadArticle();
+        }
+    }
+    //endregion
+
 }

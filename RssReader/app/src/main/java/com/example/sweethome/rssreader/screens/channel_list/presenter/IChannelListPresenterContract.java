@@ -5,5 +5,5 @@ import com.example.sweethome.rssreader.common_model.Channel;
 import java.util.ArrayList;
 
 public interface IChannelListPresenterContract {
-    void setChannelListAdapter(ArrayList<Channel> channelListAdapter);
+    void setChannelListAdapter(final ArrayList<Channel> channelListAdapter);
 }

@@ -16,32 +16,27 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <TextView
+        style="@style/MainTextView"
         android:id="@+id/add_name_TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="@string/add_name_TextView_hint"
-        android:textSize="24sp" />
+        />
+
 
     <EditText
-        android:id="@+id/add_name_EditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress" />
+        style="@style/MainEditText"
+        android:id="@+id/add_name_EditText">
+    </EditText>
 
     <TextView
+        style="@style/MainTextView"
         android:id="@+id/add_links_TextView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:text="@string/add_links_TextView_hint"
-        android:textSize="24sp" />
+        />
 
     <EditText
-        android:id="@+id/add_links_EditText"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:ems="10"
-        android:inputType="textEmailAddress" />
+        style="@style/MainEditText"
+        android:id="@+id/add_links_EditText">
+    </EditText>
 
     <Button
         android:id="@+id/add_links_Button"

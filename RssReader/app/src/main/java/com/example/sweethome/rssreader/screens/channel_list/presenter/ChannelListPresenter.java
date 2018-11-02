@@ -9,8 +9,8 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.example.sweethome.rssreader.common_model.Channel;
-import com.example.sweethome.rssreader.common_model.MyService;
 import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
+import com.example.sweethome.rssreader.service.RssService;
 
 import java.util.ArrayList;
 
@@ -21,7 +21,7 @@ public final class ChannelListPresenter {
     private IChannelListPresenterContract mView;
     private ChannelDBPresenter mChannelDBPresenter;
     private Context mContext;
-    private MyService mMyService;
+    private RssService mRssService;
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
 
@@ -32,11 +32,11 @@ public final class ChannelListPresenter {
     }
 
     private void bindToService() {
-        Intent intent = new Intent(mContext, MyService.class);
+        Intent intent = new Intent(mContext, RssService.class);
         mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(final ComponentName name, final IBinder binder) {
-                mMyService = ((MyService.MyBinder) binder).getService();
+                mRssService = ((RssService.RssBinder) binder).getService();
                 getChannelList();
             }
 
@@ -50,7 +50,7 @@ public final class ChannelListPresenter {
     private void registerBroadcastReceiver() {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
-            public void onReceive(Context context, Intent intent) {
+            public void onReceive(final Context context, final Intent intent) {
                 ArrayList<Channel> channelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
                 mView.setChannelListAdapter(channelArrayList);
             }
@@ -60,7 +60,7 @@ public final class ChannelListPresenter {
     }
 
     private void getChannelList() {
-        mMyService.getChannelListFromDB(mChannelDBPresenter);
+        mRssService.getChannelListFromDB(mChannelDBPresenter);
     }
 
     public void detach() {

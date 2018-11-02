@@ -7,14 +7,19 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
-
 import com.example.sweethome.rssreader.common_model.Channel;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 
-import static com.example.sweethome.rssreader.common_model.Constants.*;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_ADD_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_CHANNEL_LIST_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_ADD_INTENT_RESULT;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHANNEL_LIST_INTENT_RESULT;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_LINK;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_NAME;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_TABLE_NAME;
 
 public final class ChannelDBPresenter {
     private final ChannelDBHelper mChannelDBHelper;
@@ -28,6 +33,10 @@ public final class ChannelDBPresenter {
 
     //region addChanel region
     public void addChannelToDB(final String nameChannel, final String linkChannel) {
+        if (nameChannel == null || linkChannel == null) {
+            sendIsAddBroadcast(false);
+            return;
+        }
         try {
             mSQLiteDataBase = mChannelDBHelper.getWritableDatabase();
             if (!isURLLink(linkChannel)) {
@@ -57,23 +66,39 @@ public final class ChannelDBPresenter {
 
     //region getChannelList region
     public void getChannelList() {
-        mSQLiteDataBase = mChannelDBHelper.getReadableDatabase();
-        Cursor cursor = mSQLiteDataBase.query(KEY_TABLE_NAME, null, null, null, null, null, null);
-        ArrayList<Channel> channelList = new ArrayList<>();
-        if (cursor.moveToFirst()) {
-            int nameColInd = cursor.getColumnIndex(KEY_NAME);
-            int emailColInd = cursor.getColumnIndex(KEY_LINK);
-            do {
-                Channel channel = new Channel(cursor.getString(nameColInd), cursor.getString(emailColInd));
-                channelList.add(channel);
-            } while (cursor.moveToNext());
+        Cursor cursor = null;
+        ArrayList<Channel> channelList = null;
+        try {
+            mSQLiteDataBase = mChannelDBHelper.getReadableDatabase();
+            cursor = mSQLiteDataBase.query(KEY_TABLE_NAME, null, null, null, null, null, null);
+            channelList = new ArrayList<>();
+            if (cursor.moveToFirst()) {
+                int nameColInd = cursor.getColumnIndex(KEY_NAME);
+                int emailColInd = cursor.getColumnIndex(KEY_LINK);
+                do {
+                    Channel channel = new Channel(cursor.getString(nameColInd), cursor.getString(emailColInd));
+                    channelList.add(channel);
+                } while (cursor.moveToNext());
+            }
+        } catch (SQLException e) {
+            //TODO if cant get channel list
+        } finally {
+            if (cursor != null) {
+                cursor.close();
+            }
+            if (mSQLiteDataBase != null) {
+                mSQLiteDataBase.close();
+            }
+            if (channelList != null) {
+                sendGetListBroadcast(channelList);
+            }
         }
-        cursor.close();
-        mSQLiteDataBase.close();
-        sendGetListBroadcast(channelList);
     }
 
     private void sendGetListBroadcast(final ArrayList<Channel> channelList) {
+        if (channelList == null) {
+            return;
+        }
         Intent intent = new Intent(BROADCAST_GET_CHANNEL_LIST_ACTION);
         intent.putParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT, channelList);
         mContext.sendBroadcast(intent);

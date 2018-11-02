@@ -11,15 +11,15 @@ public final class Channel implements Parcelable {
     private final String mLinkString;
 
 
-    public Channel(String name, String linkString) {
+    public Channel(final String name, final String linkString) {
         this.mName = name;
         this.mLinkString = linkString;
         this.mUUID = UUID.randomUUID();
     }
 
     //region Parcelable methods region
-    private Channel(Parcel in) {
-        mUUID=UUID.fromString(in.readString());
+    private Channel(final Parcel in) {
+        mUUID = UUID.fromString(in.readString());
         mName = in.readString();
         mLinkString = in.readString();
     }
@@ -42,7 +42,7 @@ public final class Channel implements Parcelable {
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(mUUID.toString());
         dest.writeString(mName);
         dest.writeString(mLinkString);

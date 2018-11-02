@@ -51,35 +51,35 @@ public final class Article {
     //endregion
 
     //region Setters region
-    public void setUUID(UUID UUID) {
+    public void setUUID(final UUID UUID) {
         mUUID = UUID;
     }
 
-    public void setChannelUUid(UUID channelUUid) {
+    public void setChannelUUid(final UUID channelUUid) {
         mChannelUUid = channelUUid;
     }
 
-    public void setTitle(String title) {
+    public void setTitle(final String title) {
         mTitle = title;
     }
 
-    public void setSummary(String summary) {
+    public void setSummary(final String summary) {
         mSummary = summary;
     }
 
-    public void setFullText(String fullText) {
+    public void setFullText(final String fullText) {
         mFullText = fullText;
     }
 
-    public void setPublicationDate(Date publicationDate) {
+    public void setPublicationDate(final Date publicationDate) {
         mPublicationDate = publicationDate;
     }
 
-    public void setLinkString(String linkString) {
+    public void setLinkString(final String linkString) {
         mLinkString = linkString;
     }
 
-    public void setImageLinkString(String imageLinkString) {
+    public void setImageLinkString(final String imageLinkString) {
         mImageLinkString = imageLinkString;
     }
     //endregion
