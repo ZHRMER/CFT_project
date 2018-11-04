@@ -41,8 +41,8 @@ public final class RssService extends android.app.Service {
     }
 
     //region addChannel region
-    public void addChannelToDB(final ChannelDBPresenter channelDBPresenter, final String name, final String url) {
-        mExecutorService.execute(new addChanelRun(channelDBPresenter, name, url));
+    public void addChannelToDB(final String name, final String url) {
+        mExecutorService.execute(new addChanelRun(name, url));
     }
 
     private class addChanelRun implements Runnable {
@@ -50,9 +50,8 @@ public final class RssService extends android.app.Service {
         private final String mURL;
         private final String mName;
 
-        addChanelRun(ChannelDBPresenter channelDBPresenter, String name, String url) {
-            //mChannelDBPresenter=new ChannelDBPresenter(getApplicationContext());
-            mChannelDBPresenter = channelDBPresenter;
+        addChanelRun(String name, String url) {
+            mChannelDBPresenter = new ChannelDBPresenter(getApplicationContext());
             mURL = url;
             mName = name;
         }
@@ -65,15 +64,15 @@ public final class RssService extends android.app.Service {
     //endregion
 
     //region getChannelList region
-    public void getChannelListFromDB(final ChannelDBPresenter channelDBPresenter) {
-        mExecutorService.execute(new getChannelListRun(channelDBPresenter));
+    public void getChannelListFromDB() {
+        mExecutorService.execute(new getChannelListRun());
     }
 
     private class getChannelListRun implements Runnable {
         private final ChannelDBPresenter mChannelDBPresenter;
 
-        getChannelListRun(final ChannelDBPresenter channelDBPresenter) {
-            mChannelDBPresenter = channelDBPresenter;
+        getChannelListRun() {
+            mChannelDBPresenter = new ChannelDBPresenter(getApplicationContext());
         }
 
         @Override
@@ -84,22 +83,22 @@ public final class RssService extends android.app.Service {
     //endregion
 
     //region downloadArticle region
-    public void downloadArticles(final ArrayList<Channel> channelArrayList, Context context) {
-        mExecutorService.execute(new downloadArticleRun(channelArrayList,context));
+    public void downloadArticles(final ArrayList<Channel> channelArrayList) {
+        mExecutorService.execute(new downloadArticleRun(channelArrayList));
     }
 
     private class downloadArticleRun implements Runnable {
         private ArrayList<Channel> mChannelArrayList;
         private Context mContext;
 
-        downloadArticleRun(final ArrayList<Channel> channelArrayList, Context context) {
+        downloadArticleRun(final ArrayList<Channel> channelArrayList) {
             mChannelArrayList = channelArrayList;
-            mContext=context;
+            mContext = getApplicationContext();
         }
 
         @Override
         public void run() {
-            WebWorker worker = new WebWorker(mChannelArrayList,mContext);
+            WebWorker worker = new WebWorker(mChannelArrayList, mContext);
             worker.downloadArticle();
         }
     }

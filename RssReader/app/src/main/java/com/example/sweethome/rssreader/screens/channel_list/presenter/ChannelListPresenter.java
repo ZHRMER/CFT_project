@@ -9,7 +9,6 @@ import android.content.ServiceConnection;
 import android.os.IBinder;
 
 import com.example.sweethome.rssreader.common_model.Channel;
-import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
 import com.example.sweethome.rssreader.service.RssService;
 
 import java.util.ArrayList;
@@ -19,7 +18,6 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHA
 
 public final class ChannelListPresenter {
     private IChannelListPresenterContract mView;
-    private ChannelDBPresenter mChannelDBPresenter;
     private Context mContext;
     private RssService mRssService;
     private ServiceConnection mServiceConnection;
@@ -28,7 +26,6 @@ public final class ChannelListPresenter {
     public ChannelListPresenter(final IChannelListPresenterContract view, final Context context) {
         mView = view;
         mContext = context;
-        mChannelDBPresenter = new ChannelDBPresenter(mContext);
     }
 
     private void bindToService() {
@@ -60,7 +57,7 @@ public final class ChannelListPresenter {
     }
 
     private void getChannelList() {
-        mRssService.getChannelListFromDB(mChannelDBPresenter);
+        mRssService.getChannelListFromDB();
     }
 
     public void detach() {

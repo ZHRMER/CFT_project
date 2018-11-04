@@ -10,7 +10,6 @@ import android.os.IBinder;
 import android.widget.Toast;
 
 import com.example.sweethome.rssreader.R;
-import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
 import com.example.sweethome.rssreader.service.RssService;
 
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_ADD_ACTION;
@@ -20,7 +19,6 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_ADD_INT
 public final class AddChannelPresenter {
     private IAddChannelPresenterContract mView;
     private Context mContext;
-    private ChannelDBPresenter mChannelDBPresenter;
     private RssService mRssService;
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
@@ -28,7 +26,6 @@ public final class AddChannelPresenter {
     public AddChannelPresenter(final IAddChannelPresenterContract view, final Context context) {
         mView = view;
         mContext = context;
-        mChannelDBPresenter = new ChannelDBPresenter(context);
     }
 
     private void registerBroadcastReceiver() {
@@ -63,7 +60,7 @@ public final class AddChannelPresenter {
     }
 
     public void onAddLinkButtonClick() {
-        mRssService.addChannelToDB(mChannelDBPresenter, mView.getName(), mView.getLink());
+        mRssService.addChannelToDB(mView.getName(), mView.getLink());
     }
 
     public void attach(final IAddChannelPresenterContract view, final Context context) {

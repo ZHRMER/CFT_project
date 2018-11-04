@@ -6,18 +6,42 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="MainTextView">
+    <!--2region activity_add_channel_xml-->
+    <style name="ActivityAddChannelTextVew">
         <item name="android:textSize">24sp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
 
-    <style name="MainEditText">
+    <style name="ActivityAddChannelEditText">
         <item name="android:ems">10</item>
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
+    <!--endregion-->
+
+    <!--region channel_view.xml-->
+    <style name="ChannelViewNameTextView">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ChannelViewLinkTextView">
+        <item name="android:autoLink">all</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ChannelViewDelimiter">
+        <item name="android:background">@android:color/darker_gray</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    <!--endregion-->
+
 
 
 </resources>

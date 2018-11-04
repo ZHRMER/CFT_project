@@ -7,19 +7,12 @@
 
     <TextView
         android:id="@+id/channel_name"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="18sp"
-        android:textStyle="bold" />
+        style="@style/ChannelViewNameTextView" />
 
     <TextView
         android:id="@+id/channel_link"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:autoLink="all" />
+        style="@style/ChannelViewLinkTextView" />
     <View
-        android:id="@+id/delimeter"
-        android:layout_width="wrap_content"
-        android:layout_height="1dp"
-        android:background="@android:color/darker_gray" />
+        android:id="@+id/delimiter"
+        style="@style/ChannelViewDelimiter" />
 </LinearLayout>

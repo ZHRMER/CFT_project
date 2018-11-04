@@ -21,6 +21,7 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_LINK;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_NAME;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_TABLE_NAME;
 
+
 public final class ChannelDBPresenter {
     private final ChannelDBHelper mChannelDBHelper;
     private SQLiteDatabase mSQLiteDataBase;

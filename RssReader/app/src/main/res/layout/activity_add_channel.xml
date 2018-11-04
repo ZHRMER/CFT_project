@@ -16,25 +16,25 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
     <TextView
-        style="@style/MainTextView"
+        style="@style/ActivityAddChannelTextVew"
         android:id="@+id/add_name_TextView"
         android:text="@string/add_name_TextView_hint"
         />
 
 
     <EditText
-        style="@style/MainEditText"
+        style="@style/ActivityAddChannelEditText"
         android:id="@+id/add_name_EditText">
     </EditText>
 
     <TextView
-        style="@style/MainTextView"
+        style="@style/ActivityAddChannelTextVew"
         android:id="@+id/add_links_TextView"
         android:text="@string/add_links_TextView_hint"
         />
 
     <EditText
-        style="@style/MainEditText"
+        style="@style/ActivityAddChannelEditText"
         android:id="@+id/add_links_EditText">
     </EditText>
 

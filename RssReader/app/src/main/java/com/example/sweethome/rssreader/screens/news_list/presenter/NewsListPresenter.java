@@ -7,10 +7,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.widget.Toast;
 
+import com.example.sweethome.rssreader.common_model.Article;
 import com.example.sweethome.rssreader.common_model.Channel;
-import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
 import com.example.sweethome.rssreader.service.RssService;
 
 import java.util.ArrayList;
@@ -22,16 +21,16 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHA
 
 
 public final class NewsListPresenter {
-    private ChannelDBPresenter mChannelDBPresenter;
     private Context mContext;
     private RssService mRssService;
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
     private ArrayList<Channel> channelArrayList;
+    private INewsListPresenterContract mINewsListPresenterContract;
 
-    public NewsListPresenter(final Context context) {
+    public NewsListPresenter(final Context context,final INewsListPresenterContract iNewsListPresenterContract) {
         mContext = context;
-        mChannelDBPresenter = new ChannelDBPresenter(mContext);
+        mINewsListPresenterContract=iNewsListPresenterContract;
     }
 
     private void bindToService() {
@@ -40,7 +39,6 @@ public final class NewsListPresenter {
             @Override
             public void onServiceConnected(final ComponentName name, final IBinder binder) {
                 mRssService = ((RssService.RssBinder) binder).getService();
-                getChannelList();
             }
 
             @Override
@@ -63,8 +61,9 @@ public final class NewsListPresenter {
                             break;
                         }
                         case BROADCAST_GET_ARTICLE_LIST_ACTION: {
-                            Toast.makeText(context, "Article add " + intent.getStringExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT),
-                                    Toast.LENGTH_SHORT).show();
+                            if(intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT)!=null) {
+                                mINewsListPresenterContract.setArticlListAdapter(intent.<Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT));
+                            }
                         }
                     }
                 }
@@ -77,20 +76,26 @@ public final class NewsListPresenter {
     }
 
     private void downloadArticles(final ArrayList<Channel> channels) {
-        mRssService.downloadArticles(channels, mContext);
+        mRssService.downloadArticles(channels);
     }
 
     private void getChannelList() {
-        mRssService.getChannelListFromDB(mChannelDBPresenter);
+        mRssService.getChannelListFromDB();
+    }
+
+    public void showArticles(){
+        getChannelList();
     }
 
     public void detach() {
         mContext.unbindService(mServiceConnection);
         mContext.unregisterReceiver(mBroadcastReceiver);
+        mINewsListPresenterContract=null;
         mContext = null;
     }
 
-    public void attach(final Context context) {
+    public void attach(final Context context, final INewsListPresenterContract iNewsListPresenterContract) {
+        mINewsListPresenterContract=iNewsListPresenterContract;
         mContext = context;
         bindToService();
         registerBroadcastReceiver();

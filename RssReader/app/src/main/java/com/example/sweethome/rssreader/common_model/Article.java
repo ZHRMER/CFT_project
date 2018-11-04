@@ -1,28 +1,45 @@
 package com.example.sweethome.rssreader.common_model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Date;
 import java.util.UUID;
 
-public final class Article {
+public final class Article implements Parcelable {
     private UUID mUUID;
-    private UUID mChannelUUid;
 
     private String mTitle;
     private String mSummary;
-    private String mFullText;
 
     private Date mPublicationDate;
 
     private String mLinkString;
     private String mImageLinkString;
 
+    protected Article(Parcel in) {
+        mTitle = in.readString();
+        mSummary = in.readString();
+        mLinkString = in.readString();
+        mImageLinkString = in.readString();
+        mPublicationDate=new Date(in.readString());
+    }
+
+    public static final Creator<Article> CREATOR = new Creator<Article>() {
+        @Override
+        public Article createFromParcel(Parcel in) {
+            return new Article(in);
+        }
+
+        @Override
+        public Article[] newArray(int size) {
+            return new Article[size];
+        }
+    };
+
     //region Getters region
     public UUID getUUID() {
         return mUUID;
-    }
-
-    public UUID getChannelUUid() {
-        return mChannelUUid;
     }
 
     public String getTitle() {
@@ -31,10 +48,6 @@ public final class Article {
 
     public String getSummary() {
         return mSummary;
-    }
-
-    public String getFullText() {
-        return mFullText;
     }
 
     public Date getPublicationDate() {
@@ -50,41 +63,25 @@ public final class Article {
     }
     //endregion
 
-    //region Setters region
-    public void setUUID(final UUID UUID) {
-        mUUID = UUID;
-    }
-
-    public void setChannelUUid(final UUID channelUUid) {
-        mChannelUUid = channelUUid;
-    }
-
-    public void setTitle(final String title) {
-        mTitle = title;
-    }
-
-    public void setSummary(final String summary) {
-        mSummary = summary;
-    }
-
-    public void setFullText(final String fullText) {
-        mFullText = fullText;
-    }
-
-    public void setPublicationDate(final Date publicationDate) {
-        mPublicationDate = publicationDate;
-    }
-
-    public void setLinkString(final String linkString) {
-        mLinkString = linkString;
-    }
-
-    public void setImageLinkString(final String imageLinkString) {
-        mImageLinkString = imageLinkString;
-    }
-    //endregion
-
-    public Article() {
+    public Article(final String title, final String linkString, final String summary, final String date) {
         mUUID = UUID.randomUUID();
+        mTitle = title;
+        mSummary = summary;
+        mLinkString = linkString;
+        mPublicationDate=new Date(date);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeString(mSummary);
+        dest.writeString(mLinkString);
+        dest.writeString(mImageLinkString);
+        dest.writeString(mPublicationDate.toString());
     }
 }

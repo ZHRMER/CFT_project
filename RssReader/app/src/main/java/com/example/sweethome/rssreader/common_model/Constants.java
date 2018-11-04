@@ -6,6 +6,8 @@ public final class Constants {
     public static final String KEY_LINK = "link";
     public static final String KEY_TABLE_NAME = "channellist";
 
+    public static final String KEY_ARTICLE_LIST="com.example.sweethome.rssreader.article_list";
+
     public static final int NUMBER_OF_THREADS = 4;
 
     public static final String KEY_ADD_INTENT_RESULT = "resultOfAddChannel";
