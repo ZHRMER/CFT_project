@@ -27,7 +27,7 @@ public final class RssService extends android.app.Service {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mExecutorService.shutdown();
+        mExecutorService.shutdownNow();
     }
 
     public IBinder onBind(Intent arg0) {
@@ -39,6 +39,27 @@ public final class RssService extends android.app.Service {
             return RssService.this;
         }
     }
+
+    //region deleteChannel region
+    public void deleteChannelFromDB(final String channelName) {
+        mExecutorService.execute(new deleteChanelRun(channelName));
+    }
+
+    private class deleteChanelRun implements Runnable {
+        private final ChannelDBPresenter mChannelDBPresenter;
+        private final String mName;
+
+        deleteChanelRun(String name) {
+            mChannelDBPresenter = new ChannelDBPresenter(getApplicationContext());
+            mName = name;
+        }
+
+        @Override
+        public void run() {
+            mChannelDBPresenter.deleteChannelFromDB(mName);
+        }
+    }
+    //endregion
 
     //region addChannel region
     public void addChannelToDB(final String name, final String url) {

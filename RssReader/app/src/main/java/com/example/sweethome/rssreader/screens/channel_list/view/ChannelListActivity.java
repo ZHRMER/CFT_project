@@ -32,6 +32,7 @@ public final class ChannelListActivity extends AppCompatActivity implements ICha
 
         mRecyclerView = findViewById(R.id.channel_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+
     }
 
     private void initToolBar() {
@@ -51,7 +52,7 @@ public final class ChannelListActivity extends AppCompatActivity implements ICha
 
     @Override
     public void setChannelListAdapter(final ArrayList<Channel> channelList) {
-        mRecyclerView.setAdapter(new ChannelListAdapter(channelList));
+        mRecyclerView.setAdapter(new ChannelListAdapter(channelList, mChannelListPresenter));
     }
 
     @Override

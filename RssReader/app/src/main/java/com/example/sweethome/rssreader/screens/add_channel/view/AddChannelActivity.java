@@ -48,8 +48,8 @@ public final class AddChannelActivity extends AppCompatActivity implements IAddC
     private void initToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar_add_channel_activity);
         setSupportActionBar(toolbar);
-        ActionBar actionBar=getSupportActionBar();
-        if(actionBar!=null) {
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);

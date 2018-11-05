@@ -52,7 +52,6 @@
     </style>
 
     <style name="ChannelViewLinkTextView">
-        <item name="android:autoLink">all</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
@@ -96,6 +95,7 @@
     </style>
     <!--endregion-->
 
+    <!--region article_view.xml-->
     <style name="ArticleViewPubDateTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -120,5 +120,6 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
+    <!--endregion-->
 
 </resources>

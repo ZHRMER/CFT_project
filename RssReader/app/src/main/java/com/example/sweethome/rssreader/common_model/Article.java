@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import java.util.Date;
 import java.util.UUID;
 
-public final class Article implements Parcelable {
+public final class Article implements Parcelable, Comparable<Article> {
     private UUID mUUID;
 
     private String mTitle;
@@ -17,12 +17,12 @@ public final class Article implements Parcelable {
     private String mLinkString;
     private String mImageLinkString;
 
-    protected Article(Parcel in) {
+    private Article(Parcel in) {
         mTitle = in.readString();
         mSummary = in.readString();
         mLinkString = in.readString();
         mImageLinkString = in.readString();
-        mPublicationDate=new Date(in.readString());
+        mPublicationDate = new Date(in.readString());
     }
 
     public static final Creator<Article> CREATOR = new Creator<Article>() {
@@ -68,7 +68,7 @@ public final class Article implements Parcelable {
         mTitle = title;
         mSummary = summary;
         mLinkString = linkString;
-        mPublicationDate=new Date(date);
+        mPublicationDate = new Date(date);
     }
 
     @Override
@@ -83,5 +83,10 @@ public final class Article implements Parcelable {
         dest.writeString(mLinkString);
         dest.writeString(mImageLinkString);
         dest.writeString(mPublicationDate.toString());
+    }
+
+    @Override
+    public int compareTo(Article otherArticle) {
+        return mPublicationDate.compareTo(otherArticle.mPublicationDate);
     }
 }

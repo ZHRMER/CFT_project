@@ -6,5 +6,6 @@ import java.util.ArrayList;
 
 public interface INewsListPresenterContract {
     void stopRefresh();
-    void setArticlListAdapter(final ArrayList<Article> articleArrayList);
+
+    void setArticleListAdapter(final ArrayList<Article> articleArrayList);
 }

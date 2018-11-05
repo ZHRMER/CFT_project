@@ -5,7 +5,7 @@ import android.os.Parcelable;
 
 import java.util.UUID;
 
-public final class Channel implements Parcelable {
+public final class Channel implements Parcelable, Comparable<Channel> {
     private final UUID mUUID;
     private final String mName;
     private final String mLinkString;
@@ -60,6 +60,11 @@ public final class Channel implements Parcelable {
 
     public String getLinkString() {
         return mLinkString;
+    }
+
+    @Override
+    public int compareTo(Channel otherChannel) {
+        return mName.compareTo(otherChannel.mName);
     }
     //endregion
 }

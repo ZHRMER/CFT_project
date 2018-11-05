@@ -2,8 +2,6 @@ package com.example.sweethome.rssreader.screens.news_list.view;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
@@ -15,7 +13,7 @@ import com.example.sweethome.rssreader.screens.add_channel.view.AddChannelActivi
 import com.example.sweethome.rssreader.screens.channel_list.view.ChannelListActivity;
 
 
-public final class NewsListView {
+final class NewsListView {
     private DrawerLayout mDrawerLayout;
     private Activity mActivity;
 
@@ -62,9 +60,5 @@ public final class NewsListView {
 
     void attach(final Activity activity) {
         mActivity = activity;
-    }
-
-    public boolean onMenuItemClick(MenuItem menuItem) {
-        return true;
     }
 }

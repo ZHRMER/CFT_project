@@ -32,34 +32,33 @@ public final class NewsListActivity extends AppCompatActivity implements INewsLi
     private NewsListView mNewsListView;
     private NewsListPresenter mNewsListPresenter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ArrayList <Article> articles;
+    private ArrayList<Article> articles;
     private ArticleListAdapter articleListAdapter;
     private RecyclerView mRecyclerView;
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList(KEY_ARTICLE_LIST,articles);
+        outState.putParcelableArrayList(KEY_ARTICLE_LIST, articles);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        if(savedInstanceState!= null){
-            articles=savedInstanceState.getParcelableArrayList(KEY_ARTICLE_LIST);
-        }
-        else{
-            articles=new ArrayList<>();
+        if (savedInstanceState != null) {
+            articles = savedInstanceState.getParcelableArrayList(KEY_ARTICLE_LIST);
+        } else {
+            articles = new ArrayList<>();
         }
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
 
-        mNewsListPresenter=new NewsListPresenter(this,this);
+        mNewsListPresenter = new NewsListPresenter(this, this);
         mNewsListView = new NewsListView(this);
 
         Toolbar toolbar = findViewById(R.id.toolbar_news_list);
         setSupportActionBar(toolbar);
-        ActionBar actionBar=getSupportActionBar();
-        if(actionBar!=null){
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
             actionBar.setDisplayShowTitleEnabled(false);
         }
         toolbar.setOnMenuItemClickListener(this);
@@ -72,7 +71,7 @@ public final class NewsListActivity extends AppCompatActivity implements INewsLi
         NavigationView navigationView = findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        mSwipeRefreshLayout=findViewById(R.id.swipe_refresh_layout);
+        mSwipeRefreshLayout = findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -81,7 +80,7 @@ public final class NewsListActivity extends AppCompatActivity implements INewsLi
         });
         mRecyclerView = findViewById(R.id.news_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(this));
-        articleListAdapter=new ArticleListAdapter(articles);
+        articleListAdapter = new ArticleListAdapter(articles);
         mRecyclerView.setAdapter(articleListAdapter);
     }
 
@@ -132,7 +131,7 @@ public final class NewsListActivity extends AppCompatActivity implements INewsLi
     @Override
     protected void onResume() {
         mNewsListView.attach(this);
-        mNewsListPresenter.attach(this,this);
+        mNewsListPresenter.attach(this, this);
         super.onResume();
     }
 
@@ -142,9 +141,9 @@ public final class NewsListActivity extends AppCompatActivity implements INewsLi
     }
 
     @Override
-    public void setArticlListAdapter(ArrayList<Article> articleArrayList) {
-        articles=articleArrayList;
-        articleListAdapter=new ArticleListAdapter(articles);
+    public void setArticleListAdapter(ArrayList<Article> articleArrayList) {
+        articles = articleArrayList;
+        articleListAdapter = new ArticleListAdapter(articles);
         mRecyclerView.setAdapter(articleListAdapter);
         mSwipeRefreshLayout.setRefreshing(false);
     }

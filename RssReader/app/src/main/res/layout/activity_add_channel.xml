@@ -1,41 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".screens.add_channel.view.AddChannelActivity"
-    style="@style/CommonLinearLayout">
+    style="@style/CommonLinearLayout"
+    tools:context=".screens.add_channel.view.AddChannelActivity">
 
     <android.support.v7.widget.Toolbar
-        style="@style/CommonToolBar"
         android:id="@+id/toolbar_add_channel_activity"
-        />
+        style="@style/CommonToolBar" />
 
     <TextView
-        style="@style/ActivityAddChannelTextVew"
         android:id="@+id/add_name_TextView"
-        android:text="@string/add_name_TextView_hint"
-        />
+        style="@style/ActivityAddChannelTextVew"
+        android:text="@string/add_name_TextView_hint" />
 
 
     <EditText
-        style="@style/ActivityAddChannelEditText"
-        android:id="@+id/add_name_EditText">
+        android:id="@+id/add_name_EditText"
+        style="@style/ActivityAddChannelEditText">
     </EditText>
 
     <TextView
-        style="@style/ActivityAddChannelTextVew"
         android:id="@+id/add_links_TextView"
-        android:text="@string/add_links_TextView_hint"
-        />
+        style="@style/ActivityAddChannelTextVew"
+        android:text="@string/add_links_TextView_hint" />
 
     <EditText
-        style="@style/ActivityAddChannelEditText"
-        android:id="@+id/add_links_EditText">
+        android:id="@+id/add_links_EditText"
+        style="@style/ActivityAddChannelEditText">
     </EditText>
 
     <Button
-        style="@style/ActivityAddChannelButton"
         android:id="@+id/add_links_Button"
+        style="@style/ActivityAddChannelButton"
         android:text="@string/add_links_Button_text" />
 
 </LinearLayout>

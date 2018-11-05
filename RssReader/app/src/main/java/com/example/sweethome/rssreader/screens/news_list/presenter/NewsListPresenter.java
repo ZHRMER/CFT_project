@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.widget.Toast;
 
 import com.example.sweethome.rssreader.common_model.Article;
 import com.example.sweethome.rssreader.common_model.Channel;
@@ -16,8 +17,10 @@ import java.util.ArrayList;
 
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_ARTICLE_LIST_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_CHANNEL_LIST_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHANNEL_LIST_INTENT_RESULT;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
 
 
 public final class NewsListPresenter {
@@ -28,9 +31,9 @@ public final class NewsListPresenter {
     private ArrayList<Channel> channelArrayList;
     private INewsListPresenterContract mINewsListPresenterContract;
 
-    public NewsListPresenter(final Context context,final INewsListPresenterContract iNewsListPresenterContract) {
+    public NewsListPresenter(final Context context, final INewsListPresenterContract iNewsListPresenterContract) {
         mContext = context;
-        mINewsListPresenterContract=iNewsListPresenterContract;
+        mINewsListPresenterContract = iNewsListPresenterContract;
     }
 
     private void bindToService() {
@@ -52,8 +55,8 @@ public final class NewsListPresenter {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(final Context context, final Intent intent) {
-                String actionIntent=intent.getAction();
-                if (actionIntent!=null) {
+                String actionIntent = intent.getAction();
+                if (actionIntent != null) {
                     switch (actionIntent) {
                         case BROADCAST_GET_CHANNEL_LIST_ACTION: {
                             channelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
@@ -61,9 +64,15 @@ public final class NewsListPresenter {
                             break;
                         }
                         case BROADCAST_GET_ARTICLE_LIST_ACTION: {
-                            if(intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT)!=null) {
-                                mINewsListPresenterContract.setArticlListAdapter(intent.<Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT));
+                            if (intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT) != null) {
+                                mINewsListPresenterContract.setArticleListAdapter(intent.<Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT));
                             }
+                            break;
+                        }
+                        case BROADCAST_WARNING_ACTION: {
+                            Toast.makeText(mContext, intent.getStringExtra(KEY_WARNING_INTENT_RESULT), Toast.LENGTH_SHORT).show();
+                            mINewsListPresenterContract.stopRefresh();
+                            break;
                         }
                     }
                 }
@@ -71,8 +80,10 @@ public final class NewsListPresenter {
         };
         IntentFilter getChannelIntentFilter = new IntentFilter(BROADCAST_GET_CHANNEL_LIST_ACTION);
         IntentFilter getArticleIntentFilter = new IntentFilter(BROADCAST_GET_ARTICLE_LIST_ACTION);
+        IntentFilter warningIntentFilter = new IntentFilter(BROADCAST_WARNING_ACTION);
         mContext.registerReceiver(mBroadcastReceiver, getChannelIntentFilter);
         mContext.registerReceiver(mBroadcastReceiver, getArticleIntentFilter);
+        mContext.registerReceiver(mBroadcastReceiver, warningIntentFilter);
     }
 
     private void downloadArticles(final ArrayList<Channel> channels) {
@@ -83,19 +94,19 @@ public final class NewsListPresenter {
         mRssService.getChannelListFromDB();
     }
 
-    public void showArticles(){
+    public void showArticles() {
         getChannelList();
     }
 
     public void detach() {
         mContext.unbindService(mServiceConnection);
         mContext.unregisterReceiver(mBroadcastReceiver);
-        mINewsListPresenterContract=null;
+        mINewsListPresenterContract = null;
         mContext = null;
     }
 
     public void attach(final Context context, final INewsListPresenterContract iNewsListPresenterContract) {
-        mINewsListPresenterContract=iNewsListPresenterContract;
+        mINewsListPresenterContract = iNewsListPresenterContract;
         mContext = context;
         bindToService();
         registerBroadcastReceiver();

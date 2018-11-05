@@ -2,15 +2,14 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".screens.channel_list.view.ChannelListActivity"
-    style="@style/CommonLinearLayout">
+    style="@style/CommonLinearLayout"
+    tools:context=".screens.channel_list.view.ChannelListActivity">
 
     <android.support.v7.widget.Toolbar
-        style="@style/CommonToolBar"
         android:id="@+id/toolbar_channel_list_activity"
-        />
+        style="@style/CommonToolBar" />
 
     <android.support.v7.widget.RecyclerView
-        style="@style/ActivityChannelListRecyclerView"
-        android:id="@+id/channel_recycler_view" />
+        android:id="@+id/channel_recycler_view"
+        style="@style/ActivityChannelListRecyclerView" />
 </LinearLayout>

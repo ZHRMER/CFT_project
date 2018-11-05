@@ -73,4 +73,8 @@ public final class ChannelListPresenter {
         bindToService();
         registerBroadcastReceiver();
     }
+
+    public void deleteChannel(final String channelName) {
+        mRssService.deleteChannelFromDB(channelName);
+    }
 }

@@ -26,8 +26,8 @@
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <android.support.design.widget.NavigationView
-            style="@style/ActivityNewsListNavigationView"
             android:id="@+id/nav_view"
+            style="@style/ActivityNewsListNavigationView"
             app:menu="@menu/activity_main_drawer" />
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>
