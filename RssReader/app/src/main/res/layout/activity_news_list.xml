@@ -1,45 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
+    style="@style/CommonLinearLayout"
     tools:context=".screens.news_list.view.NewsListActivity"
     tools:ignore="GoogleAppIndexingWarning">
 
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar_news_list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="?attr/colorPrimary"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar" />
+        style="@style/CommonToolBar" />
 
     <android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/drawer_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        style="@style/ActivityNewsListDrawerLayout">
 
         <android.support.v4.widget.SwipeRefreshLayout
             android:id="@+id/swipe_refresh_layout"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            style="@style/ActivityNewsListSwipeRefreshLayout">
 
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/news_recycler_view"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:scrollbars="vertical"/>
-
+                style="@style/ActivityNewsListRecyclerView" />
         </android.support.v4.widget.SwipeRefreshLayout>
+
         <android.support.design.widget.NavigationView
+            style="@style/ActivityNewsListNavigationView"
             android:id="@+id/nav_view"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="start"
-            android:fitsSystemWindows="true"
             app:menu="@menu/activity_main_drawer" />
     </android.support.v4.widget.DrawerLayout>
 </LinearLayout>

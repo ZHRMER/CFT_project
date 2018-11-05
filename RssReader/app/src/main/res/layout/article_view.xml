@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/CommonLinearLayout">
+
+    <TextView
+        android:id="@+id/article_publication_date"
+        style="@style/ArticleViewPubDateTextView"/>
+
+    <TextView
+        android:id="@+id/article_name"
+        style="@style/ArticleViewNameTextView"/>
+
+    <TextView
+        android:id="@+id/article_description"
+        style="@style/ArticleViewDescriptionTextView" />
+
+    <TextView
+        android:id="@+id/article_link"
+        style="@style/ArticleViewLinkTextView"/>
+
+    <View
+        android:id="@+id/delimiter"
+        style="@style/ChannelViewDelimiter" />
+</LinearLayout>

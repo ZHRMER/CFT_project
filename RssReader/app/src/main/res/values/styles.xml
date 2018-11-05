@@ -6,16 +6,38 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <!--2region activity_add_channel_xml-->
+    <!--region Common elements-->
+    <style name="CommonLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+    </style>
+
+    <style name="CommonToolBar">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:minHeight">?attr/actionBarSize</item>
+        <item name="android:theme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
+    </style>
+    <!--endregion-->
+
+    <!--region activity_add_channel_xml-->
     <style name="ActivityAddChannelTextVew">
         <item name="android:textSize">24sp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+
     </style>
 
     <style name="ActivityAddChannelEditText">
         <item name="android:ems">10</item>
         <item name="android:inputType">textEmailAddress</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ActivityAddChannelButton">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
@@ -42,6 +64,61 @@
     </style>
     <!--endregion-->
 
+    <!--region activity_channel_list.xml-->
+    <style name="ActivityChannelListRecyclerView">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+    <!--endregion-->
 
+    <!--region activity_news_list.xml-->
+    <style name="ActivityNewsListDrawerLayout">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ActivityNewsListSwipeRefreshLayout">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
+
+    <style name="ActivityNewsListRecyclerView">
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:scrollbars">vertical</item>
+    </style>
+
+    <style name="ActivityNewsListNavigationView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_gravity">start</item>
+        <item name="android:fitsSystemWindows">true</item>
+    </style>
+    <!--endregion-->
+
+    <style name="ArticleViewPubDateTextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">italic</item>
+    </style>
+
+    <style name="ArticleViewNameTextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="ArticleViewLinkTextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:autoLink">web</item>
+    </style>
+
+    <style name="ArticleViewDescriptionTextView">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+    </style>
 
 </resources>
