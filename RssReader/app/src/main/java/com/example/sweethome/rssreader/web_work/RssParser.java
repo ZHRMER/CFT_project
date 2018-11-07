@@ -25,7 +25,7 @@ class RssParser {
     private ArrayList<Article> articles = new ArrayList<>();
 
 
-    ArrayList<Article> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
+    ArrayList<Article> parseFeed(final InputStream inputStream) throws XmlPullParserException, IOException {
         if (null == inputStream) {
             throw new IOException();
         }

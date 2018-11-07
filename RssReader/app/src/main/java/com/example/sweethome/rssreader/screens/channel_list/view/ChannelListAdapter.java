@@ -27,14 +27,14 @@ public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAd
 
     @NonNull
     @Override
-    public ChannelListAdapter.ChannelViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int i) {
+    public ChannelListAdapter.ChannelViewHolder onCreateViewHolder(@NonNull final ViewGroup viewGroup, final int position) {
         View view = LayoutInflater.from(viewGroup.getContext())
                 .inflate(R.layout.channel_view, viewGroup, false);
         return new ChannelViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull final ChannelListAdapter.ChannelViewHolder newsViewHolder, final int i) {
+    public void onBindViewHolder(@NonNull final ChannelListAdapter.ChannelViewHolder newsViewHolder, final int position) {
         newsViewHolder.itemView.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
             @Override
             public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
@@ -48,7 +48,7 @@ public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAd
                 });
             }
         });
-        final Channel rssNewsModel = mChannelList.get(i);
+        final Channel rssNewsModel = mChannelList.get(position);
         ((TextView) newsViewHolder.mChannelName.findViewById(R.id.channel_name)).setText(rssNewsModel.getName());
         ((TextView) newsViewHolder.mChannelLink.findViewById(R.id.channel_link)).setText(rssNewsModel.getLinkString());
     }
