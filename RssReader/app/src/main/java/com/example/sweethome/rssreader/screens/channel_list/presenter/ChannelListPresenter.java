@@ -29,7 +29,7 @@ public final class ChannelListPresenter {
     }
 
     private void bindToService() {
-        Intent intent = new Intent(mContext, RssService.class);
+        Intent intent = RssService.newIntent(mContext);
         mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(final ComponentName name, final IBinder binder) {

@@ -2,13 +2,11 @@ package com.example.sweethome.rssreader.web_work;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.Xml;
 
 import com.example.sweethome.rssreader.R;
 import com.example.sweethome.rssreader.common_model.Article;
 import com.example.sweethome.rssreader.common_model.Channel;
 
-import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
@@ -21,20 +19,17 @@ import java.util.Collections;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_ARTICLE_LIST_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_INTENT_RESULT;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_PARSER_DESCRIPTION;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_PARSER_ITEM;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_PARSER_LINK;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_PARSER_PUBLICATION_DATE;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_PARSER_TITLE;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
 
 public class WebWorker {
     private ArrayList<Channel> mChannelArrayList;
     private Context mContext;
 
-    public WebWorker(ArrayList<Channel> channelArrayList, Context context) {
-        mChannelArrayList = channelArrayList;
-        mContext = context;
+    public WebWorker(final ArrayList<Channel> channelArrayList, final Context context) {
+        if (null != channelArrayList && null != context) {
+            mChannelArrayList = channelArrayList;
+            mContext = context;
+        }
     }
 
     public void downloadArticle() {
@@ -46,30 +41,36 @@ public class WebWorker {
         ArrayList<Article> articleArrayList = new ArrayList<>();
         String channelName = null;
         InputStream inputStream = null;
-        for (int i = 0; i < mChannelArrayList.size(); i++) {
+        for (int position = 0; position < mChannelArrayList.size(); position++) {
             try {
-                Channel currentChannel = mChannelArrayList.get(i);
+                Channel currentChannel = mChannelArrayList.get(position);
                 channelName = currentChannel.getName();
                 URL url = new URL(currentChannel.getLinkString());
                 inputStream = url.openConnection().getInputStream();
-                tempArticleList = parseFeed(inputStream);
+
+                RssParser rssParser = new RssParser();
+                tempArticleList = rssParser.parseFeed(inputStream);
+                if (tempArticleList.size() != 0) {
+                    mChannelArrayList.get(position).setLastArticlePubDate(tempArticleList.get(0).getPublicationDate().toString());
+                }
                 inputStream.close();
-            } catch (MalformedURLException e) {
+            } catch (final MalformedURLException e) {
                 sendWarningBroadcast(mContext.getString(R.string.url_warning) + " " + channelName);
                 continue;
-            } catch (IOException e) {
+            } catch (final IOException e) {
                 sendWarningBroadcast(mContext.getString(R.string.io_warning) + " " + channelName);
                 continue;
-            } catch (XmlPullParserException e) {
+            } catch (final XmlPullParserException e) {
+                sendWarningBroadcast(mContext.getString(R.string.xml_pullparser_warning) + " " + channelName);
+                continue;
+            } finally {
                 if (inputStream != null) {
                     try {
                         inputStream.close();
-                    } catch (IOException e1) {
+                    } catch (final IOException e1) {
                         sendWarningBroadcast(mContext.getString(R.string.io_warning) + " " + channelName);
                     }
                 }
-                sendWarningBroadcast(mContext.getString(R.string.xml_pullparser_warning) + " " + channelName);
-                continue;
             }
             articleArrayList.addAll(tempArticleList);
         }
@@ -78,69 +79,21 @@ public class WebWorker {
         sendArticlesList(articleArrayList);
     }
 
-    private ArrayList<Article> parseFeed(InputStream inputStream) throws XmlPullParserException, IOException {
-        String title = null;
-        String link = null;
-        String description = null;
-        String publicationDate = null;
-        boolean isItem = false;
-        ArrayList<Article> articles = new ArrayList<>();
-
-        XmlPullParser xmlPullParser = Xml.newPullParser();
-        xmlPullParser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-        xmlPullParser.setInput(inputStream, null);
-        while (xmlPullParser.next() != XmlPullParser.END_DOCUMENT) {
-            switch (xmlPullParser.getEventType()) {
-                case XmlPullParser.START_DOCUMENT: {
-                    break;
-                }
-                case XmlPullParser.START_TAG: {
-                    if (xmlPullParser.getName().equalsIgnoreCase(KEY_PARSER_ITEM)) {
-                        isItem = true;
-                    }
-                    if (xmlPullParser.getName().equalsIgnoreCase(KEY_PARSER_TITLE) && isItem) {
-                        title = xmlPullParser.nextText();
-                    }
-                    if (xmlPullParser.getName().equalsIgnoreCase(KEY_PARSER_DESCRIPTION) && isItem) {
-                        description = xmlPullParser.nextText();
-                    }
-                    if (xmlPullParser.getName().equalsIgnoreCase(KEY_PARSER_LINK) && isItem) {
-                        link = xmlPullParser.nextText();
-                    }
-                    if (xmlPullParser.getName().equalsIgnoreCase(KEY_PARSER_PUBLICATION_DATE) && isItem) {
-                        publicationDate = xmlPullParser.nextText();
-                    }
-                    break;
-                }
-                case XmlPullParser.END_TAG: {
-                    if (xmlPullParser.getName().equalsIgnoreCase(KEY_PARSER_ITEM)) {
-                        Article tempArticle = new Article(title, link, description, publicationDate);
-                        articles.add(tempArticle);
-                        isItem = false;
-                    }
-                    break;
-                }
-                case XmlPullParser.END_DOCUMENT: {
-                    break;
-                }
-                case XmlPullParser.TEXT: {
-                    break;
-                }
-            }
-            xmlPullParser.next();
-        }
-        return articles;
-    }
-
     private void sendArticlesList(final ArrayList<Article> articles) {
-        Intent intent = new Intent(BROADCAST_GET_ARTICLE_LIST_ACTION);
-        intent.putParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT, articles);
-        mContext.sendBroadcast(intent);
+        if (null == articles) {
+            return;
+        }
+        Intent articleListIntent = new Intent(BROADCAST_GET_ARTICLE_LIST_ACTION);
+        articleListIntent.putParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT, articles);
+        mContext.sendBroadcast(articleListIntent);
     }
 
-    private void sendWarningBroadcast(final String isAdd) {
-        Intent intent = new Intent(BROADCAST_WARNING_ACTION);
-        intent.putExtra(KEY_WARNING_INTENT_RESULT, isAdd);
-        mContext.sendBroadcast(intent);
+    private void sendWarningBroadcast(final String warningMessage) {
+        if (null == warningMessage) {
+            return;
+        }
+        Intent warningIntent = new Intent(BROADCAST_WARNING_ACTION);
+        warningIntent.putExtra(KEY_WARNING_INTENT_RESULT, warningMessage);
+        mContext.sendBroadcast(warningIntent);
     }
 }

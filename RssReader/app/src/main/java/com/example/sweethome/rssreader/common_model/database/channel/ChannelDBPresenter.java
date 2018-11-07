@@ -40,14 +40,16 @@ public final class ChannelDBPresenter {
             return;
         }
         try {
+            String newLinkChannel;
             mSQLiteDataBase = mChannelDBHelper.getWritableDatabase();
-            if (!isURLLink(linkChannel)) {
+            newLinkChannel = isURLLink(linkChannel);
+            if (null == newLinkChannel) {
                 sendIsAddBroadcast(false);
                 return;
             }
             ContentValues contentValuesToPut = new ContentValues();
             contentValuesToPut.put(KEY_COLUMN_NAME, nameChannel);
-            contentValuesToPut.put(KEY_COLUMN_LINK, linkChannel);
+            contentValuesToPut.put(KEY_COLUMN_LINK, newLinkChannel);
             mSQLiteDataBase.insertOrThrow(KEY_TABLE_NAME, null, contentValuesToPut);
         } catch (SQLException e) {
             sendIsAddBroadcast(false);
@@ -60,9 +62,9 @@ public final class ChannelDBPresenter {
 
 
     private void sendIsAddBroadcast(final boolean isAdd) {
-        Intent intent = new Intent(BROADCAST_ADD_ACTION);
-        intent.putExtra(KEY_ADD_INTENT_RESULT, isAdd);
-        mContext.sendBroadcast(intent);
+        Intent isAddIntent = new Intent(BROADCAST_ADD_ACTION);
+        isAddIntent.putExtra(KEY_ADD_INTENT_RESULT, isAdd);
+        mContext.sendBroadcast(isAddIntent);
     }
     //endregion
 
@@ -93,32 +95,26 @@ public final class ChannelDBPresenter {
             }
             if (channelList != null) {
                 Collections.sort(channelList);
-                sendGetListBroadcast(channelList);
+                sendGetChannelListBroadcast(channelList);
             }
         }
     }
 
-    private void sendGetListBroadcast(final ArrayList<Channel> channelList) {
+    private void sendGetChannelListBroadcast(final ArrayList<Channel> channelList) {
         if (channelList == null) {
             return;
         }
-        Intent intent = new Intent(BROADCAST_GET_CHANNEL_LIST_ACTION);
-        intent.putParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT, channelList);
-        mContext.sendBroadcast(intent);
+        Intent channelListIntent = new Intent(BROADCAST_GET_CHANNEL_LIST_ACTION);
+        channelListIntent.putParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT, channelList);
+        mContext.sendBroadcast(channelListIntent);
     }
     //endregion
 
-    private boolean isURLLink(final String url) {
-        try {
-            new URL(url);
-            return true;
-        } catch (MalformedURLException e) {
-            return false;
-        }
-    }
-
     //region deleteChannel region
     public void deleteChannelFromDB(final String name) {
+        if (null == name) {
+            return;
+        }
         try {
             mSQLiteDataBase = mChannelDBHelper.getWritableDatabase();
             mSQLiteDataBase.delete(KEY_TABLE_NAME, KEY_COLUMN_NAME + " = '" + name + "'", null);
@@ -132,4 +128,21 @@ public final class ChannelDBPresenter {
         }
     }
     //endregion
+
+
+    private String isURLLink(final String url) {
+        if (null == url) {
+            return null;
+        }
+        StringBuilder linkString = new StringBuilder();
+        try {
+            if (!url.startsWith("http://") || !url.startsWith("https://")) {
+                linkString.append("http://").append(url);
+            }
+            new URL(linkString.toString());
+            return linkString.toString();
+        } catch (MalformedURLException e) {
+            return null;
+        }
+    }
 }

@@ -1,7 +1,9 @@
 package com.example.sweethome.rssreader.screens.news_list.view;
 
+import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +34,13 @@ public final class ArticleListAdapter extends RecyclerView.Adapter<ArticleListAd
         final Article article = mArticleList.get(i);
         ((TextView) newsViewHolder.mArticleTitle.findViewById(R.id.article_name)).setText(article.getTitle());
         ((TextView) newsViewHolder.mArticleLink.findViewById(R.id.article_link)).setText(article.getLinkString());
-        ((TextView) newsViewHolder.mArticleDescription.findViewById(R.id.article_description)).setText(article.getSummary());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            ((TextView) newsViewHolder.mArticleDescription.findViewById(R.id.article_description)).
+                    setText(Html.fromHtml(article.getDescription(),Html.FROM_HTML_MODE_LEGACY,null,null));
+        } else {
+            ((TextView) newsViewHolder.mArticleDescription.findViewById(R.id.article_description)).
+                    setText(Html.fromHtml(article.getDescription()));
+        }
         ((TextView) newsViewHolder.mArticlePublicationDate.findViewById(R.id.article_publication_date)).setText(article.getPublicationDate().toString());
     }
 

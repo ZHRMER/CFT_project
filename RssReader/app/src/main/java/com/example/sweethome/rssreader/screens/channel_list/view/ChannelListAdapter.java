@@ -15,11 +15,10 @@ import com.example.sweethome.rssreader.screens.channel_list.presenter.ChannelLis
 
 import java.util.List;
 
-import static com.example.sweethome.rssreader.common_model.Constants.DELETE_CONTEXT_MENU_ITEM_TEXT;
-
 public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAdapter.ChannelViewHolder> {
     private List<Channel> mChannelList;
     private ChannelListPresenter mChannelListPresenter;
+    private final String DELETE_CONTEXT_MENU_ITEM_TEXT = "Удалить";
 
     ChannelListAdapter(final List<Channel> rssNewsModelList, final ChannelListPresenter channelListPresenter) {
         mChannelList = rssNewsModelList;

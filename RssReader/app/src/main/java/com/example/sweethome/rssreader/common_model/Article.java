@@ -10,16 +10,41 @@ public final class Article implements Parcelable, Comparable<Article> {
     private UUID mUUID;
 
     private String mTitle;
-    private String mSummary;
+    private String mDescription;
 
     private Date mPublicationDate;
 
     private String mLinkString;
     private String mImageLinkString;
 
-    private Article(Parcel in) {
+    public Article(final String title, final String linkString, final String description, final String date) {
+        mUUID = UUID.randomUUID();
+        String DEFAULT_VALUE = "DEFAULT_TEXT";
+        if (null == title) {
+            mTitle = DEFAULT_VALUE;
+        } else {
+            mTitle = title;
+        }
+        if (null == linkString) {
+            mLinkString = DEFAULT_VALUE;
+        } else {
+            mLinkString = linkString;
+        }
+        if (null == description) {
+            mDescription = DEFAULT_VALUE;
+        } else {
+            mDescription = description;
+        }
+        if (null == date) {
+            mPublicationDate = new Date();
+        } else {
+            mPublicationDate = new Date(date);
+        }
+    }
+
+    private Article(final Parcel in) {
         mTitle = in.readString();
-        mSummary = in.readString();
+        mDescription = in.readString();
         mLinkString = in.readString();
         mImageLinkString = in.readString();
         mPublicationDate = new Date(in.readString());
@@ -27,12 +52,12 @@ public final class Article implements Parcelable, Comparable<Article> {
 
     public static final Creator<Article> CREATOR = new Creator<Article>() {
         @Override
-        public Article createFromParcel(Parcel in) {
+        public Article createFromParcel(final Parcel in) {
             return new Article(in);
         }
 
         @Override
-        public Article[] newArray(int size) {
+        public Article[] newArray(final int size) {
             return new Article[size];
         }
     };
@@ -46,8 +71,8 @@ public final class Article implements Parcelable, Comparable<Article> {
         return mTitle;
     }
 
-    public String getSummary() {
-        return mSummary;
+    public String getDescription() {
+        return mDescription;
     }
 
     public Date getPublicationDate() {
@@ -63,30 +88,22 @@ public final class Article implements Parcelable, Comparable<Article> {
     }
     //endregion
 
-    public Article(final String title, final String linkString, final String summary, final String date) {
-        mUUID = UUID.randomUUID();
-        mTitle = title;
-        mSummary = summary;
-        mLinkString = linkString;
-        mPublicationDate = new Date(date);
-    }
-
     @Override
     public int describeContents() {
         return 0;
     }
 
     @Override
-    public void writeToParcel(Parcel dest, int flags) {
+    public void writeToParcel(final Parcel dest, final int flags) {
         dest.writeString(mTitle);
-        dest.writeString(mSummary);
+        dest.writeString(mDescription);
         dest.writeString(mLinkString);
         dest.writeString(mImageLinkString);
         dest.writeString(mPublicationDate.toString());
     }
 
     @Override
-    public int compareTo(Article otherArticle) {
+    public int compareTo(final Article otherArticle) {
         return mPublicationDate.compareTo(otherArticle.mPublicationDate);
     }
 }

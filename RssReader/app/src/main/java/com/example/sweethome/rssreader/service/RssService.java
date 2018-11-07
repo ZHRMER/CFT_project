@@ -7,21 +7,27 @@ import android.os.IBinder;
 
 import com.example.sweethome.rssreader.common_model.Channel;
 import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
-import com.example.sweethome.rssreader.web_work.WebWorker;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.example.sweethome.rssreader.common_model.Constants.NUMBER_OF_THREADS;
 
 public final class RssService extends android.app.Service {
     private ExecutorService mExecutorService;
+    private Context mContext;
     public RssBinder binder = new RssBinder();
+
+
+    public static Intent newIntent(final Context context) {
+        return new Intent(context, RssService.class);
+    }
 
     public void onCreate() {
         super.onCreate();
+        int NUMBER_OF_THREADS = 4;
         mExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
+        mContext = this;
     }
 
     @Override
@@ -30,7 +36,7 @@ public final class RssService extends android.app.Service {
         mExecutorService.shutdownNow();
     }
 
-    public IBinder onBind(Intent arg0) {
+    public IBinder onBind(final Intent arg0) {
         return binder;
     }
 
@@ -42,86 +48,28 @@ public final class RssService extends android.app.Service {
 
     //region deleteChannel region
     public void deleteChannelFromDB(final String channelName) {
-        mExecutorService.execute(new deleteChanelRun(channelName));
-    }
-
-    private class deleteChanelRun implements Runnable {
-        private final ChannelDBPresenter mChannelDBPresenter;
-        private final String mName;
-
-        deleteChanelRun(String name) {
-            mChannelDBPresenter = new ChannelDBPresenter(getApplicationContext());
-            mName = name;
-        }
-
-        @Override
-        public void run() {
-            mChannelDBPresenter.deleteChannelFromDB(mName);
-        }
+        ChannelDBPresenter channelDBPresenter = new ChannelDBPresenter(mContext);
+        mExecutorService.execute(new DeleteChannelTask(channelName, channelDBPresenter));
     }
     //endregion
 
     //region addChannel region
     public void addChannelToDB(final String name, final String url) {
-        mExecutorService.execute(new addChanelRun(name, url));
-    }
-
-    private class addChanelRun implements Runnable {
-        private final ChannelDBPresenter mChannelDBPresenter;
-        private final String mURL;
-        private final String mName;
-
-        addChanelRun(String name, String url) {
-            mChannelDBPresenter = new ChannelDBPresenter(getApplicationContext());
-            mURL = url;
-            mName = name;
-        }
-
-        @Override
-        public void run() {
-            mChannelDBPresenter.addChannelToDB(mName, mURL);
-        }
+        ChannelDBPresenter channelDBPresenter = new ChannelDBPresenter(mContext);
+        mExecutorService.execute(new AddChannelTask(name, url, channelDBPresenter));
     }
     //endregion
 
     //region getChannelList region
     public void getChannelListFromDB() {
-        mExecutorService.execute(new getChannelListRun());
-    }
-
-    private class getChannelListRun implements Runnable {
-        private final ChannelDBPresenter mChannelDBPresenter;
-
-        getChannelListRun() {
-            mChannelDBPresenter = new ChannelDBPresenter(getApplicationContext());
-        }
-
-        @Override
-        public void run() {
-            mChannelDBPresenter.getChannelList();
-        }
+        ChannelDBPresenter channelDBPresenter = new ChannelDBPresenter(mContext);
+        mExecutorService.execute(new GetChannelListTask(channelDBPresenter));
     }
     //endregion
 
     //region downloadArticle region
     public void downloadArticles(final ArrayList<Channel> channelArrayList) {
-        mExecutorService.execute(new downloadArticleRun(channelArrayList));
-    }
-
-    private class downloadArticleRun implements Runnable {
-        private ArrayList<Channel> mChannelArrayList;
-        private Context mContext;
-
-        downloadArticleRun(final ArrayList<Channel> channelArrayList) {
-            mChannelArrayList = channelArrayList;
-            mContext = getApplicationContext();
-        }
-
-        @Override
-        public void run() {
-            WebWorker worker = new WebWorker(mChannelArrayList, mContext);
-            worker.downloadArticle();
-        }
+        mExecutorService.execute(new DownloadArticlesTask(channelArrayList, mContext));
     }
     //endregion
 

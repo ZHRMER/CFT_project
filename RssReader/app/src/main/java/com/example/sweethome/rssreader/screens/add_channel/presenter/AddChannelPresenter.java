@@ -40,12 +40,12 @@ public final class AddChannelPresenter {
                 }
             }
         };
-        IntentFilter intFilt = new IntentFilter(BROADCAST_ADD_ACTION);
-        mContext.registerReceiver(mBroadcastReceiver, intFilt);
+        IntentFilter broadcastAddIntentFilter = new IntentFilter(BROADCAST_ADD_ACTION);
+        mContext.registerReceiver(mBroadcastReceiver, broadcastAddIntentFilter);
     }
 
     private void bindToService() {
-        Intent intent = new Intent(mContext, RssService.class);
+        Intent rssServiceIntent = RssService.newIntent(mContext);
         mServiceConnection = new ServiceConnection() {
             @Override
             public void onServiceConnected(final ComponentName name, final IBinder binder) {
@@ -56,7 +56,7 @@ public final class AddChannelPresenter {
             public void onServiceDisconnected(final ComponentName name) {
             }
         };
-        mContext.bindService(intent, mServiceConnection, Context.BIND_AUTO_CREATE);
+        mContext.bindService(rssServiceIntent, mServiceConnection, Context.BIND_AUTO_CREATE);
     }
 
     public void onAddLinkButtonClick() {
