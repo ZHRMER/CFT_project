@@ -74,7 +74,7 @@ public final class ChannelListPresenter {
         registerBroadcastReceiver();
     }
 
-    public void deleteChannel(final String channelName) {
-        mRssService.deleteChannelFromDB(channelName);
+    public void deleteChannel(final String channelLink) {
+        mRssService.deleteChannelFromDB(channelLink);
     }
 }

@@ -1,4 +1,4 @@
-package com.example.sweethome.rssreader.screens.news_list.presenter;
+package com.example.sweethome.rssreader.screens.articles_list.presenter;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -17,11 +17,13 @@ import java.util.ArrayList;
 
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_ARTICLE_LIST_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_CHANNEL_LIST_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_UPDATE_CHANNELS_LIST_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_ACTION;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_INTENT_RESULT;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_FROM_DB_INTENT_RESULT;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHANNEL_LIST_INTENT_RESULT;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
-
 
 public final class NewsListPresenter {
     private Context mContext;
@@ -42,6 +44,7 @@ public final class NewsListPresenter {
             @Override
             public void onServiceConnected(final ComponentName name, final IBinder binder) {
                 mRssService = ((RssService.RssBinder) binder).getService();
+                showArticles();
             }
 
             @Override
@@ -56,7 +59,7 @@ public final class NewsListPresenter {
             @Override
             public void onReceive(final Context context, final Intent intent) {
                 String actionIntent = intent.getAction();
-                if (actionIntent != null) {
+                if (null != actionIntent) {
                     switch (actionIntent) {
                         case BROADCAST_GET_CHANNEL_LIST_ACTION: {
                             channelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
@@ -64,8 +67,14 @@ public final class NewsListPresenter {
                             break;
                         }
                         case BROADCAST_GET_ARTICLE_LIST_ACTION: {
-                            if (intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT) != null) {
-                                mINewsListPresenterContract.setArticleListAdapter(intent.<Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_INTENT_RESULT));
+                            if (null != intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT)) {
+                                mINewsListPresenterContract.addArticlesToListAdapter(intent.
+                                        <Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT));
+                                saveArticles(intent.<Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT));
+                            }
+                            if (null != intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_DB_INTENT_RESULT)) {
+                                mINewsListPresenterContract.setArticlesListToListAdapter(intent.
+                                        <Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_DB_INTENT_RESULT));
                             }
                             break;
                         }
@@ -74,16 +83,27 @@ public final class NewsListPresenter {
                             mINewsListPresenterContract.stopRefresh();
                             break;
                         }
+                        case BROADCAST_UPDATE_CHANNELS_LIST_ACTION: {
+                            channelArrayList = intent.getParcelableArrayListExtra(KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT);
+                            updateChannelsList(channelArrayList);
+                            break;
+                        }
+                        default: {
+                            mINewsListPresenterContract.stopRefresh();
+                        }
                     }
                 }
             }
         };
         IntentFilter getChannelIntentFilter = new IntentFilter(BROADCAST_GET_CHANNEL_LIST_ACTION);
-        IntentFilter getArticleIntentFilter = new IntentFilter(BROADCAST_GET_ARTICLE_LIST_ACTION);
-        IntentFilter warningIntentFilter = new IntentFilter(BROADCAST_WARNING_ACTION);
+        getChannelIntentFilter.addAction(BROADCAST_GET_ARTICLE_LIST_ACTION);
+        getChannelIntentFilter.addAction(BROADCAST_WARNING_ACTION);
+        getChannelIntentFilter.addAction(BROADCAST_UPDATE_CHANNELS_LIST_ACTION);
         mContext.registerReceiver(mBroadcastReceiver, getChannelIntentFilter);
-        mContext.registerReceiver(mBroadcastReceiver, getArticleIntentFilter);
-        mContext.registerReceiver(mBroadcastReceiver, warningIntentFilter);
+    }
+
+    private void updateChannelsList(final ArrayList<Channel> channels) {
+        mRssService.updateChannels(channels);
     }
 
     private void downloadArticles(final ArrayList<Channel> channels) {
@@ -94,7 +114,15 @@ public final class NewsListPresenter {
         mRssService.getChannelListFromDB();
     }
 
-    public void showArticles() {
+    private void showArticles() {
+        mRssService.getArticlesListFromDB();
+    }
+
+    private void saveArticles(ArrayList<Article> articles) {
+        mRssService.addArticlesToDB(articles);
+    }
+
+    public void updateArticles() {
         getChannelList();
     }
 

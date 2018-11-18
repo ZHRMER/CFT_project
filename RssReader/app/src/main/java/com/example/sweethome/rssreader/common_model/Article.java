@@ -4,22 +4,23 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 import java.util.Date;
-import java.util.UUID;
 
 public final class Article implements Parcelable, Comparable<Article> {
-    private UUID mUUID;
-
+    private static final String DEFAULT_VALUE = "DEFAULT_TEXT";
+    private String mChannelLink;
     private String mTitle;
     private String mDescription;
-
     private Date mPublicationDate;
-
     private String mLinkString;
     private String mImageLinkString;
 
-    public Article(final String title, final String linkString, final String description, final String date) {
-        mUUID = UUID.randomUUID();
-        String DEFAULT_VALUE = "DEFAULT_TEXT";
+    public Article(final String title, final String linkString, final String description, final String date,
+                   final String channelLink) {
+        if (null == channelLink) {
+            mChannelLink = DEFAULT_VALUE;
+        } else {
+            mChannelLink = channelLink;
+        }
         if (null == title) {
             mTitle = DEFAULT_VALUE;
         } else {
@@ -48,6 +49,7 @@ public final class Article implements Parcelable, Comparable<Article> {
         mLinkString = in.readString();
         mImageLinkString = in.readString();
         mPublicationDate = new Date(in.readString());
+        mChannelLink = in.readString();
     }
 
     public static final Creator<Article> CREATOR = new Creator<Article>() {
@@ -63,12 +65,13 @@ public final class Article implements Parcelable, Comparable<Article> {
     };
 
     //region Getters region
-    public UUID getUUID() {
-        return mUUID;
-    }
-
     public String getTitle() {
         return mTitle;
+    }
+
+
+    public String getChannelLink() {
+        return mChannelLink;
     }
 
     public String getDescription() {
@@ -81,10 +84,6 @@ public final class Article implements Parcelable, Comparable<Article> {
 
     public String getLinkString() {
         return mLinkString;
-    }
-
-    public String getImageLinkString() {
-        return mImageLinkString;
     }
     //endregion
 
@@ -100,6 +99,7 @@ public final class Article implements Parcelable, Comparable<Article> {
         dest.writeString(mLinkString);
         dest.writeString(mImageLinkString);
         dest.writeString(mPublicationDate.toString());
+        dest.writeString(mChannelLink);
     }
 
     @Override

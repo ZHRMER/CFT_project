@@ -1,4 +1,4 @@
-package com.example.sweethome.rssreader.service;
+package com.example.sweethome.rssreader.service.tasks;
 
 import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
 
@@ -7,7 +7,7 @@ public class AddChannelTask implements Runnable {
     private final String mURL;
     private final String mName;
 
-    AddChannelTask(final String name, final String url, final ChannelDBPresenter channelDBPresenter) {
+    public AddChannelTask(final String name, final String url, final ChannelDBPresenter channelDBPresenter) {
         mChannelDBPresenter = channelDBPresenter;
         mURL = url;
         mName = name;

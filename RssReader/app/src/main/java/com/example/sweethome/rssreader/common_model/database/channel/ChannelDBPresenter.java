@@ -13,15 +13,18 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_ADD_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_CHANNEL_LIST_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ADD_INTENT_RESULT;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_LINK;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_NAME;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLES_TABLE;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_CHANNELS_TABLE;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_ARTICLE_CHANNEL_LINK;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_CHANNEL_LAST_ARTICLE_DATE;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_CHANNEL_LINK;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_CHANNEL_NAME;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHANNEL_LIST_INTENT_RESULT;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_TABLE_NAME;
-
 
 public final class ChannelDBPresenter {
     private final ChannelDBHelper mChannelDBHelper;
@@ -48,14 +51,16 @@ public final class ChannelDBPresenter {
                 return;
             }
             ContentValues contentValuesToPut = new ContentValues();
-            contentValuesToPut.put(KEY_COLUMN_NAME, nameChannel);
-            contentValuesToPut.put(KEY_COLUMN_LINK, newLinkChannel);
-            mSQLiteDataBase.insertOrThrow(KEY_TABLE_NAME, null, contentValuesToPut);
+            contentValuesToPut.put(KEY_COLUMN_CHANNEL_NAME, nameChannel);
+            contentValuesToPut.put(KEY_COLUMN_CHANNEL_LINK, newLinkChannel);
+            contentValuesToPut.put(KEY_COLUMN_CHANNEL_LAST_ARTICLE_DATE, new Date(0).toString());
+            mSQLiteDataBase.insertOrThrow(KEY_CHANNELS_TABLE, null, contentValuesToPut);
         } catch (SQLException e) {
+            e.printStackTrace();
             sendIsAddBroadcast(false);
             return;
         } finally {
-            mSQLiteDataBase.close();
+            mChannelDBHelper.close();
         }
         sendIsAddBroadcast(true);
     }
@@ -74,13 +79,15 @@ public final class ChannelDBPresenter {
         ArrayList<Channel> channelList = null;
         try {
             mSQLiteDataBase = mChannelDBHelper.getReadableDatabase();
-            cursor = mSQLiteDataBase.query(KEY_TABLE_NAME, null, null, null, null, null, null);
+            cursor = mSQLiteDataBase.query(KEY_CHANNELS_TABLE, null, null, null, null, null, null);
             channelList = new ArrayList<>();
             if (cursor.moveToFirst()) {
-                int nameColInd = cursor.getColumnIndex(KEY_COLUMN_NAME);
-                int emailColInd = cursor.getColumnIndex(KEY_COLUMN_LINK);
+                int nameColInd = cursor.getColumnIndex(KEY_COLUMN_CHANNEL_NAME);
+                int emailColInd = cursor.getColumnIndex(KEY_COLUMN_CHANNEL_LINK);
+                int lastArticleDateColumnIndex = cursor.getColumnIndex(KEY_COLUMN_CHANNEL_LAST_ARTICLE_DATE);
                 do {
-                    Channel channel = new Channel(cursor.getString(nameColInd), cursor.getString(emailColInd));
+                    Channel channel = new Channel(cursor.getString(nameColInd), cursor.getString(emailColInd),
+                            cursor.getString(lastArticleDateColumnIndex));
                     channelList.add(channel);
                 } while (cursor.moveToNext());
             }
@@ -90,9 +97,7 @@ public final class ChannelDBPresenter {
             if (cursor != null) {
                 cursor.close();
             }
-            if (mSQLiteDataBase != null) {
-                mSQLiteDataBase.close();
-            }
+            mChannelDBHelper.close();
             if (channelList != null) {
                 Collections.sort(channelList);
                 sendGetChannelListBroadcast(channelList);
@@ -111,33 +116,55 @@ public final class ChannelDBPresenter {
     //endregion
 
     //region deleteChannel region
-    public void deleteChannelFromDB(final String name) {
-        if (null == name) {
+    public void deleteChannelFromDB(final String link) {
+        if (null == link) {
             return;
         }
         try {
             mSQLiteDataBase = mChannelDBHelper.getWritableDatabase();
-            mSQLiteDataBase.delete(KEY_TABLE_NAME, KEY_COLUMN_NAME + " = '" + name + "'", null);
+            mSQLiteDataBase.delete(KEY_CHANNELS_TABLE, KEY_COLUMN_CHANNEL_LINK + " = '" + link + "'", null);
+            mSQLiteDataBase.delete(KEY_ARTICLES_TABLE, KEY_COLUMN_ARTICLE_CHANNEL_LINK + " = '" + link + "'", null);
         } catch (SQLException e) {
             //TODO handle SQLException
         } finally {
             getChannelList();
-            if (mSQLiteDataBase != null) {
-                mSQLiteDataBase.close();
-            }
+            mChannelDBHelper.close();
         }
     }
     //endregion
 
+    //region updateChannelsList region
+    public void updateChannelsList(ArrayList<Channel> channelArrayList) {
+        if (null == channelArrayList) {
+            return;
+        }
+        try {
+            mSQLiteDataBase = mChannelDBHelper.getWritableDatabase();
+            ContentValues channelValueUpdate = new ContentValues();
+            for (Channel currentChannel : channelArrayList) {
+                channelValueUpdate.put(KEY_COLUMN_CHANNEL_LAST_ARTICLE_DATE, currentChannel.getLastArticlePubDate());
+                int rowUpdate = mSQLiteDataBase.update(KEY_CHANNELS_TABLE, channelValueUpdate,
+                        KEY_COLUMN_CHANNEL_LINK + " = '" + currentChannel.getLinkString() + "'", null);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            //TODO handle SQLException
+        } finally {
+            mChannelDBHelper.close();
+        }
+    }
+    //endregion
 
     private String isURLLink(final String url) {
-        if (null == url) {
+        if (null == url || "".equalsIgnoreCase(url)) {
             return null;
         }
         StringBuilder linkString = new StringBuilder();
         try {
-            if (!url.startsWith("http://") || !url.startsWith("https://")) {
+            if (!url.startsWith("http://") && !url.startsWith("https://")) {
                 linkString.append("http://").append(url);
+            } else {
+                linkString.append(url);
             }
             new URL(linkString.toString());
             return linkString.toString();

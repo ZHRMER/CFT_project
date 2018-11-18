@@ -32,8 +32,8 @@ public final class ChannelListActivity extends AppCompatActivity {
 
     @Override
     protected void onPause() {
-        mChannelListView.onPause();
         super.onPause();
+        mChannelListView.onPause();
     }
 
     @Override

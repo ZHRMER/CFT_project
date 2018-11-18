@@ -10,14 +10,10 @@ public final class Channel implements Parcelable, Comparable<Channel> {
     private final UUID mUUID;
     private final String mName;
     private final String mLinkString;
+
     private String mLastArticlePubDate;
 
-
-    public void setLastArticlePubDate(final String lastArticlePubDate) {
-        mLastArticlePubDate = lastArticlePubDate;
-    }
-
-    public Channel(final String name, final String linkString) {
+    public Channel(final String name, final String linkString, final String lastArticlePubDate) {
         String DEFAULT_VALUE = "DEFAULT_TEXT";
         mUUID = UUID.randomUUID();
         if (null == name) {
@@ -30,7 +26,11 @@ public final class Channel implements Parcelable, Comparable<Channel> {
         } else {
             mLinkString = linkString;
         }
-        mLastArticlePubDate =new Date().toString();
+        if (null == lastArticlePubDate) {
+            mLastArticlePubDate = new Date(0).toString();
+        } else {
+            mLastArticlePubDate = lastArticlePubDate;
+        }
     }
 
     //region Parcelable methods region
@@ -38,7 +38,7 @@ public final class Channel implements Parcelable, Comparable<Channel> {
         mUUID = UUID.fromString(in.readString());
         mName = in.readString();
         mLinkString = in.readString();
-        mLastArticlePubDate =in.readString();
+        mLastArticlePubDate = in.readString();
     }
 
     public static final Creator<Channel> CREATOR = new Creator<Channel>() {
@@ -72,6 +72,10 @@ public final class Channel implements Parcelable, Comparable<Channel> {
         return mUUID;
     }
 
+    public String getLastArticlePubDate() {
+        return mLastArticlePubDate;
+    }
+
     public String getName() {
         return mName;
     }
@@ -85,4 +89,8 @@ public final class Channel implements Parcelable, Comparable<Channel> {
         return mName.compareTo(otherChannel.mName);
     }
     //endregion
+
+    public void setLastArticlePubDate(final String lastArticlePubDate) {
+        mLastArticlePubDate = lastArticlePubDate;
+    }
 }

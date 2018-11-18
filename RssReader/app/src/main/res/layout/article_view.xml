@@ -14,10 +14,6 @@
         style="@style/ArticleViewNameTextView" />
 
     <TextView
-        android:id="@+id/article_description"
-        style="@style/ArticleViewDescriptionTextView" />
-
-    <TextView
         android:id="@+id/article_link"
         style="@style/ArticleViewLinkTextView" />
 

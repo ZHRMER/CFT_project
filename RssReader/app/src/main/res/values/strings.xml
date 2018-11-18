@@ -1,18 +1,23 @@
 <resources>
     <string name="app_name">RssReader</string>
-    <string name="add_text">Добавить источник</string>
-    <string name="list_links_text">Список источников</string>
+
+    <string name="add_channel_Navigation_View">Добавить канал</string>
+    <string name="channel_list_Navigation_View">Список каналов</string>
+
     <string name="settings">Настройки</string>
     <string name="navigation_drawer_open">open</string>
     <string name="navigation_drawer_close">close</string>
+
     <string name="add_links_TextView_hint">Адрес канала</string>
     <string name="add_links_Button_text">Добавить</string>
     <string name="add_name_TextView_hint">Название канала</string>
     <string name="add_channel_successful_toast">Канал добавлен</string>
     <string name="add_channel_fail_toast">Канал уже существует или неправильный адрес канала</string>
+
     <string name="url_warning">Не URL адрес.</string>
     <string name="io_warning">IOException(неправильный адрес или нет интернета).</string>
     <string name="xml_pullparser_warning">Проблема при парсинге RSS канала.</string>
     <string name="no_channel_warning">Нет каналов, чтобы загрузить статьи.</string>
+    <string name="no_internet">Включите Wi-Fi или Internet</string>
 
 </resources>

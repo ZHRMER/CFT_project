@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.widget.Toast;
 
 import com.example.sweethome.rssreader.R;
 import com.example.sweethome.rssreader.service.RssService;
@@ -34,9 +33,9 @@ public final class AddChannelPresenter {
             public void onReceive(final Context context, final Intent intent) {
                 boolean isAdd = intent.getBooleanExtra(KEY_ADD_INTENT_RESULT, false);
                 if (isAdd) {
-                    Toast.makeText(mContext, mContext.getResources().getText(R.string.add_channel_successful_toast), Toast.LENGTH_SHORT).show();
+                    mView.setSuccessfulMessage(mContext.getResources().getText(R.string.add_channel_successful_toast).toString());
                 } else {
-                    Toast.makeText(mContext, mContext.getResources().getText(R.string.add_channel_fail_toast), Toast.LENGTH_SHORT).show();
+                    mView.setWarningMessage(mContext.getResources().getText(R.string.add_channel_fail_toast).toString());
                 }
             }
         };

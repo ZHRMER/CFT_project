@@ -1,4 +1,4 @@
-package com.example.sweethome.rssreader.service;
+package com.example.sweethome.rssreader.service.tasks;
 
 import android.content.Context;
 
@@ -11,7 +11,7 @@ public class DownloadArticlesTask implements Runnable {
     private ArrayList<Channel> mChannelArrayList;
     private Context mContext;
 
-    DownloadArticlesTask(final ArrayList<Channel> channelArrayList, final Context context) {
+    public DownloadArticlesTask(final ArrayList<Channel> channelArrayList, final Context context) {
         mChannelArrayList = channelArrayList;
         mContext = context;
     }

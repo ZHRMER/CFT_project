@@ -13,6 +13,10 @@
         android:id="@+id/channel_link"
         style="@style/ChannelViewLinkTextView" />
 
+    <TextView
+        android:id="@+id/channel_last_article_date"
+        style="@style/ChannelViewLinkTextView" />
+
     <View
         android:id="@+id/delimiter"
         style="@style/ChannelViewDelimiter" />

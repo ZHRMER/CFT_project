@@ -44,7 +44,7 @@ public class ChannelListView implements IChannelListPresenterContract {
         mAppCompatActivity.setSupportActionBar(toolbar);
         ActionBar actionBar = mAppCompatActivity.getSupportActionBar();
         if (actionBar != null) {
-            actionBar.setDisplayShowTitleEnabled(false);
+            actionBar.setTitle(R.string.channel_list_Navigation_View);
             actionBar.setDisplayHomeAsUpEnabled(true);
             actionBar.setDisplayShowHomeEnabled(true);
         }

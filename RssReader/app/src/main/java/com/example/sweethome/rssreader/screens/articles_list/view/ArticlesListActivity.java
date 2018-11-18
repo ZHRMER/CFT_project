@@ -1,4 +1,4 @@
-package com.example.sweethome.rssreader.screens.news_list.view;
+package com.example.sweethome.rssreader.screens.articles_list.view;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
@@ -8,14 +8,14 @@ import android.view.Menu;
 
 import com.example.sweethome.rssreader.R;
 
-public final class NewsListActivity extends AppCompatActivity {
+public final class ArticlesListActivity extends AppCompatActivity {
 
-    private NewsListView mNewsListView;
+    private ArticlesListView mArticlesListView;
 
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-        mNewsListView.onSaveInstanceSaved(outState);
+        mArticlesListView.onSaveInstanceSaved(outState);
     }
 
     @Override
@@ -23,26 +23,26 @@ public final class NewsListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_news_list);
 
-        mNewsListView = new NewsListView(this);
-        mNewsListView.onCreate(savedInstanceState);
+        mArticlesListView = new ArticlesListView(this);
+        mArticlesListView.onCreate(savedInstanceState);
     }
 
     @Override
     protected void onResume() {
-        mNewsListView.onResume(this);
         super.onResume();
+        mArticlesListView.onResume(this);
     }
 
     @Override
     protected void onPause() {
-        mNewsListView.onPause();
         super.onPause();
+        mArticlesListView.onPause();
     }
 
 
     @Override
     public void onBackPressed() {
-        if (mNewsListView.onBackPressed()) {
+        if (mArticlesListView.onBackPressed()) {
             super.onBackPressed();
         }
     }
@@ -50,13 +50,13 @@ public final class NewsListActivity extends AppCompatActivity {
     @Override
     public void onConfigurationChanged(final Configuration newConfig) {
         super.onConfigurationChanged(newConfig);
-        mNewsListView.onConfigurationChanged();
+        mArticlesListView.onConfigurationChanged();
     }
 
     @Override
     protected void onPostCreate(@Nullable final Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
-        mNewsListView.onPostCreate();
+        mArticlesListView.onPostCreate();
     }
 
     @Override

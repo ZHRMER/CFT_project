@@ -8,10 +8,10 @@
         <item
             android:id="@+id/add_links_item"
             android:icon="@android:drawable/ic_input_add"
-            android:title="@string/add_text" />
+            android:title="@string/add_channel_Navigation_View" />
         <item
             android:id="@+id/list_links"
             android:icon="@android:drawable/ic_menu_sort_by_size"
-            android:title="@string/list_links_text" />
+            android:title="@string/channel_list_Navigation_View" />
     </group>
 </menu>

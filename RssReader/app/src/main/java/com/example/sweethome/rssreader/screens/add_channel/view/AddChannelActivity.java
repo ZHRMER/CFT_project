@@ -17,7 +17,7 @@ public final class AddChannelActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_channel);
 
         mAddChannelView = new AddChannelView(this);
-        mAddChannelView.onCreate();
+        mAddChannelView.onCreate(savedInstanceState);
 
     }
 
@@ -26,15 +26,21 @@ public final class AddChannelActivity extends AppCompatActivity {
     }
 
     @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        mAddChannelView.onSaveInstanceSaved(outState);
+    }
+
+    @Override
     protected void onResume() {
-        mAddChannelView.onResume(this);
         super.onResume();
+        mAddChannelView.onResume(this);
     }
 
     @Override
     protected void onPause() {
-        mAddChannelView.onPause();
         super.onPause();
+        mAddChannelView.onPause();
     }
 
     @Override

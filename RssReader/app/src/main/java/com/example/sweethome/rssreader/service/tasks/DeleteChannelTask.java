@@ -1,18 +1,19 @@
-package com.example.sweethome.rssreader.service;
+package com.example.sweethome.rssreader.service.tasks;
 
 import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
 
 public class DeleteChannelTask implements Runnable {
     private final ChannelDBPresenter mChannelDBPresenter;
-    private final String mName;
+    private final String mChannelLink;
 
-    DeleteChannelTask(final String name, final ChannelDBPresenter channelDBPresenter) {
+    public DeleteChannelTask(final String link, final ChannelDBPresenter channelDBPresenter) {
         mChannelDBPresenter = channelDBPresenter;
-        mName = name;
+        mChannelLink = link;
     }
+
 
     @Override
     public void run() {
-        mChannelDBPresenter.deleteChannelFromDB(mName);
+        mChannelDBPresenter.deleteChannelFromDB(mChannelLink);
     }
 }

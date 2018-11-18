@@ -4,4 +4,8 @@ public interface IAddChannelPresenterContract {
     String getLink();
 
     String getName();
+
+    void setWarningMessage(final String message);
+
+    void setSuccessfulMessage(final String message);
 }

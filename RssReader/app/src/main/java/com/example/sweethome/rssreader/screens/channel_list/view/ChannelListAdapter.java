@@ -42,7 +42,7 @@ public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAd
                 menu.getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                     @Override
                     public boolean onMenuItemClick(MenuItem item) {
-                        mChannelListPresenter.deleteChannel(newsViewHolder.mChannelName.getText().toString());
+                        mChannelListPresenter.deleteChannel(newsViewHolder.mChannelLink.getText().toString());
                         return false;
                     }
                 });
@@ -51,6 +51,7 @@ public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAd
         final Channel rssNewsModel = mChannelList.get(position);
         ((TextView) newsViewHolder.mChannelName.findViewById(R.id.channel_name)).setText(rssNewsModel.getName());
         ((TextView) newsViewHolder.mChannelLink.findViewById(R.id.channel_link)).setText(rssNewsModel.getLinkString());
+        ((TextView) newsViewHolder.mChannelLastArticleDate.findViewById(R.id.channel_last_article_date)).setText(rssNewsModel.getLastArticlePubDate());
     }
 
     @Override
@@ -61,11 +62,13 @@ public final class ChannelListAdapter extends RecyclerView.Adapter<ChannelListAd
     class ChannelViewHolder extends RecyclerView.ViewHolder {
         private TextView mChannelName;
         private TextView mChannelLink;
+        private TextView mChannelLastArticleDate;
 
         ChannelViewHolder(@NonNull final View itemView) {
             super(itemView);
             mChannelName = itemView.findViewById(R.id.channel_name);
             mChannelLink = itemView.findViewById(R.id.channel_link);
+            mChannelLastArticleDate = itemView.findViewById(R.id.channel_last_article_date);
         }
     }
 }

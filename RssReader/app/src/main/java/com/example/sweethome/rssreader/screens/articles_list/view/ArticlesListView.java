@@ -1,4 +1,4 @@
-package com.example.sweethome.rssreader.screens.news_list.view;
+package com.example.sweethome.rssreader.screens.articles_list.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,17 +18,19 @@ import android.view.MenuItem;
 import com.example.sweethome.rssreader.R;
 import com.example.sweethome.rssreader.common_model.Article;
 import com.example.sweethome.rssreader.screens.add_channel.view.AddChannelActivity;
+import com.example.sweethome.rssreader.screens.articles_list.presenter.INewsListPresenterContract;
+import com.example.sweethome.rssreader.screens.articles_list.presenter.NewsListPresenter;
 import com.example.sweethome.rssreader.screens.channel_list.view.ChannelListActivity;
-import com.example.sweethome.rssreader.screens.news_list.presenter.INewsListPresenterContract;
-import com.example.sweethome.rssreader.screens.news_list.presenter.NewsListPresenter;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLE_IS_REFRESH;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLE_LIST;
 
 
-final class NewsListView implements INewsListPresenterContract, Toolbar.OnMenuItemClickListener,
-        NavigationView.OnNavigationItemSelectedListener{
+final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMenuItemClickListener,
+        NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private AppCompatActivity mAppCompatActivity;
@@ -39,18 +41,21 @@ final class NewsListView implements INewsListPresenterContract, Toolbar.OnMenuIt
     private ArticleListAdapter articleListAdapter;
     private RecyclerView mRecyclerView;
 
-    NewsListView(final AppCompatActivity appCompatActivity) {
+    ArticlesListView(final AppCompatActivity appCompatActivity) {
         mAppCompatActivity = appCompatActivity;
         mDrawerLayout = mAppCompatActivity.findViewById(R.id.drawer_layout);
     }
 
-    void onSaveInstanceSaved(final Bundle outState){
+    void onSaveInstanceSaved(final Bundle outState) {
         outState.putParcelableArrayList(KEY_ARTICLE_LIST, articles);
+        outState.putBoolean(KEY_ARTICLE_IS_REFRESH, mSwipeRefreshLayout.isRefreshing());
     }
 
-    void onCreate(final Bundle savedInstanceState){
+    void onCreate(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             articles = savedInstanceState.getParcelableArrayList(KEY_ARTICLE_LIST);
+            mSwipeRefreshLayout = mAppCompatActivity.findViewById(R.id.swipe_refresh_layout);
+            mSwipeRefreshLayout.setRefreshing(savedInstanceState.getBoolean(KEY_ARTICLE_IS_REFRESH));
         } else {
             articles = new ArrayList<>();
         }
@@ -76,7 +81,7 @@ final class NewsListView implements INewsListPresenterContract, Toolbar.OnMenuIt
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                mNewsListPresenter.showArticles();
+                mNewsListPresenter.updateArticles();
             }
         });
         mRecyclerView = mAppCompatActivity.findViewById(R.id.news_recycler_view);
@@ -85,13 +90,13 @@ final class NewsListView implements INewsListPresenterContract, Toolbar.OnMenuIt
         mRecyclerView.setAdapter(articleListAdapter);
     }
 
-    void onResume(final AppCompatActivity appCompatActivity){
-        mAppCompatActivity=appCompatActivity;
+    void onResume(final AppCompatActivity appCompatActivity) {
+        mAppCompatActivity = appCompatActivity;
         mNewsListPresenter.attach(mAppCompatActivity, this);
     }
 
-    void onPause(){
-        mAppCompatActivity=null;
+    void onPause() {
+        mAppCompatActivity = null;
         mNewsListPresenter.detach();
     }
 
@@ -140,7 +145,16 @@ final class NewsListView implements INewsListPresenterContract, Toolbar.OnMenuIt
     }
 
     @Override
-    public void setArticleListAdapter(final ArrayList<Article> articleArrayList) {
+    public void addArticlesToListAdapter(final ArrayList<Article> articleArrayList) {
+        articles.addAll(articleArrayList);
+        Collections.sort(articles);
+        articleListAdapter = new ArticleListAdapter(articles);
+        mRecyclerView.setAdapter(articleListAdapter);
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    @Override
+    public void setArticlesListToListAdapter(ArrayList<Article> articleArrayList) {
         articles = articleArrayList;
         articleListAdapter = new ArticleListAdapter(articles);
         mRecyclerView.setAdapter(articleListAdapter);

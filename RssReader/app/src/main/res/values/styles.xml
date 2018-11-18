@@ -25,6 +25,8 @@
     <!--region activity_add_channel_xml-->
     <style name="ActivityAddChannelTextVew">
         <item name="android:textSize">24sp</item>
+        <item name="android:textColor">@color/colorBlack</item>
+        <item name="android:paddingLeft">5dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
 
@@ -32,6 +34,7 @@
 
     <style name="ActivityAddChannelEditText">
         <item name="android:ems">10</item>
+        <item name="android:paddingLeft">5dp</item>
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -40,6 +43,14 @@
     <style name="ActivityAddChannelButton">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:textColor">@color/colorBlack</item>
+    </style>
+
+    <style name="ActivityAddChannelInfoTextView">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:textSize">14sp</item>
     </style>
     <!--endregion-->
 
@@ -47,18 +58,23 @@
     <style name="ChannelViewNameTextView">
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:textColor">@color/colorBlack</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
 
     <style name="ChannelViewLinkTextView">
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:textColor">@color/colorBlack</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
     </style>
 
     <style name="ChannelViewDelimiter">
         <item name="android:background">@android:color/darker_gray</item>
-        <item name="android:layout_height">1dp</item>
+        <item name="android:layout_height">2dp</item>
+        <item name="android:paddingBottom">5dp</item>
         <item name="android:layout_width">match_parent</item>
     </style>
     <!--endregion-->
@@ -99,6 +115,8 @@
     <style name="ArticleViewPubDateTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingLeft">5dp</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">italic</item>
     </style>
@@ -106,6 +124,7 @@
     <style name="ArticleViewNameTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingLeft">5dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -113,14 +132,10 @@
     <style name="ArticleViewLinkTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
+        <item name="android:paddingLeft">5dp</item>
         <item name="android:autoLink">web</item>
-    </style>
-
-    <style name="ArticleViewDescriptionTextView">
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:maxLines">4</item>
         <item name="android:ellipsize">end</item>
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:singleLine">true</item>
     </style>
     <!--endregion-->
 
