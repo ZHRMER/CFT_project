@@ -21,7 +21,7 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_ARTICLE_TITLE;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_FROM_DB_INTENT_RESULT;
 
-public class ArticleDBPresenter {
+public final class ArticleDBPresenter {
     private final ArticleDBHelper mArticleDBHelper;
     private SQLiteDatabase mSQLiteDataBase;
     private final Context mContext;
@@ -57,12 +57,18 @@ public class ArticleDBPresenter {
     //endregion
 
     //region getArticlesList region
-    public void getArticlesList() {
+    public void getArticlesList(final String channelLink) {
         Cursor cursor = null;
         ArrayList<Article> articleArrayList = null;
         try {
             mSQLiteDataBase = mArticleDBHelper.getReadableDatabase();
-            cursor = mSQLiteDataBase.query(KEY_ARTICLES_TABLE, null, null, null, null, null, null);
+            if ("".equals(channelLink)) {
+                cursor = mSQLiteDataBase.query(KEY_ARTICLES_TABLE, null, null, null,
+                        null, null, null);
+            } else {
+                cursor = mSQLiteDataBase.query(KEY_ARTICLES_TABLE, null, KEY_COLUMN_ARTICLE_CHANNEL_LINK + " = '" + channelLink + "'",
+                        null, null, null, null);
+            }
             articleArrayList = new ArrayList<>();
             if (cursor.moveToFirst()) {
                 int articleTitleColumnIndex = cursor.getColumnIndex(KEY_COLUMN_ARTICLE_TITLE);
@@ -78,6 +84,7 @@ public class ArticleDBPresenter {
                 } while (cursor.moveToNext());
             }
         } catch (SQLException e) {
+            e.printStackTrace();
             //TODO if cant get channel list
         } finally {
             if (cursor != null) {

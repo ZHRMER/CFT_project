@@ -13,33 +13,43 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.sweethome.rssreader.R;
 import com.example.sweethome.rssreader.common_model.Article;
+import com.example.sweethome.rssreader.common_model.Channel;
 import com.example.sweethome.rssreader.screens.add_channel.view.AddChannelActivity;
+import com.example.sweethome.rssreader.screens.articles_list.presenter.ChannelListPresenter;
+import com.example.sweethome.rssreader.screens.articles_list.presenter.IChannelListPresenterContract;
 import com.example.sweethome.rssreader.screens.articles_list.presenter.INewsListPresenterContract;
 import com.example.sweethome.rssreader.screens.articles_list.presenter.NewsListPresenter;
-import com.example.sweethome.rssreader.screens.channel_list.view.ChannelListActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLE_IS_REFRESH;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLE_LIST;
 
 
 final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMenuItemClickListener,
-        NavigationView.OnNavigationItemSelectedListener {
-
+        NavigationView.OnNavigationItemSelectedListener, IChannelListPresenterContract {
+    private static final String DELETE_CONTEXT_MENU_ITEM_TEXT = "Удалить";
     private DrawerLayout mDrawerLayout;
     private AppCompatActivity mAppCompatActivity;
     private ActionBarDrawerToggle mToggle;
     private NewsListPresenter mNewsListPresenter;
+    private ChannelListPresenter mChannelListPresenter;
     private SwipeRefreshLayout mSwipeRefreshLayout;
     private ArrayList<Article> articles;
     private ArticleListAdapter articleListAdapter;
     private RecyclerView mRecyclerView;
+    private NavigationView navigationView;
+    private int lastCheckedItem;
 
     ArticlesListView(final AppCompatActivity appCompatActivity) {
         mAppCompatActivity = appCompatActivity;
@@ -60,6 +70,7 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
             articles = new ArrayList<>();
         }
         mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this);
+        mChannelListPresenter = new ChannelListPresenter(this, mAppCompatActivity);
 
         Toolbar toolbar = mAppCompatActivity.findViewById(R.id.toolbar_news_list);
         mAppCompatActivity.setSupportActionBar(toolbar);
@@ -69,12 +80,11 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
         }
         toolbar.setOnMenuItemClickListener(this);
 
-        DrawerLayout drawerLayout = mAppCompatActivity.findViewById(R.id.drawer_layout);
-        mToggle = new ActionBarDrawerToggle(mAppCompatActivity, drawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawerLayout.addDrawerListener(mToggle);
+        mToggle = new ActionBarDrawerToggle(mAppCompatActivity, mDrawerLayout, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
+        mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
-        NavigationView navigationView = mAppCompatActivity.findViewById(R.id.nav_view);
+        navigationView = mAppCompatActivity.findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
         mSwipeRefreshLayout = mAppCompatActivity.findViewById(R.id.swipe_refresh_layout);
@@ -88,16 +98,19 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mAppCompatActivity));
         articleListAdapter = new ArticleListAdapter(articles);
         mRecyclerView.setAdapter(articleListAdapter);
+        lastCheckedItem = R.id.all_channels_item;
     }
 
     void onResume(final AppCompatActivity appCompatActivity) {
         mAppCompatActivity = appCompatActivity;
         mNewsListPresenter.attach(mAppCompatActivity, this);
+        mChannelListPresenter.attach(this, mAppCompatActivity);
     }
 
     void onPause() {
         mAppCompatActivity = null;
         mNewsListPresenter.detach();
+        mChannelListPresenter.detach();
     }
 
     boolean onBackPressed() {
@@ -120,18 +133,25 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
     @Override
     public boolean onNavigationItemSelected(@NonNull final MenuItem menuItem) {
         switch (menuItem.getItemId()) {
-            case R.id.add_links_item: {
+            case R.id.add_channel_item: {
                 Intent addChannelIntent = AddChannelActivity.newIntent(mAppCompatActivity);
                 mAppCompatActivity.startActivity(addChannelIntent);
                 break;
             }
-            case R.id.list_links: {
-                Intent channelListIntent = ChannelListActivity.newIntent(mAppCompatActivity);
-                mAppCompatActivity.startActivity(channelListIntent);
+            case R.id.all_channels_item: {
+                lastCheckedItem = menuItem.getItemId();
+                mNewsListPresenter.setDefineChannelLink("");
+                break;
+            }
+            default: {
+                menuItem.setChecked(true);
+                lastCheckedItem = menuItem.getItemId();
+                TextView textView = menuItem.getActionView().findViewById(R.id.channel_link);
+                mNewsListPresenter.setDefineChannelLink(textView.getText().toString());
                 break;
             }
         }
-        return false;
+        return true;
     }
 
     @Override
@@ -147,17 +167,74 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
     @Override
     public void addArticlesToListAdapter(final ArrayList<Article> articleArrayList) {
         articles.addAll(articleArrayList);
+        updateArticlesAdapter();
+    }
+
+    @Override
+    public void setArticlesListToListAdapter(final ArrayList<Article> articleArrayList) {
+        articles = articleArrayList;
+        updateArticlesAdapter();
+    }
+
+    private void updateArticlesAdapter() {
         Collections.sort(articles);
+        Collections.reverse(articles);
         articleListAdapter = new ArticleListAdapter(articles);
         mRecyclerView.setAdapter(articleListAdapter);
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
-    public void setArticlesListToListAdapter(ArrayList<Article> articleArrayList) {
-        articles = articleArrayList;
-        articleListAdapter = new ArticleListAdapter(articles);
-        mRecyclerView.setAdapter(articleListAdapter);
-        mSwipeRefreshLayout.setRefreshing(false);
+    public void setChannelList(final ArrayList<Channel> channelList) {
+
+        Menu menu = navigationView.getMenu();
+        menu.removeGroup(R.id.channel_list_group);
+        for (final Channel currentChannel : channelList) {
+            initMenuItem(menu, currentChannel);
+        }
+        menu.findItem(lastCheckedItem).setChecked(true);
+        navigationView.setNavigationItemSelectedListener(this);
+        mNewsListPresenter.setChannelsArrayList(channelList);
+    }
+
+    private void initMenuItem(final Menu menu, final Channel currentChannel) {
+        TextView channelNameTextView;
+        TextView channelLinkTextView;
+        final MenuItem item = menu.add(R.id.channel_list_group, currentChannel.getName().hashCode(), menu.NONE, "").
+                setActionView(R.layout.channel_view);
+        View view = item.getActionView();
+        item.setCheckable(true);
+
+        channelNameTextView = view.findViewById(R.id.channel_name);
+        channelLinkTextView = view.findViewById(R.id.channel_link);
+        if (new Date(currentChannel.getLastArticlePubDate()).compareTo(new Date(0)) == 0) {
+            channelNameTextView.setTextColor(mAppCompatActivity.getResources().getColor(R.color.colorWarning));
+        } else {
+            channelNameTextView.setTextColor(mAppCompatActivity.getResources().getColor(R.color.colorBlack));
+        }
+        channelNameTextView.setText(currentChannel.getName());
+        channelLinkTextView.setText(currentChannel.getLinkString());
+        view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onNavigationItemSelected(item);
+            }
+        });
+        view.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+            @Override
+            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+                menu.add(DELETE_CONTEXT_MENU_ITEM_TEXT);
+                menu.getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+                    @Override
+                    public boolean onMenuItemClick(MenuItem item) {
+                        mChannelListPresenter.deleteChannel(currentChannel.getLinkString());
+                        mNewsListPresenter.deleteChannel(currentChannel.getLinkString());
+                        lastCheckedItem = R.id.all_channels_item;
+                        return false;
+                    }
+                });
+                item.setChecked(true);
+            }
+        });
     }
 }

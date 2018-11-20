@@ -2,7 +2,7 @@ package com.example.sweethome.rssreader.service.tasks;
 
 import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPresenter;
 
-public class GetChannelListTask implements Runnable {
+final public class GetChannelListTask implements Runnable {
     private final ChannelDBPresenter mChannelDBPresenter;
 
     public GetChannelListTask(final ChannelDBPresenter channelDBPresenter) {

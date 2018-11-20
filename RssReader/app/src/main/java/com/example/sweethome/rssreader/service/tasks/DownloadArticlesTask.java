@@ -7,7 +7,7 @@ import com.example.sweethome.rssreader.web_work.WebWorker;
 
 import java.util.ArrayList;
 
-public class DownloadArticlesTask implements Runnable {
+final public class DownloadArticlesTask implements Runnable {
     private ArrayList<Channel> mChannelArrayList;
     private Context mContext;
 

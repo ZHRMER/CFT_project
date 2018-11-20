@@ -23,6 +23,7 @@ import java.util.concurrent.Executors;
 
 
 public final class RssService extends android.app.Service {
+    private static final int NUMBER_OF_THREADS = 4;
     private ExecutorService mExecutorService;
     public RssBinder binder = new RssBinder();
 
@@ -33,7 +34,6 @@ public final class RssService extends android.app.Service {
 
     public void onCreate() {
         super.onCreate();
-        int NUMBER_OF_THREADS = 4;
         mExecutorService = Executors.newFixedThreadPool(NUMBER_OF_THREADS);
     }
 
@@ -87,9 +87,9 @@ public final class RssService extends android.app.Service {
     }
     //endregion
 
-    public void getArticlesListFromDB() {
+    public void getArticlesListFromDB(final String channelLink) {
         ArticleDBPresenter articleDBPresenter = new ArticleDBPresenter(this);
-        mExecutorService.execute(new GetArticlesListTask(articleDBPresenter));
+        mExecutorService.execute(new GetArticlesListTask(articleDBPresenter, channelLink));
     }
 
     public void addArticlesToDB(final ArrayList<Article> articleArrayList) {

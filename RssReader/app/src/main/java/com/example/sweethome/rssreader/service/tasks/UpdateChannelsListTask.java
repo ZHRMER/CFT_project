@@ -5,7 +5,7 @@ import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPr
 
 import java.util.ArrayList;
 
-public class UpdateChannelsListTask implements Runnable {
+final public class UpdateChannelsListTask implements Runnable {
     private final ChannelDBPresenter mChannelDBPresenter;
     private final ArrayList<Channel> mChannelArrayList;
 

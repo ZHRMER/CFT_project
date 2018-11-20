@@ -2,6 +2,7 @@ package com.example.sweethome.rssreader.screens.add_channel.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -41,6 +42,11 @@ public final class AddChannelActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mAddChannelView.onPause();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
     }
 
     @Override

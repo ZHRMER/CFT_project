@@ -8,6 +8,7 @@ import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
 import com.example.sweethome.rssreader.common_model.Channel;
+import com.example.sweethome.rssreader.common_model.database.articles.ArticleDBHelper;
 
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -27,18 +28,18 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHANNEL_LIST_INTENT_RESULT;
 
 public final class ChannelDBPresenter {
-    private final ChannelDBHelper mChannelDBHelper;
+    private final ArticleDBHelper mChannelDBHelper;
     private SQLiteDatabase mSQLiteDataBase;
     private final Context mContext;
 
     public ChannelDBPresenter(final Context context) {
-        mChannelDBHelper = new ChannelDBHelper(context);
+        mChannelDBHelper = new ArticleDBHelper(context);
         mContext = context;
     }
 
     //region addChanel region
     public void addChannelToDB(final String nameChannel, final String linkChannel) {
-        if (nameChannel == null || linkChannel == null) {
+        if (nameChannel == null || linkChannel == null || "".equals(nameChannel)) {
             sendIsAddBroadcast(false);
             return;
         }
@@ -143,13 +144,14 @@ public final class ChannelDBPresenter {
             ContentValues channelValueUpdate = new ContentValues();
             for (Channel currentChannel : channelArrayList) {
                 channelValueUpdate.put(KEY_COLUMN_CHANNEL_LAST_ARTICLE_DATE, currentChannel.getLastArticlePubDate());
-                int rowUpdate = mSQLiteDataBase.update(KEY_CHANNELS_TABLE, channelValueUpdate,
+                mSQLiteDataBase.update(KEY_CHANNELS_TABLE, channelValueUpdate,
                         KEY_COLUMN_CHANNEL_LINK + " = '" + currentChannel.getLinkString() + "'", null);
             }
         } catch (SQLException e) {
             e.printStackTrace();
             //TODO handle SQLException
         } finally {
+            getChannelList();
             mChannelDBHelper.close();
         }
     }

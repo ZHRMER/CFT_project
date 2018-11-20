@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -25,7 +26,7 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ART
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
 
-public class WebWorker {
+public final class WebWorker {
     private ArrayList<Channel> mChannelArrayList;
     private Context mContext;
     private boolean isUpdateChannelList;
@@ -56,8 +57,9 @@ public class WebWorker {
                 Channel currentChannel = mChannelArrayList.get(position);
                 channelName = currentChannel.getName();
                 URL url = new URL(currentChannel.getLinkString());
-                inputStream = url.openConnection().getInputStream();
-
+                URLConnection rssConnection = url.openConnection();
+                rssConnection.setConnectTimeout(5000);
+                inputStream = rssConnection.getInputStream();
                 RssParser rssParser = new RssParser();
                 tempArticleList = rssParser.parseFeed(inputStream, currentChannel);
                 if (tempArticleList.size() != 0) {
@@ -72,6 +74,7 @@ public class WebWorker {
                 sendWarningBroadcast(mContext.getString(R.string.io_warning) + " " + channelName);
                 continue;
             } catch (final XmlPullParserException e) {
+                e.printStackTrace();
                 sendWarningBroadcast(mContext.getString(R.string.xml_pullparser_warning) + " " + channelName);
                 continue;
             } finally {
@@ -118,8 +121,8 @@ public class WebWorker {
     }
 
     private boolean isOnline() {
-        ConnectivityManager cm = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        ConnectivityManager connectivityManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = connectivityManager.getActiveNetworkInfo();
         return netInfo != null && netInfo.isConnectedOrConnecting();
     }
 }

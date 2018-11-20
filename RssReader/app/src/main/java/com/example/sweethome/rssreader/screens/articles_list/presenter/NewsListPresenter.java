@@ -16,12 +16,10 @@ import com.example.sweethome.rssreader.service.RssService;
 import java.util.ArrayList;
 
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_ARTICLE_LIST_ACTION;
-import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_CHANNEL_LIST_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_UPDATE_CHANNELS_LIST_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_FROM_DB_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT;
-import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHANNEL_LIST_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
 
@@ -30,8 +28,10 @@ public final class NewsListPresenter {
     private RssService mRssService;
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
-    private ArrayList<Channel> channelArrayList;
+    private ArrayList<Channel> mChannelArrayList;
     private INewsListPresenterContract mINewsListPresenterContract;
+
+    private String mDefineChannelLink = "";
 
     public NewsListPresenter(final Context context, final INewsListPresenterContract iNewsListPresenterContract) {
         mContext = context;
@@ -61,16 +61,11 @@ public final class NewsListPresenter {
                 String actionIntent = intent.getAction();
                 if (null != actionIntent) {
                     switch (actionIntent) {
-                        case BROADCAST_GET_CHANNEL_LIST_ACTION: {
-                            channelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
-                            downloadArticles(channelArrayList);
-                            break;
-                        }
                         case BROADCAST_GET_ARTICLE_LIST_ACTION: {
                             if (null != intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT)) {
                                 mINewsListPresenterContract.addArticlesToListAdapter(intent.
                                         <Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT));
-                                saveArticles(intent.<Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT));
+                                saveArticlesToDB(intent.<Article>getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT));
                             }
                             if (null != intent.getParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_DB_INTENT_RESULT)) {
                                 mINewsListPresenterContract.setArticlesListToListAdapter(intent.
@@ -84,8 +79,8 @@ public final class NewsListPresenter {
                             break;
                         }
                         case BROADCAST_UPDATE_CHANNELS_LIST_ACTION: {
-                            channelArrayList = intent.getParcelableArrayListExtra(KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT);
-                            updateChannelsList(channelArrayList);
+                            mChannelArrayList = intent.getParcelableArrayListExtra(KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT);
+                            updateChannelsListInDB(mChannelArrayList);
                             break;
                         }
                         default: {
@@ -95,35 +90,36 @@ public final class NewsListPresenter {
                 }
             }
         };
-        IntentFilter getChannelIntentFilter = new IntentFilter(BROADCAST_GET_CHANNEL_LIST_ACTION);
-        getChannelIntentFilter.addAction(BROADCAST_GET_ARTICLE_LIST_ACTION);
+        IntentFilter getChannelIntentFilter = new IntentFilter(BROADCAST_GET_ARTICLE_LIST_ACTION);
         getChannelIntentFilter.addAction(BROADCAST_WARNING_ACTION);
         getChannelIntentFilter.addAction(BROADCAST_UPDATE_CHANNELS_LIST_ACTION);
         mContext.registerReceiver(mBroadcastReceiver, getChannelIntentFilter);
     }
 
-    private void updateChannelsList(final ArrayList<Channel> channels) {
+    private void updateChannelsListInDB(final ArrayList<Channel> channels) {
         mRssService.updateChannels(channels);
     }
 
-    private void downloadArticles(final ArrayList<Channel> channels) {
-        mRssService.downloadArticles(channels);
-    }
-
-    private void getChannelList() {
-        mRssService.getChannelListFromDB();
-    }
-
     private void showArticles() {
-        mRssService.getArticlesListFromDB();
+        mRssService.getArticlesListFromDB(mDefineChannelLink);
     }
 
-    private void saveArticles(ArrayList<Article> articles) {
+    private void saveArticlesToDB(ArrayList<Article> articles) {
         mRssService.addArticlesToDB(articles);
     }
 
     public void updateArticles() {
-        getChannelList();
+        if ("".equals(mDefineChannelLink)) {
+            mRssService.downloadArticles(mChannelArrayList);
+        } else {
+            for (Channel currentChannel : mChannelArrayList) {
+                if (mDefineChannelLink.equals(currentChannel.getLinkString())) {
+                    ArrayList<Channel> oneChannel = new ArrayList<>();
+                    oneChannel.add(currentChannel);
+                    mRssService.downloadArticles(oneChannel);
+                }
+            }
+        }
     }
 
     public void detach() {
@@ -138,5 +134,22 @@ public final class NewsListPresenter {
         mContext = context;
         bindToService();
         registerBroadcastReceiver();
+    }
+
+    public void setChannelsArrayList(final ArrayList<Channel> channelsArrayList) {
+        mChannelArrayList = channelsArrayList;
+    }
+
+    public void setDefineChannelLink(final String defineChannelLink) {
+        if (!mDefineChannelLink.equals(defineChannelLink)) {
+            mDefineChannelLink = defineChannelLink;
+        }
+        showArticles();
+    }
+
+    public void deleteChannel(final String channelLink) {
+        if (mDefineChannelLink.equals(channelLink) || mDefineChannelLink.equals("")) {
+            setDefineChannelLink("");
+        }
     }
 }

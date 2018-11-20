@@ -5,7 +5,7 @@ import com.example.sweethome.rssreader.common_model.database.articles.ArticleDBP
 
 import java.util.ArrayList;
 
-public class AddArticlesListTask implements Runnable {
+final public class AddArticlesListTask implements Runnable {
     private final ArticleDBPresenter mArticleDBPresenter;
     private final ArrayList<Article> mArticleArrayList;
 

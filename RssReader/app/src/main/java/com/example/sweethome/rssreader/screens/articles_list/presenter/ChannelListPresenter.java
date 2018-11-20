@@ -1,4 +1,4 @@
-package com.example.sweethome.rssreader.screens.channel_list.presenter;
+package com.example.sweethome.rssreader.screens.articles_list.presenter;
 
 import android.content.BroadcastReceiver;
 import android.content.ComponentName;
@@ -22,6 +22,7 @@ public final class ChannelListPresenter {
     private RssService mRssService;
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
+    private ArrayList<Channel> mChannelArrayList;
 
     public ChannelListPresenter(final IChannelListPresenterContract view, final Context context) {
         mView = view;
@@ -48,8 +49,8 @@ public final class ChannelListPresenter {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(final Context context, final Intent intent) {
-                ArrayList<Channel> channelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
-                mView.setChannelListAdapter(channelArrayList);
+                mChannelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
+                mView.setChannelList(mChannelArrayList);
             }
         };
         IntentFilter intentFilter = new IntentFilter(BROADCAST_GET_CHANNEL_LIST_ACTION);

@@ -2,7 +2,7 @@
     <string name="app_name">RssReader</string>
 
     <string name="add_channel_Navigation_View">Добавить канал</string>
-    <string name="channel_list_Navigation_View">Список каналов</string>
+    <string name="channel_list_Navigation_View">Все статьи</string>
 
     <string name="settings">Настройки</string>
     <string name="navigation_drawer_open">open</string>

@@ -6,12 +6,17 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/add_links_item"
+            android:id="@+id/add_channel_item"
             android:icon="@android:drawable/ic_input_add"
+            android:checkable="false"
             android:title="@string/add_channel_Navigation_View" />
         <item
-            android:id="@+id/list_links"
+            android:id="@+id/all_channels_item"
             android:icon="@android:drawable/ic_menu_sort_by_size"
             android:title="@string/channel_list_Navigation_View" />
+    </group>
+    <group android:checkableBehavior="single"
+        android:id="@+id/channel_list_group" >
+
     </group>
 </menu>

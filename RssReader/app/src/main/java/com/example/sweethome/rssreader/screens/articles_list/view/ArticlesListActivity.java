@@ -39,7 +39,6 @@ public final class ArticlesListActivity extends AppCompatActivity {
         mArticlesListView.onPause();
     }
 
-
     @Override
     public void onBackPressed() {
         if (mArticlesListView.onBackPressed()) {

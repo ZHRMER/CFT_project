@@ -18,7 +18,7 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_DATABAS
 
 public class ArticleDBHelper extends SQLiteOpenHelper {
 
-    ArticleDBHelper(final Context context) {
+    public ArticleDBHelper(final Context context) {
         super(context, KEY_DATABASE_NAME, null, 1);
     }
 
@@ -39,6 +39,7 @@ public class ArticleDBHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(final SQLiteDatabase db, final int oldVersion, final int newVersion) {
         db.execSQL("drop table " + KEY_ARTICLES_TABLE + ";");
+        db.execSQL("drop table " + KEY_CHANNELS_TABLE + ";");
         onCreate(db);
     }
 }

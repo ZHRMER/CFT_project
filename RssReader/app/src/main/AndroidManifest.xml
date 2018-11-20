@@ -23,7 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.sweethome.rssreader.screens.add_channel.view.AddChannelActivity" />
-        <activity android:name="com.example.sweethome.rssreader.screens.channel_list.view.ChannelListActivity" />
+
         <service android:name=".service.RssService"/>
     </application>
 
