@@ -38,6 +38,12 @@ public final class NewsListPresenter {
         mINewsListPresenterContract = iNewsListPresenterContract;
     }
 
+    public NewsListPresenter(final Context context, final INewsListPresenterContract INewsListPresenterContract, final String defineChannelLink) {
+        mContext = context;
+        mINewsListPresenterContract = INewsListPresenterContract;
+        mDefineChannelLink = defineChannelLink;
+    }
+
     private void bindToService() {
         Intent intent = RssService.newIntent(mContext);
         mServiceConnection = new ServiceConnection() {

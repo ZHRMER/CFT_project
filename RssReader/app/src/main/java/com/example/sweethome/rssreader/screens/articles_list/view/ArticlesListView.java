@@ -1,5 +1,6 @@
 package com.example.sweethome.rssreader.screens.articles_list.view;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,11 +10,11 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,22 +35,24 @@ import java.util.Date;
 
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLE_IS_REFRESH;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLE_LIST;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_LAST_CHECKED_ITEM;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_LAST_CHECKED_ITEM_LINK;
 
 
 final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMenuItemClickListener,
         NavigationView.OnNavigationItemSelectedListener, IChannelListPresenterContract {
-    private static final String DELETE_CONTEXT_MENU_ITEM_TEXT = "Удалить";
-    private DrawerLayout mDrawerLayout;
-    private AppCompatActivity mAppCompatActivity;
-    private ActionBarDrawerToggle mToggle;
-    private NewsListPresenter mNewsListPresenter;
     private ChannelListPresenter mChannelListPresenter;
-    private SwipeRefreshLayout mSwipeRefreshLayout;
-    private ArrayList<Article> articles;
-    private ArticleListAdapter articleListAdapter;
+    private NewsListPresenter mNewsListPresenter;
+    private AppCompatActivity mAppCompatActivity;
     private RecyclerView mRecyclerView;
-    private NavigationView navigationView;
-    private int lastCheckedItem;
+    private NavigationView mNavigationView;
+    private DrawerLayout mDrawerLayout;
+    private ActionBarDrawerToggle mToggle;
+    private SwipeRefreshLayout mSwipeRefreshLayout;
+    private ArrayList<Article> mArticleArrayList;
+    private ArticleListAdapter mArticleListAdapter;
+    private int mLastCheckedItem;
+    private String mLastCheckedItemLink;
 
     ArticlesListView(final AppCompatActivity appCompatActivity) {
         mAppCompatActivity = appCompatActivity;
@@ -57,19 +60,25 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
     }
 
     void onSaveInstanceSaved(final Bundle outState) {
-        outState.putParcelableArrayList(KEY_ARTICLE_LIST, articles);
+        outState.putParcelableArrayList(KEY_ARTICLE_LIST, mArticleArrayList);
         outState.putBoolean(KEY_ARTICLE_IS_REFRESH, mSwipeRefreshLayout.isRefreshing());
+        outState.putInt(KEY_LAST_CHECKED_ITEM, mLastCheckedItem);
+        outState.putString(KEY_LAST_CHECKED_ITEM_LINK, mLastCheckedItemLink);
     }
 
     void onCreate(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            articles = savedInstanceState.getParcelableArrayList(KEY_ARTICLE_LIST);
+            mArticleArrayList = savedInstanceState.getParcelableArrayList(KEY_ARTICLE_LIST);
             mSwipeRefreshLayout = mAppCompatActivity.findViewById(R.id.swipe_refresh_layout);
             mSwipeRefreshLayout.setRefreshing(savedInstanceState.getBoolean(KEY_ARTICLE_IS_REFRESH));
+            mLastCheckedItem = savedInstanceState.getInt(KEY_LAST_CHECKED_ITEM);
+            mLastCheckedItemLink = savedInstanceState.getString(KEY_LAST_CHECKED_ITEM_LINK);
+            mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this, mLastCheckedItemLink);
         } else {
-            articles = new ArrayList<>();
+            mArticleArrayList = new ArrayList<>();
+            mLastCheckedItem = R.id.all_channels_item;
+            mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this);
         }
-        mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this);
         mChannelListPresenter = new ChannelListPresenter(this, mAppCompatActivity);
 
         Toolbar toolbar = mAppCompatActivity.findViewById(R.id.toolbar_news_list);
@@ -84,8 +93,8 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
         mDrawerLayout.addDrawerListener(mToggle);
         mToggle.syncState();
 
-        navigationView = mAppCompatActivity.findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(this);
+        mNavigationView = mAppCompatActivity.findViewById(R.id.nav_view);
+        mNavigationView.setNavigationItemSelectedListener(this);
 
         mSwipeRefreshLayout = mAppCompatActivity.findViewById(R.id.swipe_refresh_layout);
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
@@ -96,9 +105,8 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
         });
         mRecyclerView = mAppCompatActivity.findViewById(R.id.news_recycler_view);
         mRecyclerView.setLayoutManager(new LinearLayoutManager(mAppCompatActivity));
-        articleListAdapter = new ArticleListAdapter(articles);
-        mRecyclerView.setAdapter(articleListAdapter);
-        lastCheckedItem = R.id.all_channels_item;
+        mArticleListAdapter = new ArticleListAdapter(mArticleArrayList);
+        mRecyclerView.setAdapter(mArticleListAdapter);
     }
 
     void onResume(final AppCompatActivity appCompatActivity) {
@@ -139,15 +147,16 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
                 break;
             }
             case R.id.all_channels_item: {
-                lastCheckedItem = menuItem.getItemId();
+                mLastCheckedItem = menuItem.getItemId();
                 mNewsListPresenter.setDefineChannelLink("");
                 break;
             }
             default: {
                 menuItem.setChecked(true);
-                lastCheckedItem = menuItem.getItemId();
+                mLastCheckedItem = menuItem.getItemId();
                 TextView textView = menuItem.getActionView().findViewById(R.id.channel_link);
-                mNewsListPresenter.setDefineChannelLink(textView.getText().toString());
+                mLastCheckedItemLink = textView.getText().toString();
+                mNewsListPresenter.setDefineChannelLink(mLastCheckedItemLink);
                 break;
             }
         }
@@ -166,34 +175,34 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
 
     @Override
     public void addArticlesToListAdapter(final ArrayList<Article> articleArrayList) {
-        articles.addAll(articleArrayList);
+        mArticleArrayList.addAll(articleArrayList);
         updateArticlesAdapter();
     }
 
     @Override
     public void setArticlesListToListAdapter(final ArrayList<Article> articleArrayList) {
-        articles = articleArrayList;
+        mArticleArrayList = articleArrayList;
         updateArticlesAdapter();
     }
 
     private void updateArticlesAdapter() {
-        Collections.sort(articles);
-        Collections.reverse(articles);
-        articleListAdapter = new ArticleListAdapter(articles);
-        mRecyclerView.setAdapter(articleListAdapter);
+        Collections.sort(mArticleArrayList);
+        Collections.reverse(mArticleArrayList);
+        mArticleListAdapter = new ArticleListAdapter(mArticleArrayList);
+        mRecyclerView.setAdapter(mArticleListAdapter);
         mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Override
     public void setChannelList(final ArrayList<Channel> channelList) {
 
-        Menu menu = navigationView.getMenu();
+        Menu menu = mNavigationView.getMenu();
         menu.removeGroup(R.id.channel_list_group);
         for (final Channel currentChannel : channelList) {
             initMenuItem(menu, currentChannel);
         }
-        menu.findItem(lastCheckedItem).setChecked(true);
-        navigationView.setNavigationItemSelectedListener(this);
+        menu.findItem(mLastCheckedItem).setChecked(true);
+        mNavigationView.setNavigationItemSelectedListener(this);
         mNewsListPresenter.setChannelsArrayList(channelList);
     }
 
@@ -220,20 +229,25 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
                 onNavigationItemSelected(item);
             }
         });
-        view.setOnCreateContextMenuListener(new View.OnCreateContextMenuListener() {
+        view.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-                menu.add(DELETE_CONTEXT_MENU_ITEM_TEXT);
-                menu.getItem(0).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            public boolean onLongClick(View v) {
+                item.setChecked(true);
+                AlertDialog.Builder builder = new AlertDialog.Builder(mAppCompatActivity);
+                builder.setTitle(currentChannel.getName());
+                final String[] paramsArray = {mAppCompatActivity.getString(R.string.delete_item_menu_text)};
+                builder.setItems(paramsArray, new DialogInterface.OnClickListener() {
                     @Override
-                    public boolean onMenuItemClick(MenuItem item) {
-                        mChannelListPresenter.deleteChannel(currentChannel.getLinkString());
-                        mNewsListPresenter.deleteChannel(currentChannel.getLinkString());
-                        lastCheckedItem = R.id.all_channels_item;
-                        return false;
+                    public void onClick(DialogInterface dialog, int which) {
+                        if (mAppCompatActivity.getString(R.string.delete_item_menu_text).equals(paramsArray[which])) {
+                            mChannelListPresenter.deleteChannel(currentChannel.getLinkString());
+                            mNewsListPresenter.deleteChannel(currentChannel.getLinkString());
+                            mLastCheckedItem = R.id.all_channels_item;
+                        }
                     }
                 });
-                item.setChecked(true);
+                builder.show();
+                return true;
             }
         });
     }

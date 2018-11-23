@@ -26,7 +26,7 @@ final class AddChannelView implements IAddChannelPresenterContract {
     private EditText mChannelLinkEditText;
     private EditText mChannelNameEditText;
     private TextView mInfoTextView;
-    private SharedPreferences mSettings;
+    private SharedPreferences mSharedPreferences;
 
     AddChannelView(final AppCompatActivity appCompatActivity) {
         mAppCompatActivity = appCompatActivity;
@@ -37,7 +37,7 @@ final class AddChannelView implements IAddChannelPresenterContract {
     }
 
     void onCreate(final Bundle savedInstanceState) {
-        mSettings = mAppCompatActivity.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        mSharedPreferences = mAppCompatActivity.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         mInfoTextView = mAppCompatActivity.findViewById(R.id.add_info_TextView);
         if (null != savedInstanceState) {
             String message = savedInstanceState.getString(KEY_INFO_TEXT);
@@ -75,16 +75,16 @@ final class AddChannelView implements IAddChannelPresenterContract {
     }
 
     private void loadSharedPreferences() {
-        if (mSettings.contains(APP_PREFERENCES_CHANNEL_NAME)) {
-            mChannelNameEditText.setText(mSettings.getString(APP_PREFERENCES_CHANNEL_NAME, ""));
+        if (mSharedPreferences.contains(APP_PREFERENCES_CHANNEL_NAME)) {
+            mChannelNameEditText.setText(mSharedPreferences.getString(APP_PREFERENCES_CHANNEL_NAME, ""));
         }
-        if (mSettings.contains(APP_PREFERENCES_CHANNEL_LINK)) {
-            mChannelLinkEditText.setText(mSettings.getString(APP_PREFERENCES_CHANNEL_LINK, ""));
+        if (mSharedPreferences.contains(APP_PREFERENCES_CHANNEL_LINK)) {
+            mChannelLinkEditText.setText(mSharedPreferences.getString(APP_PREFERENCES_CHANNEL_LINK, ""));
         }
     }
 
     private void saveSharedPreferences() {
-        SharedPreferences.Editor editor = mSettings.edit();
+        SharedPreferences.Editor editor = mSharedPreferences.edit();
         editor.putString(APP_PREFERENCES_CHANNEL_NAME, getName());
         editor.putString(APP_PREFERENCES_CHANNEL_LINK, getLink());
         editor.apply();

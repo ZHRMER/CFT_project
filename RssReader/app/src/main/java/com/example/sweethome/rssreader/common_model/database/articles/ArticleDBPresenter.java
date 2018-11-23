@@ -22,12 +22,12 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_FROM_DB_INTENT_RESULT;
 
 public final class ArticleDBPresenter {
-    private final ArticleDBHelper mArticleDBHelper;
+    private final DBHelper mDBHelper;
     private SQLiteDatabase mSQLiteDataBase;
     private final Context mContext;
 
     public ArticleDBPresenter(final Context context) {
-        mArticleDBHelper = new ArticleDBHelper(context);
+        mDBHelper = new DBHelper(context);
         mContext = context;
     }
 
@@ -37,7 +37,7 @@ public final class ArticleDBPresenter {
             return;
         }
         try {
-            mSQLiteDataBase = mArticleDBHelper.getWritableDatabase();
+            mSQLiteDataBase = mDBHelper.getWritableDatabase();
             ContentValues contentValuesToPut;
             for (Article currentArticle : articleArrayList) {
                 contentValuesToPut = new ContentValues();
@@ -48,10 +48,10 @@ public final class ArticleDBPresenter {
                 contentValuesToPut.put(KEY_COLUMN_ARTICLE_PUBLICATION_DATE, currentArticle.getPublicationDate().toString());
                 mSQLiteDataBase.insertOrThrow(KEY_ARTICLES_TABLE, null, contentValuesToPut);
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
+        } catch (final SQLException ignored) {
+
         } finally {
-            mArticleDBHelper.close();
+            mDBHelper.close();
         }
     }
     //endregion
@@ -61,7 +61,7 @@ public final class ArticleDBPresenter {
         Cursor cursor = null;
         ArrayList<Article> articleArrayList = null;
         try {
-            mSQLiteDataBase = mArticleDBHelper.getReadableDatabase();
+            mSQLiteDataBase = mDBHelper.getReadableDatabase();
             if ("".equals(channelLink)) {
                 cursor = mSQLiteDataBase.query(KEY_ARTICLES_TABLE, null, null, null,
                         null, null, null);
@@ -83,14 +83,13 @@ public final class ArticleDBPresenter {
                     articleArrayList.add(article);
                 } while (cursor.moveToNext());
             }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            //TODO if cant get channel list
+        } catch (final SQLException ignored) {
+
         } finally {
             if (cursor != null) {
                 cursor.close();
             }
-            mArticleDBHelper.close();
+            mDBHelper.close();
             if (articleArrayList != null) {
                 Collections.sort(articleArrayList);
                 sendGetArticlesListBroadcast(articleArrayList);

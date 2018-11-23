@@ -15,9 +15,12 @@
     <string name="add_channel_fail_toast">Канал уже существует или неправильный адрес канала</string>
 
     <string name="url_warning">Не URL адрес.</string>
-    <string name="io_warning">IOException(неправильный адрес или нет интернета).</string>
-    <string name="xml_pullparser_warning">Проблема при парсинге RSS канала.</string>
+    <string name="io_warning">Неправильный адрес или нет интернета.</string>
+    <string name="xml_pullparser_warning">Невозможно скачать новости канала.</string>
     <string name="no_channel_warning">Нет каналов, чтобы загрузить статьи.</string>
     <string name="no_internet">Включите Wi-Fi или Internet</string>
+    <string name="delete_item_menu_text">Удалить</string>
+    <string name="add_name_hint_EditText">Название</string>
+    <string name="add_link_hint_EditText">Адрес</string>
 
 </resources>

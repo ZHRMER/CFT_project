@@ -18,6 +18,8 @@ public final class Constants {
 
     public static final String KEY_ARTICLE_LIST = "com.example.sweethome.rssreader.article_list";
     public static final String KEY_ARTICLE_IS_REFRESH = "com.example.sweethome.rssreader.refresh";
+    public static final String KEY_LAST_CHECKED_ITEM = "com.example.sweethome.rssreader.last_checked_item";
+    public static final String KEY_LAST_CHECKED_ITEM_LINK = "com.example.sweethome.rssreader.last_checked_item_link";
     public static final String KEY_INFO_TEXT = "com.example.sweethome.rssreader.info_text";
 
     public static final String KEY_ADD_INTENT_RESULT = "resultOfAddChannel";

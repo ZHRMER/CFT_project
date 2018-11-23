@@ -87,14 +87,18 @@ public final class RssService extends android.app.Service {
     }
     //endregion
 
+    //region getArticlesFromDB region
     public void getArticlesListFromDB(final String channelLink) {
         ArticleDBPresenter articleDBPresenter = new ArticleDBPresenter(this);
         mExecutorService.execute(new GetArticlesListTask(articleDBPresenter, channelLink));
     }
+    //endregion
 
+    //region addArticlesToDB region
     public void addArticlesToDB(final ArrayList<Article> articleArrayList) {
         ArticleDBPresenter articleDBPresenter = new ArticleDBPresenter(this);
         mExecutorService.execute(new AddArticlesListTask(articleArrayList, articleDBPresenter));
     }
+    //endregion
 
 }

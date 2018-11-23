@@ -16,9 +16,9 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_CHANNEL_NAME;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_DATABASE_NAME;
 
-public class ArticleDBHelper extends SQLiteOpenHelper {
+public class DBHelper extends SQLiteOpenHelper {
 
-    public ArticleDBHelper(final Context context) {
+    public DBHelper(final Context context) {
         super(context, KEY_DATABASE_NAME, null, 1);
     }
 

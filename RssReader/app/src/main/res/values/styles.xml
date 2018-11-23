@@ -26,7 +26,7 @@
     <style name="ActivityAddChannelTextVew">
         <item name="android:textSize">24sp</item>
         <item name="android:textColor">@color/colorBlack</item>
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
 
@@ -34,7 +34,7 @@
 
     <style name="ActivityAddChannelEditText">
         <item name="android:ems">10</item>
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
         <item name="android:inputType">textEmailAddress</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -47,7 +47,7 @@
     </style>
 
     <style name="ActivityAddChannelInfoTextView">
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:textSize">14sp</item>
@@ -56,8 +56,8 @@
 
     <!--region channel_view.xml-->
     <style name="ChannelViewNameTextView">
-        <item name="android:textSize">18sp</item>
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:textSize">@dimen/channel_or_article_name</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -68,7 +68,7 @@
     <style name="ChannelViewLinkTextView">
         <item name="android:textSize">12sp</item>
         <item name="android:paddingTop">2dp</item>
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
@@ -120,7 +120,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:paddingTop">5dp</item>
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
         <item name="android:textSize">12sp</item>
         <item name="android:textStyle">italic</item>
     </style>
@@ -128,15 +128,15 @@
     <style name="ArticleViewNameTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingLeft">5dp</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
+        <item name="android:textSize">@dimen/channel_or_article_name</item>
         <item name="android:textStyle">bold</item>
     </style>
 
     <style name="ArticleViewLinkTextView">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:paddingLeft">5dp</item>
+        <item name="android:paddingLeft">@dimen/padding_left</item>
         <item name="android:autoLink">web</item>
         <item name="android:ellipsize">end</item>
         <item name="android:singleLine">true</item>

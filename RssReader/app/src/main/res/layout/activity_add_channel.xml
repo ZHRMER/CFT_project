@@ -16,7 +16,9 @@
 
     <EditText
         android:id="@+id/add_name_EditText"
-        style="@style/ActivityAddChannelEditText">
+        android:hint="@string/add_name_hint_EditText"
+        style="@style/ActivityAddChannelEditText"
+        tools:ignore="Autofill">
     </EditText>
 
     <TextView
@@ -26,7 +28,9 @@
 
     <EditText
         android:id="@+id/add_links_EditText"
-        style="@style/ActivityAddChannelEditText">
+        android:hint="@string/add_link_hint_EditText"
+        style="@style/ActivityAddChannelEditText"
+        tools:ignore="Autofill">
     </EditText>
 
     <TextView

@@ -64,7 +64,7 @@ final class DateUtils {
                     result = sDateFormats[i].parse(publicationDate);
                 }
                 break;
-            } catch (java.text.ParseException eA) {
+            } catch (final java.text.ParseException eA) {
                 i++;
             }
         }
