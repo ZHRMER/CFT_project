@@ -3,7 +3,6 @@ package com.example.sweethome.rssreader.screens.settings.view;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -21,7 +20,7 @@ final class SettingsView implements ISettingsPresenterContract {
     private static final String KEY_LAST_CHECKED_TIME_INTERVAL = "KEY_LAST_CHECKED_TIME_INTERVAL";
     private static final String KEY_IS_CHECKED_INTERVAL = "KEY_IS_CHECKED_INTERVAL";
     private static final String APP_PREFERENCES = "mysettings";
-    private final String[] listItems = {"1 минута", "15 минут", "1 час", "3 часа", "6 часов", "12 часов", "1 день"};
+    private String[] listItems;
     private SettingsPresenter mSettingsPresenter;
     private AppCompatActivity mAppCompatActivity;
     private TextView mIntervalTimeTextView;
@@ -31,12 +30,10 @@ final class SettingsView implements ISettingsPresenterContract {
 
     SettingsView(final AppCompatActivity appCompatActivity) {
         mAppCompatActivity = appCompatActivity;
+        listItems = mAppCompatActivity.getResources().getStringArray(R.array.times);
     }
 
-    void onSaveInstanceSaved(final Bundle outState) {
-    }
-
-    void onCreate(final Bundle savedInstanceState) {
+    void onCreate() {
         mSharedPreferences = mAppCompatActivity.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         final CheckBox updateByTimeCheckBox = mAppCompatActivity.findViewById(R.id.update_by_time_CheckBox);
         mIntervalTimeTextView = mAppCompatActivity.findViewById(R.id.interval_value_TextView);

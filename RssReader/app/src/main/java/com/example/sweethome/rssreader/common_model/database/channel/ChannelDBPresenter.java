@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
 
+import com.example.sweethome.rssreader.R;
 import com.example.sweethome.rssreader.common_model.Channel;
 import com.example.sweethome.rssreader.common_model.database.articles.DBHelper;
 
@@ -18,6 +19,9 @@ import java.util.Date;
 
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_ADD_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_CHANNEL_LIST_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_CHANNEL_LIST_UPDATE_BY_TIME_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_UPDATE_BY_TIME_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ADD_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_ARTICLES_TABLE;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_CHANNELS_TABLE;
@@ -26,6 +30,7 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_CHANNEL_LINK;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_COLUMN_CHANNEL_NAME;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_CHANNEL_LIST_INTENT_RESULT;
+import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
 
 public final class ChannelDBPresenter {
     private final DBHelper mDBHelper;
@@ -74,7 +79,7 @@ public final class ChannelDBPresenter {
     //endregion
 
     //region getChannelList region
-    public void getChannelList() {
+    public void getChannelList(final boolean isByTime) {
         Cursor cursor = null;
         ArrayList<Channel> channelList = null;
         try {
@@ -91,8 +96,8 @@ public final class ChannelDBPresenter {
                     channelList.add(channel);
                 } while (cursor.moveToNext());
             }
-        } catch (final SQLException ignored) {
-
+        } catch (final SQLException e) {
+            sendWarningBroadcast(mContext.getResources().getString(R.string.sql_warning), isByTime);
         } finally {
             if (cursor != null) {
                 cursor.close();
@@ -100,16 +105,23 @@ public final class ChannelDBPresenter {
             mDBHelper.close();
             if (channelList != null) {
                 Collections.sort(channelList);
-                sendGetChannelListBroadcast(channelList);
+                sendGetChannelListBroadcast(channelList, isByTime);
+            } else {
+                sendWarningBroadcast(mContext.getResources().getString(R.string.sql_warning), isByTime);
             }
         }
     }
 
-    private void sendGetChannelListBroadcast(final ArrayList<Channel> channelList) {
+    private void sendGetChannelListBroadcast(final ArrayList<Channel> channelList, final boolean isByTime) {
         if (channelList == null) {
-            return;
+            sendWarningBroadcast(mContext.getResources().getString(R.string.sql_warning), isByTime);
         }
-        Intent channelListIntent = new Intent(BROADCAST_GET_CHANNEL_LIST_ACTION);
+        Intent channelListIntent;
+        if (isByTime) {
+            channelListIntent = new Intent(BROADCAST_GET_CHANNEL_LIST_UPDATE_BY_TIME_ACTION);
+        } else {
+            channelListIntent = new Intent(BROADCAST_GET_CHANNEL_LIST_ACTION);
+        }
         channelListIntent.putParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT, channelList);
         mContext.sendBroadcast(channelListIntent);
     }
@@ -118,24 +130,25 @@ public final class ChannelDBPresenter {
     //region deleteChannel region
     public void deleteChannelFromDB(final String link) {
         if (null == link) {
-            return;
+            sendWarningBroadcast(mContext.getResources().getString(R.string.sql_warning), false);
         }
         try {
             mSQLiteDataBase = mDBHelper.getWritableDatabase();
             mSQLiteDataBase.delete(KEY_CHANNELS_TABLE, KEY_COLUMN_CHANNEL_LINK + " = '" + link + "'", null);
             mSQLiteDataBase.delete(KEY_ARTICLES_TABLE, KEY_COLUMN_ARTICLE_CHANNEL_LINK + " = '" + link + "'", null);
-        } catch (final SQLException ignored) {
-
+        } catch (final SQLException e) {
+            sendWarningBroadcast(mContext.getResources().getString(R.string.sql_warning), false);
         } finally {
-            getChannelList();
+            getChannelList(false);
             mDBHelper.close();
         }
     }
     //endregion
 
     //region updateChannelsList region
-    public void updateChannelsList(ArrayList<Channel> channelArrayList) {
+    public void updateChannelsList(ArrayList<Channel> channelArrayList, final boolean isByTime) {
         if (null == channelArrayList) {
+            sendWarningBroadcast("", isByTime);
             return;
         }
         try {
@@ -146,14 +159,28 @@ public final class ChannelDBPresenter {
                 mSQLiteDataBase.update(KEY_CHANNELS_TABLE, channelValueUpdate,
                         KEY_COLUMN_CHANNEL_LINK + " = '" + currentChannel.getLinkString() + "'", null);
             }
-        } catch (final SQLException ignored) {
-
+        } catch (final SQLException e) {
+            sendWarningBroadcast("", isByTime);
         } finally {
-            getChannelList();
+            getChannelList(isByTime);
             mDBHelper.close();
         }
     }
     //endregion
+
+    private void sendWarningBroadcast(final String warningMessage, final boolean isByTime) {
+        if (null == warningMessage) {
+            return;
+        }
+        Intent warningIntent;
+        if (isByTime) {
+            warningIntent = new Intent(BROADCAST_WARNING_UPDATE_BY_TIME_ACTION);
+        } else {
+            warningIntent = new Intent(BROADCAST_WARNING_ACTION);
+        }
+        warningIntent.putExtra(KEY_WARNING_INTENT_RESULT, warningMessage);
+        mContext.sendBroadcast(warningIntent);
+    }
 
     private String isURLLink(final String url) {
         if (null == url || "".equalsIgnoreCase(url)) {

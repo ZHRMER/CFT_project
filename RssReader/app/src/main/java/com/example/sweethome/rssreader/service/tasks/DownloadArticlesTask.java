@@ -10,15 +10,17 @@ import java.util.ArrayList;
 final public class DownloadArticlesTask implements Runnable {
     private ArrayList<Channel> mChannelArrayList;
     private Context mContext;
+    private final boolean mIsByTime;
 
-    public DownloadArticlesTask(final ArrayList<Channel> channelArrayList, final Context context) {
+    public DownloadArticlesTask(final ArrayList<Channel> channelArrayList, final Context context, final boolean isByTime) {
         mChannelArrayList = channelArrayList;
         mContext = context;
+        mIsByTime = isByTime;
     }
 
     @Override
     public void run() {
         WebWorker worker = new WebWorker(mChannelArrayList, mContext);
-        worker.downloadArticle();
+        worker.downloadArticle(mIsByTime);
     }
 }

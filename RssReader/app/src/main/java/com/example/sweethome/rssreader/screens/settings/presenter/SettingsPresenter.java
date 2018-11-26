@@ -5,7 +5,6 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.os.SystemClock;
-import android.widget.Toast;
 
 import com.example.sweethome.rssreader.time_update_work.AlarmUpdateByTimeReceiver;
 
@@ -70,15 +69,12 @@ public final class SettingsPresenter {
 
     private void setAlarm() {
         final AlarmManager alarmManager = (AlarmManager) mContext.getSystemService(Context.ALARM_SERVICE);
-        final Intent intent = new Intent(mContext, AlarmUpdateByTimeReceiver.class);
+        final Intent updateByTimeReceiverIntent = new Intent(mContext, AlarmUpdateByTimeReceiver.class);
         PendingIntent pendingIntent = PendingIntent.getBroadcast(mContext, 0,
-                intent, PendingIntent.FLAG_CANCEL_CURRENT);
+                updateByTimeReceiverIntent, PendingIntent.FLAG_CANCEL_CURRENT);
         alarmManager.cancel(pendingIntent);
         if (isUpdateByTimeChecked) {
-            Toast.makeText(mContext, "Alarm start " + mIntervalTime, Toast.LENGTH_SHORT).show();
             alarmManager.setRepeating(AlarmManager.ELAPSED_REALTIME_WAKEUP, SystemClock.elapsedRealtime() + 3000, mIntervalTime, pendingIntent);
-        } else {
-            Toast.makeText(mContext, "Alarm cancelled", Toast.LENGTH_SHORT).show();
         }
     }
 }

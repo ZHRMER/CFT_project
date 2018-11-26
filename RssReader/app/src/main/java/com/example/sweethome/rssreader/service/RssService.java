@@ -25,7 +25,7 @@ import java.util.concurrent.Executors;
 public final class RssService extends android.app.Service {
     private static final int NUMBER_OF_THREADS = 4;
     private ExecutorService mExecutorService;
-    public RssBinder binder = new RssBinder();
+    private RssBinder binder = new RssBinder();
 
 
     public static Intent newIntent(final Context context) {
@@ -63,7 +63,7 @@ public final class RssService extends android.app.Service {
     //region updateChannels region
     public void updateChannels(final ArrayList<Channel> channelArrayList) {
         ChannelDBPresenter channelDBPresenter = new ChannelDBPresenter(this);
-        mExecutorService.execute(new UpdateChannelsListTask(channelArrayList, channelDBPresenter));
+        mExecutorService.execute(new UpdateChannelsListTask(channelArrayList, channelDBPresenter, false));
     }
     //endregion
 
@@ -77,13 +77,13 @@ public final class RssService extends android.app.Service {
     //region getChannelList region
     public void getChannelListFromDB() {
         ChannelDBPresenter channelDBPresenter = new ChannelDBPresenter(this);
-        mExecutorService.execute(new GetChannelListTask(channelDBPresenter));
+        mExecutorService.execute(new GetChannelListTask(channelDBPresenter, false));
     }
     //endregion
 
     //region downloadArticle region
     public void downloadArticles(final ArrayList<Channel> channelArrayList) {
-        mExecutorService.execute(new DownloadArticlesTask(channelArrayList, this));
+        mExecutorService.execute(new DownloadArticlesTask(channelArrayList, this, false));
     }
     //endregion
 

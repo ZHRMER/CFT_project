@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -70,7 +69,6 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
 
     void onCreate(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
-            Log.d("myLogs", "Saved instance not null");
             mArticleArrayList = savedInstanceState.getParcelableArrayList(KEY_ARTICLE_LIST);
             mSwipeRefreshLayout = mAppCompatActivity.findViewById(R.id.swipe_refresh_layout);
             mSwipeRefreshLayout.setRefreshing(savedInstanceState.getBoolean(KEY_ARTICLE_IS_REFRESH));
@@ -78,7 +76,6 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
             mLastCheckedItemLink = savedInstanceState.getString(KEY_LAST_CHECKED_ITEM_LINK);
             mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this, mLastCheckedItemLink);
         } else {
-            Log.d("myLogs", "Saved instance null");
             mArticleArrayList = new ArrayList<>();
             mLastCheckedItem = R.id.all_channels_item;
             mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this);

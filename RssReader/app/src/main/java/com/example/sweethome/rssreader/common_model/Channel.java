@@ -68,9 +68,6 @@ public final class Channel implements Parcelable, Comparable<Channel> {
     //endregion
 
     //region Getters region
-    public UUID getUUID() {
-        return mUUID;
-    }
 
     public String getLastArticlePubDate() {
         return mLastArticlePubDate;

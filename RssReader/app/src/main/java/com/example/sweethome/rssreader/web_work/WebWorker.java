@@ -20,13 +20,17 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_ARTICLE_LIST_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_GET_ARTICLE_LIST_UPDATE_BY_TIME_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_UPDATE_CHANNELS_LIST_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_UPDATE_CHANNELS_LIST_UPDATE_BY_TIME_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_ACTION;
+import static com.example.sweethome.rssreader.common_model.Constants.BROADCAST_WARNING_UPDATE_BY_TIME_ACTION;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT;
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
 
 public final class WebWorker {
+    private static final int TIME_TO_TIMEOUT = 5000;
     private ArrayList<Channel> mChannelArrayList;
     private Context mContext;
     private boolean isUpdateChannelList;
@@ -39,13 +43,13 @@ public final class WebWorker {
         }
     }
 
-    public void downloadArticle() {
+    public void downloadArticle(final boolean isByTime) {
         if (!isOnline()) {
-            sendWarningBroadcast(mContext.getString(R.string.no_internet));
+            sendWarningBroadcast(mContext.getString(R.string.no_internet), isByTime);
             return;
         }
         if (mChannelArrayList.size() == 0) {
-            sendWarningBroadcast(mContext.getString(R.string.no_channel_warning));
+            sendWarningBroadcast(mContext.getString(R.string.no_channel_warning), isByTime);
             return;
         }
         ArrayList<Article> tempArticleList;
@@ -58,7 +62,7 @@ public final class WebWorker {
                 channelName = currentChannel.getName();
                 URL url = new URL(currentChannel.getLinkString());
                 URLConnection rssConnection = url.openConnection();
-                rssConnection.setConnectTimeout(5000);
+                rssConnection.setConnectTimeout(TIME_TO_TIMEOUT);
                 inputStream = rssConnection.getInputStream();
                 RssParser rssParser = new RssParser();
                 tempArticleList = rssParser.parseFeed(inputStream, currentChannel);
@@ -68,54 +72,76 @@ public final class WebWorker {
                 }
                 inputStream.close();
             } catch (final MalformedURLException e) {
-                sendWarningBroadcast(mContext.getString(R.string.url_warning) + " " + channelName);
+                if (!isByTime) {
+                    sendWarningBroadcast(mContext.getString(R.string.url_warning) + " " + channelName, false);
+                }
                 continue;
             } catch (final IOException e) {
-                sendWarningBroadcast(mContext.getString(R.string.io_warning) + " " + channelName);
+                if (!isByTime) {
+                    sendWarningBroadcast(mContext.getString(R.string.io_warning) + " " + channelName, false);
+                }
                 continue;
             } catch (final XmlPullParserException e) {
-                e.printStackTrace();
-                sendWarningBroadcast(mContext.getString(R.string.xml_pullparser_warning) + " " + channelName);
+                if (!isByTime) {
+                    sendWarningBroadcast(mContext.getString(R.string.xml_pullparser_warning) + " " + channelName, false);
+                }
                 continue;
             } finally {
                 if (inputStream != null) {
                     try {
                         inputStream.close();
                     } catch (final IOException e1) {
-                        sendWarningBroadcast(mContext.getString(R.string.io_warning) + " " + channelName);
+                        if (!isByTime) {
+                            sendWarningBroadcast(mContext.getString(R.string.io_warning) + " " + channelName, false);
+                        }
                     }
                 }
             }
             articleArrayList.addAll(tempArticleList);
         }
         if (isUpdateChannelList) {
-            sendUpdateChannelsList();
+            sendUpdateChannelsList(isByTime);
         }
         Collections.sort(articleArrayList);
         Collections.reverse(articleArrayList);
-        sendArticlesList(articleArrayList);
+        sendArticlesList(articleArrayList, isByTime);
     }
 
-    private void sendArticlesList(final ArrayList<Article> articles) {
+    private void sendArticlesList(final ArrayList<Article> articles, final boolean isByTime) {
         if (null == articles) {
-            return;
+            sendWarningBroadcast("", isByTime);
         }
-        Intent articleListIntent = new Intent(BROADCAST_GET_ARTICLE_LIST_ACTION);
+        Intent articleListIntent;
+        if (isByTime) {
+            articleListIntent = new Intent(BROADCAST_GET_ARTICLE_LIST_UPDATE_BY_TIME_ACTION);
+        } else {
+            articleListIntent = new Intent(BROADCAST_GET_ARTICLE_LIST_ACTION);
+        }
         articleListIntent.putParcelableArrayListExtra(KEY_GET_ARTICLE_LIST_FROM_WEB_INTENT_RESULT, articles);
         mContext.sendBroadcast(articleListIntent);
     }
 
-    private void sendUpdateChannelsList() {
-        Intent channelsListIntent = new Intent(BROADCAST_UPDATE_CHANNELS_LIST_ACTION);
+    private void sendUpdateChannelsList(final boolean isByTime) {
+        Intent channelsListIntent;
+        if (isByTime) {
+            channelsListIntent = new Intent(BROADCAST_UPDATE_CHANNELS_LIST_UPDATE_BY_TIME_ACTION);
+        } else {
+            channelsListIntent = new Intent(BROADCAST_UPDATE_CHANNELS_LIST_ACTION);
+        }
         channelsListIntent.putParcelableArrayListExtra(KEY_UPDATE_CHANNELS_LIST_INTENT_RESULT, mChannelArrayList);
         mContext.sendBroadcast(channelsListIntent);
     }
 
-    private void sendWarningBroadcast(final String warningMessage) {
+    private void sendWarningBroadcast(final String warningMessage, final boolean isByTime) {
         if (null == warningMessage) {
             return;
         }
-        Intent warningIntent = new Intent(BROADCAST_WARNING_ACTION);
+        Intent warningIntent;
+        if (isByTime) {
+            warningIntent = new Intent(BROADCAST_WARNING_UPDATE_BY_TIME_ACTION);
+        } else {
+            warningIntent = new Intent(BROADCAST_WARNING_ACTION);
+        }
         warningIntent.putExtra(KEY_WARNING_INTENT_RESULT, warningMessage);
         mContext.sendBroadcast(warningIntent);
     }

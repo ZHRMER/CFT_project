@@ -15,7 +15,7 @@
     <string name="add_channel_fail_toast">Канал уже существует или неправильный адрес канала</string>
 
     <string name="url_warning">Не URL адрес.</string>
-    <string name="io_warning">Неправильный адрес или нет интернета.</string>
+    <string name="io_warning">Неправильный адрес или нет интернета</string>
     <string name="xml_pullparser_warning">Невозможно скачать новости канала.</string>
     <string name="no_channel_warning">Нет каналов, чтобы загрузить статьи.</string>
     <string name="no_internet">Включите Wi-Fi или Internet</string>
@@ -25,5 +25,16 @@
     <string name="settings_update_by_time_text">Обновлять по времени</string>
     <string name="settings_interval_text">Интервал</string>
     <string name="choose_time_text">Выберите время</string>
+    <string name="sql_warning">Неполадки при работе с БД</string>
+
+    <string-array name="times">
+        <item>1 минута</item>
+        <item>15 минут</item>
+        <item>1 час</item>
+        <item>3 часа</item>
+        <item>6 часов</item>
+        <item>12 часов</item>
+        <item>1 день</item>
+    </string-array>
 
 </resources>

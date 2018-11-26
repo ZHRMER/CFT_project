@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.sweethome.rssreader.common_model.Article;
@@ -109,7 +108,6 @@ public final class NewsListPresenter {
     }
 
     private void showArticles() {
-        Log.d("myLogs", "showArticles");
         mRssService.getArticlesListFromDB(mDefineChannelLink);
     }
 

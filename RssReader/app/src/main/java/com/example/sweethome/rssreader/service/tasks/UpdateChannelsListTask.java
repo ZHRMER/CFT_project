@@ -8,14 +8,16 @@ import java.util.ArrayList;
 final public class UpdateChannelsListTask implements Runnable {
     private final ChannelDBPresenter mChannelDBPresenter;
     private final ArrayList<Channel> mChannelArrayList;
+    private final boolean mIsByTime;
 
-    public UpdateChannelsListTask(final ArrayList<Channel> channelArrayList, final ChannelDBPresenter channelDBPresenter) {
+    public UpdateChannelsListTask(final ArrayList<Channel> channelArrayList, final ChannelDBPresenter channelDBPresenter, final boolean isByTime) {
         mChannelArrayList = channelArrayList;
         mChannelDBPresenter = channelDBPresenter;
+        mIsByTime=isByTime;
     }
 
     @Override
     public void run() {
-        mChannelDBPresenter.updateChannelsList(mChannelArrayList);
+        mChannelDBPresenter.updateChannelsList(mChannelArrayList,mIsByTime);
     }
 }

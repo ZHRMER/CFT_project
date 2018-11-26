@@ -52,7 +52,7 @@ public final class ChannelListPresenter {
                 if(null==intent.getAction()){
                     return;
                 }
-                if(intent.getAction().equals(BROADCAST_GET_CHANNEL_LIST_ACTION)) {
+                if (intent.getAction().equals(BROADCAST_GET_CHANNEL_LIST_ACTION)) {
                     mChannelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
                     mView.setChannelList(mChannelArrayList);
                 }

@@ -19,13 +19,8 @@ public final class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        mSettingsView=new SettingsView(this);
-        mSettingsView.onCreate(savedInstanceState);
-    }
-    @Override
-    protected void onSaveInstanceState(final Bundle outState) {
-        super.onSaveInstanceState(outState);
-        mSettingsView.onSaveInstanceSaved(outState);
+        mSettingsView = new SettingsView(this);
+        mSettingsView.onCreate();
     }
 
     @Override

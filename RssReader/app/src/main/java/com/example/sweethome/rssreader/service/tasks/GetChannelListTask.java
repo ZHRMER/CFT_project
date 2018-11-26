@@ -4,13 +4,15 @@ import com.example.sweethome.rssreader.common_model.database.channel.ChannelDBPr
 
 final public class GetChannelListTask implements Runnable {
     private final ChannelDBPresenter mChannelDBPresenter;
+    private final boolean mIsByTime;
 
-    public GetChannelListTask(final ChannelDBPresenter channelDBPresenter) {
+    public GetChannelListTask(final ChannelDBPresenter channelDBPresenter,final boolean isByTime) {
         mChannelDBPresenter = channelDBPresenter;
+        mIsByTime=isByTime;
     }
 
     @Override
     public void run() {
-        mChannelDBPresenter.getChannelList();
+        mChannelDBPresenter.getChannelList(mIsByTime);
     }
 }
