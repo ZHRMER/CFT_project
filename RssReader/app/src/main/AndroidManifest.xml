@@ -14,18 +14,40 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-
-        <activity android:name="com.example.sweethome.rssreader.screens.articles_list.view.ArticlesListActivity">
+        <activity android:name=".screens.articles_list.view.ArticlesListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.example.sweethome.rssreader.screens.add_channel.view.AddChannelActivity" />
+        <activity android:name=".screens.add_channel.view.AddChannelActivity">
+            <intent-filter>
+                <data android:scheme="http" />
+                <data android:host="*" />
+                <data android:pathPattern=".*atom.*" />
+                <data android:pathPattern=".*rss.*" />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+            <intent-filter>
+                <data android:scheme="https" />
+                <data android:host="*" />
+                <data android:pathPattern=".*atom.*" />
+                <data android:pathPattern=".*rss.*" />
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+            </intent-filter>
+        </activity>
 
         <service android:name=".service.RssService" />
-    </application>
+        <service android:name=".service.UpdateByTimeService"/>
 
+        <receiver android:name=".time_update_work.AlarmUpdateByTimeReceiver" />
+
+        <activity android:name=".screens.settings.view.SettingsActivity"></activity>
+    </application>
 
 </manifest>

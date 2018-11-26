@@ -2,4 +2,5 @@
 <resources>
     <dimen name="padding_left">5dp</dimen>
     <dimen name="channel_or_article_name">18sp</dimen>
+    <dimen name="padding_top">10dp</dimen>
 </resources>

@@ -22,5 +22,8 @@
     <string name="delete_item_menu_text">Удалить</string>
     <string name="add_name_hint_EditText">Название</string>
     <string name="add_link_hint_EditText">Адрес</string>
+    <string name="settings_update_by_time_text">Обновлять по времени</string>
+    <string name="settings_interval_text">Интервал</string>
+    <string name="choose_time_text">Выберите время</string>
 
 </resources>

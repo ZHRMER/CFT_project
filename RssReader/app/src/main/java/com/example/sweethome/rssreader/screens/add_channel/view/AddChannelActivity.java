@@ -2,7 +2,7 @@ package com.example.sweethome.rssreader.screens.add_channel.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 
@@ -16,10 +16,12 @@ public final class AddChannelActivity extends AppCompatActivity {
     protected void onCreate(final Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_channel);
-
         mAddChannelView = new AddChannelView(this);
         mAddChannelView.onCreate(savedInstanceState);
-
+        Uri data = this.getIntent().getData();
+        if (null != data) {
+            mAddChannelView.handleUriData(getIntent().getDataString());
+        }
     }
 
     public static Intent newIntent(final Context context) {
@@ -42,11 +44,6 @@ public final class AddChannelActivity extends AppCompatActivity {
     protected void onPause() {
         super.onPause();
         mAddChannelView.onPause();
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
     }
 
     @Override

@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.sweethome.rssreader.common_model.Article;
@@ -24,16 +25,17 @@ import static com.example.sweethome.rssreader.common_model.Constants.KEY_UPDATE_
 import static com.example.sweethome.rssreader.common_model.Constants.KEY_WARNING_INTENT_RESULT;
 
 public final class NewsListPresenter {
+    private static final String DEFAULT_CHANNEL_LINK = "";
     private Context mContext;
     private RssService mRssService;
     private ServiceConnection mServiceConnection;
     private BroadcastReceiver mBroadcastReceiver;
     private ArrayList<Channel> mChannelArrayList;
     private INewsListPresenterContract mINewsListPresenterContract;
-
-    private String mDefineChannelLink = "";
+    private String mDefineChannelLink;
 
     public NewsListPresenter(final Context context, final INewsListPresenterContract iNewsListPresenterContract) {
+        mDefineChannelLink = DEFAULT_CHANNEL_LINK;
         mContext = context;
         mINewsListPresenterContract = iNewsListPresenterContract;
     }
@@ -107,6 +109,7 @@ public final class NewsListPresenter {
     }
 
     private void showArticles() {
+        Log.d("myLogs", "showArticles");
         mRssService.getArticlesListFromDB(mDefineChannelLink);
     }
 
@@ -115,7 +118,7 @@ public final class NewsListPresenter {
     }
 
     public void updateArticles() {
-        if ("".equals(mDefineChannelLink)) {
+        if (DEFAULT_CHANNEL_LINK.equals(mDefineChannelLink)) {
             mRssService.downloadArticles(mChannelArrayList);
         } else {
             for (Channel currentChannel : mChannelArrayList) {
@@ -144,6 +147,7 @@ public final class NewsListPresenter {
 
     public void setChannelsArrayList(final ArrayList<Channel> channelsArrayList) {
         mChannelArrayList = channelsArrayList;
+        showArticles();
     }
 
     public void setDefineChannelLink(final String defineChannelLink) {
@@ -154,8 +158,8 @@ public final class NewsListPresenter {
     }
 
     public void deleteChannel(final String channelLink) {
-        if (mDefineChannelLink.equals(channelLink) || mDefineChannelLink.equals("")) {
-            setDefineChannelLink("");
+        if (mDefineChannelLink.equals(channelLink) || mDefineChannelLink.equals(DEFAULT_CHANNEL_LINK)) {
+            mDefineChannelLink = DEFAULT_CHANNEL_LINK;
         }
     }
 }

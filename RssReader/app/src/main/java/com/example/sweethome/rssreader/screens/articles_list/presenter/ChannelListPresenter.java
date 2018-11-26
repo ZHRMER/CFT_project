@@ -49,8 +49,13 @@ public final class ChannelListPresenter {
         mBroadcastReceiver = new BroadcastReceiver() {
             @Override
             public void onReceive(final Context context, final Intent intent) {
-                mChannelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
-                mView.setChannelList(mChannelArrayList);
+                if(null==intent.getAction()){
+                    return;
+                }
+                if(intent.getAction().equals(BROADCAST_GET_CHANNEL_LIST_ACTION)) {
+                    mChannelArrayList = intent.getParcelableArrayListExtra(KEY_GET_CHANNEL_LIST_INTENT_RESULT);
+                    mView.setChannelList(mChannelArrayList);
+                }
             }
         };
         IntentFilter intentFilter = new IntentFilter(BROADCAST_GET_CHANNEL_LIST_ACTION);

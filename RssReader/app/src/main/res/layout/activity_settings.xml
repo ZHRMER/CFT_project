@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/CommonLinearLayout"
+    tools:context=".screens.settings.view.SettingsActivity">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_settings_activity"
+        style="@style/CommonToolBar" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/update_by_time_TextView"
+            style="@style/ActivitySettingsTextView"
+            android:text="@string/settings_update_by_time_text"/>
+
+        <CheckBox
+            android:id="@+id/update_by_time_CheckBox"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.2"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/delimiter1"
+        style="@style/ChannelViewDelimiter" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/interval_TextView"
+            style="@style/ActivitySettingsTextView"
+            android:text="@string/settings_interval_text" />
+
+        <TextView
+            android:id="@+id/interval_value_TextView"
+            style="@style/ActivitySettingsIntervalValueTextView"/>
+    </LinearLayout>
+    <View
+        android:id="@+id/delimiter2"
+        style="@style/ChannelViewDelimiter" />
+
+
+</LinearLayout>

@@ -15,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -28,6 +29,7 @@ import com.example.sweethome.rssreader.screens.articles_list.presenter.ChannelLi
 import com.example.sweethome.rssreader.screens.articles_list.presenter.IChannelListPresenterContract;
 import com.example.sweethome.rssreader.screens.articles_list.presenter.INewsListPresenterContract;
 import com.example.sweethome.rssreader.screens.articles_list.presenter.NewsListPresenter;
+import com.example.sweethome.rssreader.screens.settings.view.SettingsActivity;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -52,7 +54,7 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
     private ArrayList<Article> mArticleArrayList;
     private ArticleListAdapter mArticleListAdapter;
     private int mLastCheckedItem;
-    private String mLastCheckedItemLink;
+    private String mLastCheckedItemLink = "";
 
     ArticlesListView(final AppCompatActivity appCompatActivity) {
         mAppCompatActivity = appCompatActivity;
@@ -68,6 +70,7 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
 
     void onCreate(final Bundle savedInstanceState) {
         if (savedInstanceState != null) {
+            Log.d("myLogs", "Saved instance not null");
             mArticleArrayList = savedInstanceState.getParcelableArrayList(KEY_ARTICLE_LIST);
             mSwipeRefreshLayout = mAppCompatActivity.findViewById(R.id.swipe_refresh_layout);
             mSwipeRefreshLayout.setRefreshing(savedInstanceState.getBoolean(KEY_ARTICLE_IS_REFRESH));
@@ -75,6 +78,7 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
             mLastCheckedItemLink = savedInstanceState.getString(KEY_LAST_CHECKED_ITEM_LINK);
             mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this, mLastCheckedItemLink);
         } else {
+            Log.d("myLogs", "Saved instance null");
             mArticleArrayList = new ArrayList<>();
             mLastCheckedItem = R.id.all_channels_item;
             mNewsListPresenter = new NewsListPresenter(mAppCompatActivity, this);
@@ -165,6 +169,13 @@ final class ArticlesListView implements INewsListPresenterContract, Toolbar.OnMe
 
     @Override
     public boolean onMenuItemClick(final MenuItem menuItem) {
+        switch (menuItem.getItemId()) {
+            case R.id.action_settings: {
+                Intent settingsIntent = SettingsActivity.newIntent(mAppCompatActivity);
+                mAppCompatActivity.startActivity(settingsIntent);
+                break;
+            }
+        }
         return false;
     }
 

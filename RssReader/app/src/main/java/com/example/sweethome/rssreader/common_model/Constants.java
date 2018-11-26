@@ -31,7 +31,10 @@ public final class Constants {
 
     public static final String BROADCAST_ADD_ACTION = "com.example.sweethome.rssreader.add_broadcast";
     public static final String BROADCAST_GET_CHANNEL_LIST_ACTION = "com.example.sweethome.rssreader.get_channel_list_broadcast";
+    public static final String BROADCAST_GET_CHANNEL_LIST_UPDATE_BY_TIME_ACTION = "com.example.sweethome.rssreader.get_channel_list_update_by_time_broadcast";
     public static final String BROADCAST_WARNING_ACTION = "com.example.sweethome.rssreader.get_article_list_warning_broadcast";
     public static final String BROADCAST_GET_ARTICLE_LIST_ACTION = "com.example.sweethome.rssreader.get_article_list_broadcast";
+    public static final String BROADCAST_GET_ARTICLE_LIST_UPDATE_BY_TIME_ACTION = "com.example.sweethome.rssreader.get_article_list_update_by_time_broadcast";
     public static final String BROADCAST_UPDATE_CHANNELS_LIST_ACTION = "com.example.sweethome.rssreader.update_channels_list_broadcast";
+    public static final String BROADCAST_UPDATE_CHANNELS_LIST_UPDATE_BY_TIME_ACTION = "com.example.sweethome.rssreader.update_channels_list_update_by_time_broadcast";
 }

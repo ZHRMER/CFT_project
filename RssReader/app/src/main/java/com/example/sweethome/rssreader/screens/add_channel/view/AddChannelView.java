@@ -75,6 +75,9 @@ final class AddChannelView implements IAddChannelPresenterContract {
     }
 
     private void loadSharedPreferences() {
+        if (!mChannelLinkEditText.getText().toString().equals("")) {
+            return;
+        }
         if (mSharedPreferences.contains(APP_PREFERENCES_CHANNEL_NAME)) {
             mChannelNameEditText.setText(mSharedPreferences.getString(APP_PREFERENCES_CHANNEL_NAME, ""));
         }
@@ -123,5 +126,9 @@ final class AddChannelView implements IAddChannelPresenterContract {
         mChannelNameEditText.setText("");
         mInfoTextView.setTextColor(mAppCompatActivity.getResources().getColor(R.color.colorSuccess));
         mInfoTextView.setText(message);
+    }
+
+    void handleUriData(final String uri) {
+        mChannelLinkEditText.setText(uri);
     }
 }
