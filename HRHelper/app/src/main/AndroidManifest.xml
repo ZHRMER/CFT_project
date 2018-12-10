@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
+            android:name=".data.model.App"
             android:allowBackup="true"
             android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
@@ -13,16 +14,18 @@
             android:supportsRtl="true"
             android:theme="@style/AppTheme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".screens.event_list.view.EventListActivity">
+        <activity android:name=".presentation.screens.event_list.view.EventListActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".screens.settings.view.SettingsActivity">
+        <activity android:name=".presentation.screens.settings.view.SettingsActivity">
         </activity>
-        <activity android:name=".screens.event.view.EventActivity">
+        <activity android:name=".presentation.screens.event.view.EventActivity">
+        </activity>
+        <activity android:name=".presentation.screens.member.view.MemberInfoActivity">
         </activity>
     </application>
 

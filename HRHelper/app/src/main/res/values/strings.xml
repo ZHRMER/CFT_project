@@ -3,4 +3,6 @@
     <string name="event_list_title">Events</string>
     <string name="settings_text">Settings</string>
     <string name="update_text">Update</string>
+    <string name="settings_title">Settings</string>
+    <string name="search_member_hint_text">Search</string>
 </resources>

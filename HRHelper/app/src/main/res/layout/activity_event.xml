@@ -1,8 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical">
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
     <android.support.v7.widget.Toolbar
             android:layout_width="match_parent"
@@ -11,10 +15,16 @@
             android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
             android:minHeight="?attr/actionBarSize"
             android:id="@+id/toolbar_activity_event"/>
-    <SearchView
+
+    <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/member_search_view"/>
+            android:inputType="textPersonName"
+            android:ems="10"
+            android:id="@+id/search_member_edit_text"
+            android:hint="@string/search_member_hint_text"
+
+            tools:ignore="Autofill,LabelFor"/>
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_member_list_activity_event"
             android:layout_width="match_parent"

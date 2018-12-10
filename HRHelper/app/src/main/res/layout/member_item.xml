@@ -20,7 +20,7 @@
         <Switch
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:id="@+id/switch1"/>
+                android:id="@+id/member_switch"/>
     </LinearLayout>
     <TextView
             android:id="@+id/member_id_text_view"
