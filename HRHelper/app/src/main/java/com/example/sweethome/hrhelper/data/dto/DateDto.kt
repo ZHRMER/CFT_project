@@ -1,11 +1,11 @@
-package com.example.sweethome.hrhelper.data.model
+package com.example.sweethome.hrhelper.data.dto
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Date() : Parcelable {
+class DateDto() : Parcelable {
 
     @SerializedName("start")
     @Expose
@@ -28,12 +28,12 @@ class Date() : Parcelable {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Date> {
-        override fun createFromParcel(parcel: Parcel): Date {
-            return Date(parcel)
+    companion object CREATOR : Parcelable.Creator<DateDto> {
+        override fun createFromParcel(parcel: Parcel): DateDto {
+            return DateDto(parcel)
         }
 
-        override fun newArray(size: Int): Array<Date?> {
+        override fun newArray(size: Int): Array<DateDto?> {
             return arrayOfNulls(size)
         }
     }

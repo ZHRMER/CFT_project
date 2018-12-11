@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar
 import android.view.MenuItem
 import android.widget.Toast
 import com.example.sweethome.hrhelper.R
-import com.example.sweethome.hrhelper.data.model.Event
+import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.presentation.screens.event_list.presenter.EventListPresenter
 
 

@@ -5,9 +5,9 @@ import android.arch.persistence.room.Room
 import android.arch.persistence.room.RoomDatabase
 import android.arch.persistence.room.TypeConverters
 import android.content.Context
-import com.example.sweethome.hrhelper.data.model.Event
+import com.example.sweethome.hrhelper.data.dto.EventDto
 
-@Database(entities = [Event::class], version = 1, exportSchema = false)
+@Database(entities = [EventDto::class], version = 1, exportSchema = false)
 @TypeConverters(EventConverter::class)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun eventDao(): EventDao

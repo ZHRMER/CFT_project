@@ -1,4 +1,4 @@
-package com.example.sweethome.hrhelper.data.model
+package com.example.sweethome.hrhelper.data.dto
 
 import android.arch.persistence.room.Ignore
 import android.os.Parcel
@@ -6,7 +6,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-data class City(
+data class CityDto(
     @SerializedName("id")
     @Expose
     var id: Int? = null,
@@ -45,12 +45,12 @@ data class City(
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<City> {
-        override fun createFromParcel(parcel: Parcel): City {
-            return City(parcel)
+    companion object CREATOR : Parcelable.Creator<CityDto> {
+        override fun createFromParcel(parcel: Parcel): CityDto {
+            return CityDto(parcel)
         }
 
-        override fun newArray(size: Int): Array<City?> {
+        override fun newArray(size: Int): Array<CityDto?> {
             return arrayOfNulls(size)
         }
     }

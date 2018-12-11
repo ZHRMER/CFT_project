@@ -7,11 +7,11 @@ import android.text.Html
 import android.widget.ListView
 import android.widget.SimpleAdapter
 import com.example.sweethome.hrhelper.R
-import com.example.sweethome.hrhelper.data.model.Member
+import com.example.sweethome.hrhelper.data.dto.MemberDto
 import com.example.sweethome.hrhelper.presentation.screens.member.presenter.MemberInfoPresenter
 
 
-class MemberInfoActivityView(private var myActivity: AppCompatActivity?, private var myMember: Member) {
+class MemberInfoActivityView(private var myActivity: AppCompatActivity?, private var myMember: MemberDto) {
 
     private lateinit var myMemberInfoPresenter: MemberInfoPresenter
 
@@ -53,7 +53,7 @@ class MemberInfoActivityView(private var myActivity: AppCompatActivity?, private
         arrayList.add(map)
 
         map = HashMap(1)
-        map["Item"] = "City"
+        map["Item"] = "CityDto"
         map["Value"] = myMember.city!!
         arrayList.add(map)
 

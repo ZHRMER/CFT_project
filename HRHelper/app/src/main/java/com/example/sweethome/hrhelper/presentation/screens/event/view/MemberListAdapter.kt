@@ -1,17 +1,16 @@
 package com.example.sweethome.hrhelper.presentation.screens.event.view
 
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Switch
 import android.widget.TextView
 import com.example.sweethome.hrhelper.R
-import com.example.sweethome.hrhelper.data.model.Member
+import com.example.sweethome.hrhelper.data.dto.MemberDto
 
 class MemberListAdapter(
-    private val memberList: List<Member>?,
+    private val memberList: List<MemberDto>?,
     private val myMemberListAdapterContract: MemberListAdapterContract
 ) : RecyclerView.Adapter<MemberListAdapter.ViewHolder>() {
 
@@ -49,6 +48,6 @@ class MemberListAdapter(
     }
 
     interface MemberListAdapterContract {
-        fun onMemberClick(member: Member?)
+        fun onMemberClick(member: MemberDto?)
     }
 }

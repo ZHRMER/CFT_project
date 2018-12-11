@@ -11,8 +11,8 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.Toast
 import com.example.sweethome.hrhelper.R
-import com.example.sweethome.hrhelper.data.model.Event
-import com.example.sweethome.hrhelper.data.model.Member
+import com.example.sweethome.hrhelper.data.dto.MemberDto
+import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.presentation.screens.event.presenter.EventPresenter
 
 class EventActivityView(
@@ -22,7 +22,7 @@ class EventActivityView(
     EventPresenter.EventPresenterContract,
     MemberListAdapter.MemberListAdapterContract {
     private lateinit var myEventPresenter: EventPresenter
-    private var myMemberList: ArrayList<Member>? = null
+    private var myMemberList: ArrayList<MemberDto>? = null
     private lateinit var recyclerView: RecyclerView
 
     fun onSaveInstanceState(outState: Bundle?) {
@@ -37,7 +37,7 @@ class EventActivityView(
             myEvent.id!!
         )
         if (savedInstanceState?.getParcelableArrayList<Event>("member_list") != null) {
-            myMemberList = savedInstanceState.getParcelableArrayList<Member>("member_list")
+            myMemberList = savedInstanceState.getParcelableArrayList<MemberDto>("member_list")
         } else {
             myMemberList = ArrayList()
             myEventPresenter.loadMembersList()
@@ -57,7 +57,7 @@ class EventActivityView(
             }
 
             override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                val tempMemberList = ArrayList<Member>()
+                val tempMemberList = ArrayList<MemberDto>()
                 val fullMemberList = myMemberList
                 if (fullMemberList != null) {
                     for (user in fullMemberList) {
@@ -95,7 +95,7 @@ class EventActivityView(
         myEventPresenter.onOptionsItemSelected(menuItem)
     }
 
-    override fun getEventSuccess(memberList: List<Member>?) {
+    override fun getEventSuccess(memberList: List<MemberDto>?) {
         myMemberList?.clear()
         if (memberList != null) {
             myMemberList?.addAll(memberList)
@@ -107,7 +107,7 @@ class EventActivityView(
         Toast.makeText(myActivity, "Can't get member list", Toast.LENGTH_SHORT).show()
     }
 
-    override fun onMemberClick(member: Member?) {
+    override fun onMemberClick(member: MemberDto?) {
         myEventPresenter.onMemberClick(member)
     }
 }

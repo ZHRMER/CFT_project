@@ -7,7 +7,7 @@ import android.support.v7.app.AppCompatActivity
 import android.view.Menu
 import android.view.MenuItem
 import com.example.sweethome.hrhelper.R
-import com.example.sweethome.hrhelper.data.model.Event
+import com.example.sweethome.hrhelper.domain.entity.Event
 
 class EventActivity : AppCompatActivity() {
     private lateinit var myEventActivityView: EventActivityView

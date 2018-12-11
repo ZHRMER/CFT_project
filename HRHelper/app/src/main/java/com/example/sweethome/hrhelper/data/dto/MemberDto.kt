@@ -1,11 +1,11 @@
-package com.example.sweethome.hrhelper.data.model
+package com.example.sweethome.hrhelper.data.dto
 
 import android.os.Parcel
 import android.os.Parcelable
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Member() : Parcelable {
+class MemberDto() : Parcelable {
 
     @SerializedName("id")
     @Expose
@@ -81,12 +81,12 @@ class Member() : Parcelable {
         return 0
     }
 
-    companion object CREATOR : Parcelable.Creator<Member> {
-        override fun createFromParcel(parcel: Parcel): Member {
-            return Member(parcel)
+    companion object CREATOR : Parcelable.Creator<MemberDto> {
+        override fun createFromParcel(parcel: Parcel): MemberDto {
+            return MemberDto(parcel)
         }
 
-        override fun newArray(size: Int): Array<Member?> {
+        override fun newArray(size: Int): Array<MemberDto?> {
             return arrayOfNulls(size)
         }
     }

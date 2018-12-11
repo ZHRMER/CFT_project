@@ -5,11 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.sweethome.hrhelper.R
-import com.example.sweethome.hrhelper.data.model.Member
+import com.example.sweethome.hrhelper.data.dto.MemberDto
 
 class MemberInfoActivity : AppCompatActivity() {
     private lateinit var myMemberInfoActivityView: MemberInfoActivityView
-    private lateinit var myMember: Member
+    private lateinit var myMember: MemberDto
 
     companion object {
         fun newIntent(context: Context?): Intent {

@@ -3,7 +3,7 @@ package com.example.sweethome.hrhelper.presentation.screens.event_list.presenter
 import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.example.sweethome.hrhelper.R
-import com.example.sweethome.hrhelper.data.model.Event
+import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.domain.use_cases.GetEventListUseCase
 import com.example.sweethome.hrhelper.presentation.callbacks.Carry
 import com.example.sweethome.hrhelper.presentation.screens.event.view.EventActivity
@@ -11,7 +11,8 @@ import com.example.sweethome.hrhelper.presentation.screens.event.view.EventActiv
 
 class EventListPresenter(
     private var myActivity: AppCompatActivity?,
-    private var myEventListPresenterContract: EventListPresenterContract?
+    private var myEventListPresenterContract: EventListPresenterContract?,
+    private var getEventListUseCase: GetEventListUseCase = GetEventListUseCase()
 ) {
 
     fun attach(activity: AppCompatActivity?, eventListPresenterContract: EventListPresenterContract?) {
@@ -31,7 +32,6 @@ class EventListPresenter(
     }
 
     fun loadEventsList() {
-        val getEventListUseCase = GetEventListUseCase()
         getEventListUseCase.getEventList(object : Carry<List<Event>> {
 
             override fun onSuccess(result: List<Event>) {
