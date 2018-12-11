@@ -1,9 +1,7 @@
 package com.example.sweethome.hrhelper.presentation.screens.event_list.view
 
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.support.v7.app.AppCompatActivity
-import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import com.example.sweethome.hrhelper.R
@@ -43,4 +41,5 @@ class EventListActivity : AppCompatActivity() {
         myEventListActivityView.onOptionsItemSelected(item)
         return super.onOptionsItemSelected(item)
     }
+
 }

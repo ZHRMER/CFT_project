@@ -5,14 +5,17 @@ import android.view.MenuItem
 import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.domain.use_cases.GetEventListUseCase
-import com.example.sweethome.hrhelper.presentation.callbacks.Carry
 import com.example.sweethome.hrhelper.presentation.screens.event.view.EventActivity
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 
 
 class EventListPresenter(
     private var myActivity: AppCompatActivity?,
     private var myEventListPresenterContract: EventListPresenterContract?,
-    private var getEventListUseCase: GetEventListUseCase = GetEventListUseCase()
+    private var getEventListUseCase: GetEventListUseCase = GetEventListUseCase(),
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 ) {
 
     fun attach(activity: AppCompatActivity?, eventListPresenterContract: EventListPresenterContract?) {
@@ -23,25 +26,27 @@ class EventListPresenter(
     fun detach() {
         myActivity = null
         myEventListPresenterContract = null
+        compositeDisposable.clear()
     }
 
     fun onOptionsItemSelected(item: MenuItem?) {
         if (item?.itemId == R.id.update_event_item) {
-            loadEventsList()
+            loadEventsListRx()
         }
     }
 
-    fun loadEventsList() {
-        getEventListUseCase.getEventList(object : Carry<List<Event>> {
-
-            override fun onSuccess(result: List<Event>) {
-                myEventListPresenterContract?.getEventSuccess(result)
-            }
-
-            override fun onFailure(throwable: Throwable) {
-                myEventListPresenterContract?.getEventFail()
-            }
-        })
+    fun loadEventsListRx() {
+        compositeDisposable.add(getEventListUseCase.loadEventRx()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(
+                {
+                    myEventListPresenterContract?.getEventSuccess(it)
+                },
+                {
+                    myEventListPresenterContract?.getEventFail()
+                }
+            ))
     }
 
     fun onEventClick(event: Event?) {

@@ -35,7 +35,7 @@ class EventListActivityView(private var myActivity: AppCompatActivity?) :
             myEventList = savedInstanceState.getParcelableArrayList<Event>("event_list")
         } else {
             myEventList = ArrayList()
-            eventListPresenter.loadEventsList()
+            eventListPresenter.loadEventsListRx()
         }
         recyclerView = myActivity?.findViewById(R.id.recycler_view_activity_event_list) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(myActivity)

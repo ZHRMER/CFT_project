@@ -40,7 +40,7 @@ class EventActivityView(
             myMemberList = savedInstanceState.getParcelableArrayList<MemberDto>("member_list")
         } else {
             myMemberList = ArrayList()
-            myEventPresenter.loadMembersList()
+            myEventPresenter.loadMembersListRx()
         }
         recyclerView = myActivity?.findViewById(R.id.recycler_view_member_list_activity_event) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(myActivity)
@@ -95,7 +95,7 @@ class EventActivityView(
         myEventPresenter.onOptionsItemSelected(menuItem)
     }
 
-    override fun getEventSuccess(memberList: List<MemberDto>?) {
+    override fun getMembersSuccess(memberList: List<MemberDto>?) {
         myMemberList?.clear()
         if (memberList != null) {
             myMemberList?.addAll(memberList)
@@ -103,11 +103,15 @@ class EventActivityView(
         recyclerView.adapter?.notifyDataSetChanged()
     }
 
-    override fun getEventFail() {
+    override fun getMembersFail() {
         Toast.makeText(myActivity, "Can't get member list", Toast.LENGTH_SHORT).show()
     }
 
     override fun onMemberClick(member: MemberDto?) {
         myEventPresenter.onMemberClick(member)
+    }
+
+    override fun onMemberArrivedStateChanged(memberId: Int, myIsArrived: Boolean) {
+        myEventPresenter.onMemberArrivedStateChanged(memberId, myIsArrived)
     }
 }

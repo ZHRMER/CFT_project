@@ -43,11 +43,13 @@ class MemberListAdapter(
             itemView.setOnClickListener { myMemberListAdapterContract.onMemberClick(memberList!![itemPosition]) }
             memberArrivedSwitch.setOnCheckedChangeListener { _, isChecked ->
                 memberList?.get(itemPosition)!!.isArrived = isChecked
+                myMemberListAdapterContract.onMemberArrivedStateChanged(memberList[itemPosition].id, isChecked)
             }
         }
     }
 
     interface MemberListAdapterContract {
         fun onMemberClick(member: MemberDto?)
+        fun onMemberArrivedStateChanged(memberId: Int, myIsArrived: Boolean)
     }
 }

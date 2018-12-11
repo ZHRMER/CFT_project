@@ -1,7 +1,6 @@
-package com.example.sweethome.hrhelper.di
+package com.example.sweethome.hrhelper.di.module
 
 import com.example.sweethome.hrhelper.data.EventsApi
-import com.example.sweethome.hrhelper.extension.warning
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -28,7 +27,6 @@ class RetrofitModule(private var url: String) {
     @Provides
     @Singleton
     fun providesEventsApi(): EventsApi {
-        warning("EventsApi created")
         return Retrofit.Builder()
             .baseUrl(url)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

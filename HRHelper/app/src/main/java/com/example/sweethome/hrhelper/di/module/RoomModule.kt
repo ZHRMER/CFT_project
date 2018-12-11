@@ -1,4 +1,4 @@
-package com.example.sweethome.hrhelper.di
+package com.example.sweethome.hrhelper.di.module
 
 import android.arch.persistence.room.Room
 import android.content.Context
