@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        style="@style/CommonLinearLayout"
+        android:layout_height="wrap_content">
     <android.support.v7.widget.CardView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/card_view"
@@ -11,31 +10,24 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp">
         <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
+                style="@style/CommonLinearLayout">
             <TextView
                     android:id="@+id/event_title_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:textSize="18sp"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="0dp"/>
+                    style="@style/CommonHeaderTextView"/>
             <TextView
                     android:id="@+id/event_description_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="0dp"/>
+                    style="@style/CommonPadding"/>
             <TextView
                     android:id="@+id/event_data_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="5dp"
-                    android:paddingStart="5dp"
-                    android:paddingEnd="0dp"/>
+                    style="@style/CommonPadding"/>
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

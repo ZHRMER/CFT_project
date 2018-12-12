@@ -31,12 +31,10 @@ class EventActivityView(
 
     fun onCreate(savedInstanceState: Bundle?) {
         initToolbar()
-        myEventPresenter = EventPresenter(
-            myActivity,
-            this,
-            myEvent.id!!
-        )
-        if (savedInstanceState?.getParcelableArrayList<Event>("member_list") != null) {
+        myEventPresenter = EventPresenter(myActivity, this, myEvent)
+        if (savedInstanceState?.getParcelableArrayList<Event>("member_list") != null
+            && savedInstanceState.getParcelableArrayList<Event>("member_list")?.size!! > 0
+        ) {
             myMemberList = savedInstanceState.getParcelableArrayList<MemberDto>("member_list")
         } else {
             myMemberList = ArrayList()
@@ -66,9 +64,10 @@ class EventActivityView(
                             tempMemberList.add(user)
                         }
                     }
-                    val tempAdapter =
-                        MemberListAdapter(tempMemberList, this@EventActivityView)
-                    recyclerView.adapter = tempAdapter
+                    val myAdapter = recyclerView.adapter
+                    if (myAdapter is MemberListAdapter) {
+                        myAdapter.updateMemberList(tempMemberList)
+                    }
                 }
             }
         })
@@ -96,15 +95,18 @@ class EventActivityView(
     }
 
     override fun getMembersSuccess(memberList: List<MemberDto>?) {
-        myMemberList?.clear()
         if (memberList != null) {
+            myMemberList?.clear()
             myMemberList?.addAll(memberList)
+            val myAdapter = recyclerView.adapter
+            if (myAdapter is MemberListAdapter) {
+                myAdapter.updateMemberList(memberList)
+            }
         }
-        recyclerView.adapter?.notifyDataSetChanged()
     }
 
     override fun getMembersFail() {
-        Toast.makeText(myActivity, "Can't get member list", Toast.LENGTH_SHORT).show()
+        Toast.makeText(myActivity, myActivity?.getString(R.string.warning_load_members), Toast.LENGTH_SHORT).show()
     }
 
     override fun onMemberClick(member: MemberDto?) {

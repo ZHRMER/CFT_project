@@ -1,4 +1,4 @@
-package com.example.sweethome.hrhelper.data
+package com.example.sweethome.hrhelper.data.network_source
 
 import com.example.sweethome.hrhelper.data.dto.EventDto
 import com.example.sweethome.hrhelper.data.dto.MemberDto

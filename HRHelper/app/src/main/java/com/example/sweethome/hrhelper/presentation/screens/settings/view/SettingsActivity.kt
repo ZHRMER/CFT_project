@@ -5,9 +5,11 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.sweethome.hrhelper.R
+import com.example.sweethome.hrhelper.domain.entity.Event
 
 class SettingsActivity : AppCompatActivity() {
     private lateinit var mySettingsActivityView: SettingsActivityView
+    private lateinit var myEvent: Event
 
     companion object {
         fun newIntent(context: Context?): Intent {
@@ -18,8 +20,9 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
+        myEvent = intent.getParcelableExtra("CurrentEvent")
         mySettingsActivityView =
-                SettingsActivityView(this)
+                SettingsActivityView(this, myEvent)
         mySettingsActivityView.onCreate()
     }
 

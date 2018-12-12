@@ -1,8 +1,8 @@
 package com.example.sweethome.hrhelper.di
 
 import android.content.Context
-import com.example.sweethome.hrhelper.data.EventsApi
 import com.example.sweethome.hrhelper.data.data_base_source.AppDatabase
+import com.example.sweethome.hrhelper.data.network_source.EventsApi
 import com.example.sweethome.hrhelper.data.repository.EventRepository
 import com.example.sweethome.hrhelper.di.module.AppModule
 import com.example.sweethome.hrhelper.di.module.RepositoryModule

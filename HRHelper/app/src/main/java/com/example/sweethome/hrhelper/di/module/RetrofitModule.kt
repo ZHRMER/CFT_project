@@ -1,6 +1,6 @@
 package com.example.sweethome.hrhelper.di.module
 
-import com.example.sweethome.hrhelper.data.EventsApi
+import com.example.sweethome.hrhelper.data.network_source.EventsApi
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit

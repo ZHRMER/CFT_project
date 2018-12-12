@@ -26,11 +26,7 @@ class EventListActivityView(private var myActivity: AppCompatActivity?) :
 
     fun onCreate(savedInstanceState: Bundle?) {
         initToolbar()
-        eventListPresenter =
-                EventListPresenter(
-                    myActivity,
-                    this
-                )
+        eventListPresenter = EventListPresenter(myActivity, this)
         if (savedInstanceState?.getParcelableArrayList<Event>("event_list") != null) {
             myEventList = savedInstanceState.getParcelableArrayList<Event>("event_list")
         } else {
@@ -39,8 +35,7 @@ class EventListActivityView(private var myActivity: AppCompatActivity?) :
         }
         recyclerView = myActivity?.findViewById(R.id.recycler_view_activity_event_list) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(myActivity)
-        val adapter =
-            EventListAdapter(myEventList, this)
+        val adapter = EventListAdapter(myEventList, this)
         recyclerView.adapter = adapter
     }
 

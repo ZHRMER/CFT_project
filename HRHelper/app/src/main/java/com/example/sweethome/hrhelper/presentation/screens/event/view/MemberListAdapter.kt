@@ -10,9 +10,10 @@ import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.data.dto.MemberDto
 
 class MemberListAdapter(
-    private val memberList: List<MemberDto>?,
+    var myAdapterMemberList: List<MemberDto>?,
     private val myMemberListAdapterContract: MemberListAdapterContract
 ) : RecyclerView.Adapter<MemberListAdapter.ViewHolder>() {
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.member_item, parent, false)
@@ -20,17 +21,22 @@ class MemberListAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        if (memberList != null) {
-            val userName = memberList[position].firstName + " " + memberList[position].lastName
+        if (myAdapterMemberList != null) {
+            val userName = myAdapterMemberList!![position].firstName + " " + myAdapterMemberList!![position].lastName
             holder.itemPosition = position
             holder.memberNameTextView.text = userName
-            holder.memberIdTextView.text = memberList[position].id.toString()
-            holder.memberArrivedSwitch.isChecked = memberList[position].isArrived
+            holder.memberIdTextView.text = myAdapterMemberList!![position].id.toString()
+            holder.memberArrivedSwitch.isChecked = myAdapterMemberList!![position].isArrived
         }
     }
 
     override fun getItemCount(): Int {
-        return memberList?.size ?: 0
+        return myAdapterMemberList?.size ?: 0
+    }
+
+    fun updateMemberList(memberList: List<MemberDto>) {
+        myAdapterMemberList = memberList
+        notifyDataSetChanged()
     }
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -40,10 +46,13 @@ class MemberListAdapter(
         var itemPosition = 0
 
         init {
-            itemView.setOnClickListener { myMemberListAdapterContract.onMemberClick(memberList!![itemPosition]) }
+            itemView.setOnClickListener { myMemberListAdapterContract.onMemberClick(myAdapterMemberList!![itemPosition]) }
             memberArrivedSwitch.setOnCheckedChangeListener { _, isChecked ->
-                memberList?.get(itemPosition)!!.isArrived = isChecked
-                myMemberListAdapterContract.onMemberArrivedStateChanged(memberList[itemPosition].id, isChecked)
+                myAdapterMemberList?.get(itemPosition)!!.isArrived = isChecked
+                myMemberListAdapterContract.onMemberArrivedStateChanged(
+                    myAdapterMemberList!![itemPosition].id,
+                    isChecked
+                )
             }
         }
     }

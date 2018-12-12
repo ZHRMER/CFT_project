@@ -24,4 +24,10 @@ interface MemberDao {
 
     @Query("UPDATE member SET isArrived = :myIsArrive  WHERE event_id=:eventId AND member_id=:memberId")
     fun changeMemberArrivedState(memberId: Int, eventId: Int, myIsArrive: Boolean): Int
+
+    @Query("Select count(*) from member WHERE event_id=:eventId and isArrived = 1")
+    fun getArrivedMemberCountEvent(eventId: Int): Int
+
+    @Query("Select count(*) from member WHERE event_id=:eventId")
+    fun getRegisteredMemberCountEvent(eventId: Int): Int
 }
