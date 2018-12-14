@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="HeaderTextSize">18sp</dimen>
+    <dimen name="DefaultPaddingStart">8dp</dimen>
+    <dimen name="DefaultPaddingEnd">0dp</dimen>
+    <dimen name="DefaultMarginBottom">10dp</dimen>
+    <dimen name="DefaultMarginTop">5dp</dimen>
+    <dimen name="DefaultPaddingTop">10dp</dimen>
+</resources>

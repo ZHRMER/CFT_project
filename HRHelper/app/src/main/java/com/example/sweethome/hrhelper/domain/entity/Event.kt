@@ -4,20 +4,19 @@ import android.os.Parcel
 import android.os.Parcelable
 
 data class Event(
-    val id: Int?,
-    val title: String?,
-    val description: String?,
-    val beginDate: Long?,
-    val endDate: Long?
+    val id: Int,
+    val title: String,
+    val description: String,
+    val beginDate: Long,
+    val endDate: Long
 ) : Parcelable {
     constructor(parcel: Parcel) : this(
-        parcel.readValue(Int::class.java.classLoader) as? Int,
-        parcel.readString(),
-        parcel.readString(),
-        parcel.readValue(Long::class.java.classLoader) as? Long,
-        parcel.readValue(Long::class.java.classLoader) as? Long
-    ) {
-    }
+        parcel.readValue(Int::class.java.classLoader) as Int,
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readValue(Long::class.java.classLoader) as Long,
+        parcel.readValue(Long::class.java.classLoader) as Long
+    )
 
     override fun writeToParcel(parcel: Parcel, flags: Int) {
         parcel.writeValue(id)

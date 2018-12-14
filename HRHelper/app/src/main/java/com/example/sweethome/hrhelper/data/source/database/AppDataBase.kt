@@ -1,4 +1,4 @@
-package com.example.sweethome.hrhelper.data.data_base_source
+package com.example.sweethome.hrhelper.data.source.database
 
 import android.arch.persistence.room.Database
 import android.arch.persistence.room.RoomDatabase

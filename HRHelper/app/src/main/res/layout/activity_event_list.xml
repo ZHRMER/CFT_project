@@ -9,8 +9,20 @@
             android:id="@+id/toolbar_activity_event_list"
             layout="@layout/common_toolbar"/>
 
+    <include
+            android:id="@+id/progress_bar_activity_event_list"
+            layout="@layout/common_progress_bar"/>
+
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_activity_event_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+    <TextView
+            android:id="@+id/empty_event_recycler_text_view"
+            android:text="@string/empty_event_list_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            style="@style/CommonHeaderTextView"/>
 </LinearLayout>

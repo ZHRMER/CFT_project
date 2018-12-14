@@ -8,4 +8,7 @@
     <string name="registered_number_text">Registered:</string>
     <string name="arrived_number_text">Arrived:</string>
     <string name="warning_load_members">Can\'t load fresh member list</string>
+    <string name="empty_member_list_text">No members to show.</string>
+    <string name="empty_event_list_text">No events to show.</string>
+    <string name="confirm_text">Confirm members</string>
 </resources>

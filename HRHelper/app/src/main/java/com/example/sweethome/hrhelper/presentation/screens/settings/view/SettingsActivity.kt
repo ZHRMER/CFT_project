@@ -8,6 +8,7 @@ import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.domain.entity.Event
 
 class SettingsActivity : AppCompatActivity() {
+    private val KEY_CURRENT_EVENT = "current_event"
     private lateinit var mySettingsActivityView: SettingsActivityView
     private lateinit var myEvent: Event
 
@@ -20,7 +21,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
-        myEvent = intent.getParcelableExtra("CurrentEvent")
+        myEvent = intent.getParcelableExtra(KEY_CURRENT_EVENT)
         mySettingsActivityView =
                 SettingsActivityView(this, myEvent)
         mySettingsActivityView.onCreate()

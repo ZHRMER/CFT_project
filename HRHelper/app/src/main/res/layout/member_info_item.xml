@@ -12,7 +12,7 @@
             android:id="@+id/member_item_value_text_view"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="10dp"
+            android:paddingTop="@dimen/DefaultPaddingTop"
             style="@style/CommonPadding"/>
 
 </LinearLayout>

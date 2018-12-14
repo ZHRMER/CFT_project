@@ -17,10 +17,22 @@
             android:ems="10"
             android:id="@+id/search_member_edit_text"
             android:hint="@string/search_member_hint_text"
-
             tools:ignore="Autofill,LabelFor"/>
+
+    <include
+            android:id="@+id/progress_bar_activity_event"
+            layout="@layout/common_progress_bar"/>
+
     <android.support.v7.widget.RecyclerView
             android:id="@+id/recycler_view_member_list_activity_event"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+    <TextView
+            android:id="@+id/empty_member_recycler_text_view"
+            android:text="@string/empty_member_list_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            style="@style/CommonHeaderTextView"/>
 </LinearLayout>

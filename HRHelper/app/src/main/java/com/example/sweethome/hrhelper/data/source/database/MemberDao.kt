@@ -1,6 +1,9 @@
-package com.example.sweethome.hrhelper.data.data_base_source
+package com.example.sweethome.hrhelper.data.source.database
 
-import android.arch.persistence.room.*
+import android.arch.persistence.room.Dao
+import android.arch.persistence.room.Insert
+import android.arch.persistence.room.OnConflictStrategy
+import android.arch.persistence.room.Query
 import com.example.sweethome.hrhelper.data.dto.MemberDto
 import io.reactivex.Single
 
@@ -10,17 +13,14 @@ interface MemberDao {
     @Query("SELECT * FROM member WHERE event_id=:eventId")
     fun getMembers(eventId: Int): Single<List<MemberDto>>
 
-    @get:Query("Select count(*) from member")
+    @get:Query("SELECT count(*) FROM member")
     val size: Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(memberDto: MemberDto)
 
-    @Update
-    fun update(memberDto: MemberDto)
-
-    @Delete
-    fun delete(memberDto: MemberDto)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun insertAllMembers(events: List<MemberDto>)
 
     @Query("UPDATE member SET isArrived = :myIsArrive  WHERE event_id=:eventId AND member_id=:memberId")
     fun changeMemberArrivedState(memberId: Int, eventId: Int, myIsArrive: Boolean): Int

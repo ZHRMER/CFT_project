@@ -6,6 +6,9 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import android.support.v7.widget.Toolbar
 import android.view.MenuItem
+import android.view.View
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.domain.entity.Event
@@ -19,6 +22,7 @@ class EventListActivityView(private var myActivity: AppCompatActivity?) :
     private lateinit var eventListPresenter: EventListPresenter
     private var myEventList: ArrayList<Event>? = null
     private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
 
     fun onSaveInstanceState(outState: Bundle?) {
         outState?.putParcelableArrayList("event_list", myEventList)
@@ -26,6 +30,7 @@ class EventListActivityView(private var myActivity: AppCompatActivity?) :
 
     fun onCreate(savedInstanceState: Bundle?) {
         initToolbar()
+        progressBar = myActivity?.findViewById(R.id.progress_bar_activity_event_list)!!
         eventListPresenter = EventListPresenter(myActivity, this)
         if (savedInstanceState?.getParcelableArrayList<Event>("event_list") != null) {
             myEventList = savedInstanceState.getParcelableArrayList<Event>("event_list")
@@ -60,15 +65,36 @@ class EventListActivityView(private var myActivity: AppCompatActivity?) :
     }
 
     override fun getEventSuccess(eventList: List<Event>?) {
-        myEventList?.clear()
         if (eventList != null) {
+            myEventList?.clear()
+            checkIsEmptyList(eventList)
             myEventList?.addAll(eventList)
+            recyclerView.adapter?.notifyDataSetChanged()
         }
-        recyclerView.adapter?.notifyDataSetChanged()
+    }
+
+    private fun checkIsEmptyList(eventList: List<Event>?) {
+        if (eventList?.isEmpty()!!) {
+            recyclerView.visibility = View.GONE
+            val emptyTextView = myActivity?.findViewById(R.id.empty_event_recycler_text_view) as TextView
+            emptyTextView.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            val emptyTextView = myActivity?.findViewById(R.id.empty_event_recycler_text_view) as TextView
+            emptyTextView.visibility = View.GONE
+        }
     }
 
     override fun getEventFail() {
         Toast.makeText(myActivity, "Can't get event", Toast.LENGTH_SHORT).show()
+    }
+
+    override fun startProgressBar() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun stopProgressBar() {
+        progressBar.visibility = View.GONE
     }
 
     override fun onEventClick(event: Event?) {

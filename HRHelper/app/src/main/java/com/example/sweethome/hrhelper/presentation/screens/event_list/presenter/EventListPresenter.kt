@@ -17,6 +17,7 @@ class EventListPresenter(
     private var getEventListUseCase: GetEventListUseCase = GetEventListUseCase(),
     private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 ) {
+    private val KEY_CURRENT_EVENT = "current_event"
 
     fun attach(activity: AppCompatActivity?, eventListPresenterContract: EventListPresenterContract?) {
         myActivity = activity
@@ -36,27 +37,32 @@ class EventListPresenter(
     }
 
     fun loadEventsListRx() {
+        myEventListPresenterContract?.startProgressBar()
         compositeDisposable.add(getEventListUseCase.loadEventRx()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
                     myEventListPresenterContract?.getEventSuccess(it)
+                    myEventListPresenterContract?.stopProgressBar()
                 },
                 {
                     myEventListPresenterContract?.getEventFail()
+                    myEventListPresenterContract?.stopProgressBar()
                 }
             ))
     }
 
     fun onEventClick(event: Event?) {
         val eventActivityIntent = EventActivity.newIntent(myActivity)
-        eventActivityIntent.putExtra("CurrentEvent", event)
+        eventActivityIntent.putExtra(KEY_CURRENT_EVENT, event)
         myActivity?.startActivity(eventActivityIntent)
     }
 
     interface EventListPresenterContract {
         fun getEventFail()
         fun getEventSuccess(eventList: List<Event>?)
+        fun startProgressBar()
+        fun stopProgressBar()
     }
 }

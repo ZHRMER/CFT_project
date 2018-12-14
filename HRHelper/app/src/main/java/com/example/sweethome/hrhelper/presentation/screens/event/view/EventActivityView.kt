@@ -8,7 +8,10 @@ import android.support.v7.widget.Toolbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.MenuItem
+import android.view.View
 import android.widget.EditText
+import android.widget.ProgressBar
+import android.widget.TextView
 import android.widget.Toast
 import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.data.dto.MemberDto
@@ -21,56 +24,35 @@ class EventActivityView(
 ) :
     EventPresenter.EventPresenterContract,
     MemberListAdapter.MemberListAdapterContract {
+    private val KEY_MEMBER_LIST = "member_list"
     private lateinit var myEventPresenter: EventPresenter
     private var myMemberList: ArrayList<MemberDto>? = null
     private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
+    private lateinit var memberAdapter: MemberListAdapter
 
     fun onSaveInstanceState(outState: Bundle?) {
-        outState?.putParcelableArrayList("member_list", myMemberList)
+        outState?.putParcelableArrayList(KEY_MEMBER_LIST, myMemberList)
     }
 
     fun onCreate(savedInstanceState: Bundle?) {
         initToolbar()
+        progressBar = myActivity?.findViewById(R.id.progress_bar_activity_event) as ProgressBar
         myEventPresenter = EventPresenter(myActivity, this, myEvent)
-        if (savedInstanceState?.getParcelableArrayList<Event>("member_list") != null
-            && savedInstanceState.getParcelableArrayList<Event>("member_list")?.size!! > 0
+        if (savedInstanceState?.getParcelableArrayList<Event>(KEY_MEMBER_LIST) != null
+            && savedInstanceState.getParcelableArrayList<Event>(KEY_MEMBER_LIST)?.size!! > 0
         ) {
-            myMemberList = savedInstanceState.getParcelableArrayList<MemberDto>("member_list")
+            myMemberList = savedInstanceState.getParcelableArrayList<MemberDto>(KEY_MEMBER_LIST)
+            stopProgressBar()
         } else {
             myMemberList = ArrayList()
             myEventPresenter.loadMembersListRx()
         }
         recyclerView = myActivity?.findViewById(R.id.recycler_view_member_list_activity_event) as RecyclerView
         recyclerView.layoutManager = LinearLayoutManager(myActivity)
-        val adapter = MemberListAdapter(myMemberList, this)
-        recyclerView.adapter = adapter
-
-
-        val searchEditText = myActivity?.findViewById<EditText>(R.id.search_member_edit_text)
-        searchEditText?.addTextChangedListener(object : TextWatcher {
-            override fun afterTextChanged(p0: Editable?) {
-            }
-
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                val tempMemberList = ArrayList<MemberDto>()
-                val fullMemberList = myMemberList
-                if (fullMemberList != null) {
-                    for (user in fullMemberList) {
-                        val fullName = user.firstName + " " + user.lastName
-                        if (fullName.startsWith(p0!!, true)) {
-                            tempMemberList.add(user)
-                        }
-                    }
-                    val myAdapter = recyclerView.adapter
-                    if (myAdapter is MemberListAdapter) {
-                        myAdapter.updateMemberList(tempMemberList)
-                    }
-                }
-            }
-        })
+        memberAdapter = MemberListAdapter(myMemberList, this)
+        recyclerView.adapter = memberAdapter
+        initMemberSearch()
     }
 
     fun onResume(activity: AppCompatActivity) {
@@ -90,18 +72,53 @@ class EventActivityView(
         myActivity?.supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
+    private fun initMemberSearch() {
+        val searchEditText = myActivity?.findViewById<EditText>(R.id.search_member_edit_text)
+        searchEditText?.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                val tempMemberList = ArrayList<MemberDto>()
+                val fullMemberList = myMemberList
+                if (fullMemberList != null) {
+                    for (user in fullMemberList) {
+                        val fullName = user.firstName + " " + user.lastName
+                        if (fullName.startsWith(p0!!, true)) {
+                            tempMemberList.add(user)
+                        }
+                    }
+                    memberAdapter.updateMemberList(tempMemberList)
+                }
+            }
+        })
+    }
+
     fun onOptionsItemSelected(menuItem: MenuItem?) {
         myEventPresenter.onOptionsItemSelected(menuItem)
     }
 
     override fun getMembersSuccess(memberList: List<MemberDto>?) {
         if (memberList != null) {
+            checkIsEmptyList(memberList)
             myMemberList?.clear()
             myMemberList?.addAll(memberList)
-            val myAdapter = recyclerView.adapter
-            if (myAdapter is MemberListAdapter) {
-                myAdapter.updateMemberList(memberList)
-            }
+            memberAdapter.updateMemberList(memberList)
+        }
+    }
+
+    private fun checkIsEmptyList(memberList: List<MemberDto>?) {
+        if (memberList?.isEmpty()!!) {
+            recyclerView.visibility = View.GONE
+            val emptyTextView = myActivity?.findViewById(R.id.empty_member_recycler_text_view) as TextView
+            emptyTextView.visibility = View.VISIBLE
+        } else {
+            recyclerView.visibility = View.VISIBLE
+            val emptyTextView = myActivity?.findViewById(R.id.empty_member_recycler_text_view) as TextView
+            emptyTextView.visibility = View.GONE
         }
     }
 
@@ -111,6 +128,28 @@ class EventActivityView(
 
     override fun onMemberClick(member: MemberDto?) {
         myEventPresenter.onMemberClick(member)
+    }
+
+    override fun startProgressBar() {
+        progressBar.visibility = View.VISIBLE
+    }
+
+    override fun stopProgressBar() {
+        progressBar.visibility = View.GONE
+    }
+
+    override fun getMembersArrivedList(): List<MemberDto> {
+        val arrivedList = ArrayList<MemberDto>()
+        myMemberList?.forEach {
+            if (it.isArrived) {
+                arrivedList.add(it)
+            }
+        }
+        return arrivedList
+    }
+
+    override fun showToast(message: String) {
+        Toast.makeText(myActivity, message, Toast.LENGTH_SHORT).show()
     }
 
     override fun onMemberArrivedStateChanged(memberId: Int, myIsArrived: Boolean) {

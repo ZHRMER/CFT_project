@@ -21,7 +21,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/registered_number_value_text_view"
-                android:textSize="18sp"
+                android:textSize="@dimen/HeaderTextSize"
                 android:layout_weight="1"
                 style="@style/CommonPadding"/>
     </LinearLayout>
@@ -39,7 +39,7 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/arrived_number_value_text_view"
-                android:textSize="18sp"
+                android:textSize="@dimen/HeaderTextSize"
                 android:layout_weight="1"
                 style="@style/CommonPadding"/>
     </LinearLayout>

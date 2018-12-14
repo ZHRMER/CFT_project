@@ -1,18 +1,18 @@
 package com.example.sweethome.hrhelper.domain.use_cases
 
-import com.example.sweethome.hrhelper.data.repository.EventRepository
+import com.example.sweethome.hrhelper.data.repository.CommonRepository
 import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.domain.entity.toEvent
-import io.reactivex.Observable
+import io.reactivex.Single
 
-class GetEventListUseCase(private val eventRepository: EventRepository = EventRepository()) {
+class GetEventListUseCase(private val commonRepository: CommonRepository = CommonRepository()) {
 
-    fun loadEventRx(): Observable<List<Event>> =
-        eventRepository.loadEventListRx()
-            .flatMap { list ->
-                Observable.fromIterable(list)
-                    .map { it -> it.toEvent() }
-                    .toList().toObservable()
+    fun loadEventRx(): Single<List<Event>> =
+        commonRepository.loadEventListRx()
+            .map { list ->
+                list.map {
+                    it.toEvent()
+                }
             }
 
 }

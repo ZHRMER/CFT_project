@@ -8,7 +8,7 @@
             android:id="@+id/card_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp">
+            android:layout_marginBottom="@dimen/DefaultMarginBottom">
         <LinearLayout
                 style="@style/CommonLinearLayout">
             <TextView
@@ -20,13 +20,13 @@
                     android:id="@+id/event_description_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/DefaultMarginTop"
                     style="@style/CommonPadding"/>
             <TextView
                     android:id="@+id/event_data_text_view"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="5dp"
+                    android:layout_marginTop="@dimen/DefaultMarginTop"
                     style="@style/CommonPadding"/>
         </LinearLayout>
 

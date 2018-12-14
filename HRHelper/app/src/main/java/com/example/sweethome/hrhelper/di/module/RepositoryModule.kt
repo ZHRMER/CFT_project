@@ -1,6 +1,6 @@
 package com.example.sweethome.hrhelper.di.module
 
-import com.example.sweethome.hrhelper.data.repository.EventRepository
+import com.example.sweethome.hrhelper.data.repository.CommonRepository
 import dagger.Module
 import dagger.Provides
 import javax.inject.Inject
@@ -11,7 +11,7 @@ class RepositoryModule {
     @Inject
     @Provides
     @Singleton
-    fun providesEventRepository(): EventRepository {
-        return EventRepository()
+    fun providesEventRepository(): CommonRepository {
+        return CommonRepository()
     }
 }

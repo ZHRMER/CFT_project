@@ -19,7 +19,7 @@ class SettingsActivityView(
         initToolbar()
         mySettingsPresenter =
                 SettingsPresenter(myActivity, this)
-        mySettingsPresenter.updateStatistics(myEvent.id!!)
+        mySettingsPresenter.updateStatistics(myEvent.id)
     }
 
     fun onResume(activity: AppCompatActivity) {

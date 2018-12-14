@@ -8,6 +8,7 @@ import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.data.dto.MemberDto
 
 class MemberInfoActivity : AppCompatActivity() {
+    private val KEY_CURRENT_MEMBER = "current_member"
     private lateinit var myMemberInfoActivityView: MemberInfoActivityView
     private lateinit var myMember: MemberDto
 
@@ -19,7 +20,7 @@ class MemberInfoActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        myMember = intent.getParcelableExtra("CurrentMember")
+        myMember = intent.getParcelableExtra(KEY_CURRENT_MEMBER)
         setContentView(R.layout.activity_member_info)
         myMemberInfoActivityView =
                 MemberInfoActivityView(this, myMember)

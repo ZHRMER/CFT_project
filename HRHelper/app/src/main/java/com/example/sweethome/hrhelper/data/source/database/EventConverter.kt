@@ -1,4 +1,4 @@
-package com.example.sweethome.hrhelper.data.data_base_source
+package com.example.sweethome.hrhelper.data.source.database
 
 import android.arch.persistence.room.TypeConverter
 import com.example.sweethome.hrhelper.data.dto.CityDto
