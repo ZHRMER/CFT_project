@@ -30,9 +30,9 @@ class MemberListAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return myAdapterMemberList?.size ?: 0
-    }
+    override fun getItemCount(): Int =
+        myAdapterMemberList?.size ?: 0
+
 
     fun updateMemberList(memberList: List<MemberDto>) {
         myAdapterMemberList = memberList
@@ -49,16 +49,13 @@ class MemberListAdapter(
             itemView.setOnClickListener { myMemberListAdapterContract.onMemberClick(myAdapterMemberList!![itemPosition]) }
             memberArrivedSwitch.setOnCheckedChangeListener { _, isChecked ->
                 myAdapterMemberList?.get(itemPosition)!!.isArrived = isChecked
-                myMemberListAdapterContract.onMemberArrivedStateChanged(
-                    myAdapterMemberList!![itemPosition].id,
-                    isChecked
-                )
+                myMemberListAdapterContract.onMemberArrivedStateChanged(myAdapterMemberList?.get(itemPosition)!!)
             }
         }
     }
 
     interface MemberListAdapterContract {
         fun onMemberClick(member: MemberDto?)
-        fun onMemberArrivedStateChanged(memberId: Int, myIsArrived: Boolean)
+        fun onMemberArrivedStateChanged(member: MemberDto)
     }
 }

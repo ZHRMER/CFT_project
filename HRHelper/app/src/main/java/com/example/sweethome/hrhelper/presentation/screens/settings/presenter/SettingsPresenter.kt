@@ -1,6 +1,7 @@
 package com.example.sweethome.hrhelper.presentation.screens.settings.presenter
 
-import android.support.v7.app.AppCompatActivity
+import com.example.sweethome.hrhelper.data.utils.Constants.KEY_ARRIVED_MEMBER
+import com.example.sweethome.hrhelper.data.utils.Constants.KEY_REGISTERED_MEMBER
 import com.example.sweethome.hrhelper.domain.use_cases.GetMemberStatisticUseCase
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
@@ -9,22 +10,16 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class SettingsPresenter(
-    private var myActivity: AppCompatActivity?,
-    private var mySettingsPresenterContract: SettingsPresenterContract?,
-    private var getMemberStatisticUseCase: GetMemberStatisticUseCase = GetMemberStatisticUseCase(),
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var mySettingsPresenterContract: SettingsPresenterContract?
 ) {
+    private var getMemberStatisticUseCase: GetMemberStatisticUseCase = GetMemberStatisticUseCase()
+    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    fun attach(
-        activity: AppCompatActivity?,
-        settingsPresenterContract: SettingsPresenterContract
-    ) {
-        myActivity = activity
+    fun attach(settingsPresenterContract: SettingsPresenterContract) {
         mySettingsPresenterContract = settingsPresenterContract
     }
 
     fun detach() {
-        myActivity = null
         mySettingsPresenterContract = null
         compositeDisposable.clear()
     }
@@ -37,7 +32,12 @@ class SettingsPresenter(
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({
-                    mySettingsPresenterContract?.updateViewStatistics(it[0], it[1])
+                    if (it.size > 1) {
+                        mySettingsPresenterContract?.updateViewStatistics(
+                            it[KEY_REGISTERED_MEMBER],
+                            it[KEY_ARRIVED_MEMBER]
+                        )
+                    }
                 }, {
                 })
         )

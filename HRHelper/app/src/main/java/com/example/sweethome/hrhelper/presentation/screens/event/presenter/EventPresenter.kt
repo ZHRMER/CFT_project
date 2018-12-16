@@ -1,6 +1,5 @@
 package com.example.sweethome.hrhelper.presentation.screens.event.presenter
 
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.data.dto.MemberDto
@@ -8,8 +7,6 @@ import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.domain.use_cases.ChangeMemberStateUseCase
 import com.example.sweethome.hrhelper.domain.use_cases.ConfirmArrivedMembersUseCase
 import com.example.sweethome.hrhelper.domain.use_cases.GetMemberListUseCase
-import com.example.sweethome.hrhelper.presentation.screens.member.view.MemberInfoActivity
-import com.example.sweethome.hrhelper.presentation.screens.settings.view.SettingsActivity
 import io.reactivex.Single
 import io.reactivex.SingleOnSubscribe
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -17,24 +14,19 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 class EventPresenter(
-    private var myActivity: AppCompatActivity?,
     private var myEventPresenterContract: EventPresenterContract?,
-    private val myEvent: Event,
-    private var getMemberListUseCase: GetMemberListUseCase = GetMemberListUseCase(),
-    private var changeMemberStateUseCase: ChangeMemberStateUseCase = ChangeMemberStateUseCase(),
-    private var confirmArrivedMembersUseCase: ConfirmArrivedMembersUseCase = ConfirmArrivedMembersUseCase(),
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
-
+    private val myEvent: Event
 ) {
-    private val KEY_CURRENT_EVENT = "current_event"
-    private val KEY_CURRENT_MEMBER = "current_member"
-    fun attach(activity: AppCompatActivity?, eventListPresenterContract: EventPresenterContract?) {
-        myActivity = activity
+    private val getMemberListUseCase: GetMemberListUseCase = GetMemberListUseCase()
+    private val changeMemberStateUseCase: ChangeMemberStateUseCase = ChangeMemberStateUseCase()
+    private val confirmArrivedMembersUseCase: ConfirmArrivedMembersUseCase = ConfirmArrivedMembersUseCase()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
+
+    fun attach(eventListPresenterContract: EventPresenterContract?) {
         myEventPresenterContract = eventListPresenterContract
     }
 
     fun detach() {
-        myActivity = null
         myEventPresenterContract = null
         compositeDisposable.clear()
     }
@@ -43,7 +35,7 @@ class EventPresenter(
         when (item?.itemId) {
             R.id.item_settings -> onSettingItemClick()
             R.id.update_member_list_item -> loadMembersListRx()
-            else -> sendConfirmation()
+            R.id.confirm_member_list_item -> sendConfirmation()
         }
     }
 
@@ -55,45 +47,42 @@ class EventPresenter(
             ).observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe({
-                    myEventPresenterContract?.showToast("Send confirmation success: ${it.message}")
+                    myEventPresenterContract?.showMessageSuccess(it.message.toString())
                 }, {
-                    myEventPresenterContract?.showToast("Send confirmation failed: ${it.message}")
+                    myEventPresenterContract?.showMessageFail(it.message.toString())
                 })
         )
     }
 
-    private fun onSettingItemClick() {
-        val settingsActivityIntent = SettingsActivity.newIntent(myActivity)
-        settingsActivityIntent.putExtra(KEY_CURRENT_EVENT, myEvent)
-        myActivity?.startActivity(settingsActivityIntent)
-    }
+    private fun onSettingItemClick() =
+        myEventPresenterContract?.startSettingsActivity()
+
 
     fun loadMembersListRx() {
-        myEventPresenterContract?.startProgressBar()
+        myEventPresenterContract?.showProgressBar()
         compositeDisposable.add(
             getMemberListUseCase.loadEventMemberListRx(myEvent.id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.newThread())
                 .subscribe({
-                    myEventPresenterContract?.getMembersSuccess(it)
-                    myEventPresenterContract?.stopProgressBar()
+                    myEventPresenterContract?.loadMembersSuccess(it)
+                    myEventPresenterContract?.hideProgressBar()
                 }, {
-                    myEventPresenterContract?.getMembersFail()
-                    myEventPresenterContract?.stopProgressBar()
+                    myEventPresenterContract?.loadMembersFail()
+                    myEventPresenterContract?.hideProgressBar()
                 })
         )
     }
 
-    fun onMemberClick(member: MemberDto?) {
-        val memberInfoActivityIntent = MemberInfoActivity.newIntent(myActivity)
-        memberInfoActivityIntent.putExtra(KEY_CURRENT_MEMBER, member)
-        myActivity?.startActivity(memberInfoActivityIntent)
-    }
+    fun onMemberClick(member: MemberDto?) =
+        myEventPresenterContract?.startMemberInfoActivity(member)
 
-    fun onMemberArrivedStateChanged(memberId: Int, myIsArrived: Boolean) {
+
+    fun onMemberArrivedStateChanged(member: MemberDto) {
+        member.visitedDate = System.currentTimeMillis()
         compositeDisposable.add(
             Single.create(SingleOnSubscribe<Int> { emitter ->
-                emitter.onSuccess(changeMemberStateUseCase.changeMemberState(memberId, myEvent.id, myIsArrived))
+                emitter.onSuccess(changeMemberStateUseCase.changeMemberState(member))
             })
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
@@ -102,11 +91,14 @@ class EventPresenter(
     }
 
     interface EventPresenterContract {
-        fun getMembersFail()
-        fun getMembersSuccess(memberList: List<MemberDto>?)
-        fun startProgressBar()
-        fun stopProgressBar()
+        fun loadMembersFail()
+        fun loadMembersSuccess(memberList: List<MemberDto>?)
+        fun showProgressBar()
+        fun hideProgressBar()
         fun getMembersArrivedList(): List<MemberDto>
-        fun showToast(message: String)
+        fun showMessageSuccess(message: String)
+        fun showMessageFail(message: String)
+        fun startSettingsActivity()
+        fun startMemberInfoActivity(member: MemberDto?)
     }
 }

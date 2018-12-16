@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.example.sweethome.hrhelper.R
+import com.example.sweethome.hrhelper.data.utils.Constants.KEY_EVENT_DATE_FORMAT
 import com.example.sweethome.hrhelper.domain.entity.Event
 import java.text.SimpleDateFormat
 import java.util.*
@@ -14,7 +15,9 @@ class EventListAdapter(
     private val eventList: List<Event>?,
     private val myEventListAdapterContract: EventListAdapterContract
 ) : RecyclerView.Adapter<EventListAdapter.ViewHolder>() {
-    val simpleDateFormatOutput = SimpleDateFormat("dd MMMM yyyy г.", Locale("ru"))
+
+    private val simpleDateFormatOutput = SimpleDateFormat(KEY_EVENT_DATE_FORMAT, Locale("ru"))
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val v = LayoutInflater.from(parent.context).inflate(R.layout.event_item, parent, false)
         return ViewHolder(v)
@@ -29,9 +32,9 @@ class EventListAdapter(
         }
     }
 
-    override fun getItemCount(): Int {
-        return eventList?.size ?: 0
-    }
+    override fun getItemCount(): Int =
+        eventList?.size ?: 0
+
 
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         var eventTitleTextView: TextView = itemView.findViewById(R.id.event_title_text_view)

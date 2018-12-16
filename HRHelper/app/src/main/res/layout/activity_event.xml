@@ -10,29 +10,41 @@
             android:id="@+id/toolbar_activity_event"
             layout="@layout/common_toolbar"/>
 
-    <EditText
+    <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textPersonName"
-            android:ems="10"
-            android:id="@+id/search_member_edit_text"
-            android:hint="@string/search_member_hint_text"
-            tools:ignore="Autofill,LabelFor"/>
+            android:layout_height="match_parent">
 
-    <include
-            android:id="@+id/progress_bar_activity_event"
-            layout="@layout/common_progress_bar"/>
+        <LinearLayout
+                style="@style/CommonLinearLayout">
 
-    <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_view_member_list_activity_event"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
-    <TextView
-            android:id="@+id/empty_member_recycler_text_view"
-            android:text="@string/empty_member_list_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:visibility="gone"
-            style="@style/CommonHeaderTextView"/>
+            <EditText
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textPersonName"
+                    android:ems="10"
+                    android:id="@+id/search_member_edit_text"
+                    android:hint="@string/search_member_hint_text"
+                    tools:ignore="Autofill,LabelFor"/>
+
+            <android.support.v7.widget.RecyclerView
+                    android:id="@+id/recycler_view_member_list_activity_event"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
+            <TextView
+                    android:id="@+id/empty_member_recycler_text_view"
+                    android:text="@string/empty_member_list_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    style="@style/CommonHeaderTextView"/>
+        </LinearLayout>
+
+        <include
+                android:id="@+id/progress_bar_activity_event"
+                android:layout_gravity="center"
+                layout="@layout/common_progress_bar"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"/>
+    </FrameLayout>
 </LinearLayout>

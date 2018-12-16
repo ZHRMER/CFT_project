@@ -1,7 +1,8 @@
 package com.example.sweethome.hrhelper.di
 
 import android.content.Context
-import com.example.sweethome.hrhelper.data.repository.CommonRepository
+import com.example.sweethome.hrhelper.data.repository.EventListRepositoryImpl
+import com.example.sweethome.hrhelper.data.repository.MemberListRepositoryImpl
 import com.example.sweethome.hrhelper.data.source.database.AppDatabase
 import com.example.sweethome.hrhelper.data.source.network.EventsApi
 import com.example.sweethome.hrhelper.di.module.AppModule
@@ -15,7 +16,8 @@ import javax.inject.Singleton
 @Singleton
 @Component(modules = [AppModule::class, RetrofitModule::class, RoomModule::class, RepositoryModule::class])
 interface AppComponent {
-    fun createEventRepository(): CommonRepository
+    fun createEventRepository(): EventListRepositoryImpl
+    fun createMemberRepository(): MemberListRepositoryImpl
     fun createEventApi(): EventsApi
     fun createRetrofit(): Retrofit
     fun createRoom(): AppDatabase

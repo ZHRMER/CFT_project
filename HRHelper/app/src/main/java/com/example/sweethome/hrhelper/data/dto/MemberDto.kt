@@ -49,10 +49,11 @@ class MemberDto(
     @Expose
     var email: String? = "No"
 ) : Parcelable {
-    //    @ColumnInfo(name = "isArrived")
+    @ColumnInfo(name = "isArrived")
     var isArrived: Boolean = false
     @ColumnInfo(name = "event_id")
     var eventId: Int = 0
+    var visitedDate: Long = 0
 
     @Ignore
     constructor() : this(
@@ -76,6 +77,7 @@ class MemberDto(
         email = parcel.readString()
         isArrived = parcel.readString()!!.toBoolean()
         eventId = parcel.readInt()
+        visitedDate = parcel.readLong()
     }
 
     @Ignore
@@ -94,6 +96,7 @@ class MemberDto(
         parcel.writeString(email)
         parcel.writeString(isArrived.toString())
         parcel.writeInt(eventId)
+        parcel.writeLong(visitedDate)
     }
 
     @Ignore

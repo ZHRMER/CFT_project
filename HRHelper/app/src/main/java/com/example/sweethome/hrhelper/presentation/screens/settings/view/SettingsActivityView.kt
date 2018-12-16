@@ -17,14 +17,13 @@ class SettingsActivityView(
 
     fun onCreate() {
         initToolbar()
-        mySettingsPresenter =
-                SettingsPresenter(myActivity, this)
+        mySettingsPresenter = SettingsPresenter(this)
         mySettingsPresenter.updateStatistics(myEvent.id)
     }
 
     fun onResume(activity: AppCompatActivity) {
         myActivity = activity
-        mySettingsPresenter.attach(myActivity, this)
+        mySettingsPresenter.attach(this)
     }
 
     fun onPause() {

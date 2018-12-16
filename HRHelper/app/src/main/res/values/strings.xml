@@ -11,4 +11,7 @@
     <string name="empty_member_list_text">No members to show.</string>
     <string name="empty_event_list_text">No events to show.</string>
     <string name="confirm_text">Confirm members</string>
+    <string name="load_event_warning">Can\'t get event</string>
+    <string name="send_confirm_success">Send confirmation success:</string>
+    <string name="send_confirm_fail">Send confirmation failed:</string>
 </resources>

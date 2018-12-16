@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.data.dto.MemberDto
+import com.example.sweethome.hrhelper.data.utils.Constants.KEY_CURRENT_MEMBER
 
 class MemberInfoActivity : AppCompatActivity() {
-    private val KEY_CURRENT_MEMBER = "current_member"
     private lateinit var myMemberInfoActivityView: MemberInfoActivityView
     private lateinit var myMember: MemberDto
 

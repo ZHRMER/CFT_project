@@ -1,31 +1,25 @@
 package com.example.sweethome.hrhelper.presentation.screens.event_list.presenter
 
-import android.support.v7.app.AppCompatActivity
 import android.view.MenuItem
 import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.domain.use_cases.GetEventListUseCase
-import com.example.sweethome.hrhelper.presentation.screens.event.view.EventActivity
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
 
 class EventListPresenter(
-    private var myActivity: AppCompatActivity?,
-    private var myEventListPresenterContract: EventListPresenterContract?,
-    private var getEventListUseCase: GetEventListUseCase = GetEventListUseCase(),
-    private var compositeDisposable: CompositeDisposable = CompositeDisposable()
+    private var myEventListPresenterContract: EventListPresenterContract?
 ) {
-    private val KEY_CURRENT_EVENT = "current_event"
+    private val getEventListUseCase: GetEventListUseCase = GetEventListUseCase()
+    private val compositeDisposable: CompositeDisposable = CompositeDisposable()
 
-    fun attach(activity: AppCompatActivity?, eventListPresenterContract: EventListPresenterContract?) {
-        myActivity = activity
+    fun attach(eventListPresenterContract: EventListPresenterContract?) {
         myEventListPresenterContract = eventListPresenterContract
     }
 
     fun detach() {
-        myActivity = null
         myEventListPresenterContract = null
         compositeDisposable.clear()
     }
@@ -37,32 +31,31 @@ class EventListPresenter(
     }
 
     fun loadEventsListRx() {
-        myEventListPresenterContract?.startProgressBar()
+        myEventListPresenterContract?.showProgressBar()
         compositeDisposable.add(getEventListUseCase.loadEventRx()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
-                    myEventListPresenterContract?.getEventSuccess(it)
-                    myEventListPresenterContract?.stopProgressBar()
+                    myEventListPresenterContract?.loadEventSuccess(it)
+                    myEventListPresenterContract?.hideProgressBar()
                 },
                 {
-                    myEventListPresenterContract?.getEventFail()
-                    myEventListPresenterContract?.stopProgressBar()
+                    myEventListPresenterContract?.loadEventFail()
+                    myEventListPresenterContract?.hideProgressBar()
                 }
             ))
     }
 
-    fun onEventClick(event: Event?) {
-        val eventActivityIntent = EventActivity.newIntent(myActivity)
-        eventActivityIntent.putExtra(KEY_CURRENT_EVENT, event)
-        myActivity?.startActivity(eventActivityIntent)
-    }
+    fun onEventClick(event: Event?) =
+        myEventListPresenterContract?.startEventActivity(event)
+
 
     interface EventListPresenterContract {
-        fun getEventFail()
-        fun getEventSuccess(eventList: List<Event>?)
-        fun startProgressBar()
-        fun stopProgressBar()
+        fun loadEventFail()
+        fun loadEventSuccess(eventList: List<Event>?)
+        fun showProgressBar()
+        fun hideProgressBar()
+        fun startEventActivity(event: Event?)
     }
 }

@@ -3,13 +3,11 @@ package com.example.sweethome.hrhelper.data.source.network
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
-class Example {
-
+class ServerResponse {
     @SerializedName("result")
     @Expose
-    var result: Boolean? = null
+    var result: Boolean? = false
     @SerializedName("message")
     @Expose
-    var message: String? = null
-
+    var message: String? = ""
 }

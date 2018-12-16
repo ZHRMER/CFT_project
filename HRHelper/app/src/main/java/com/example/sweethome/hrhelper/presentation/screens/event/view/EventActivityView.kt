@@ -15,8 +15,12 @@ import android.widget.TextView
 import android.widget.Toast
 import com.example.sweethome.hrhelper.R
 import com.example.sweethome.hrhelper.data.dto.MemberDto
+import com.example.sweethome.hrhelper.data.utils.Constants.KEY_CURRENT_EVENT
+import com.example.sweethome.hrhelper.data.utils.Constants.KEY_CURRENT_MEMBER
 import com.example.sweethome.hrhelper.domain.entity.Event
 import com.example.sweethome.hrhelper.presentation.screens.event.presenter.EventPresenter
+import com.example.sweethome.hrhelper.presentation.screens.member.view.MemberInfoActivity
+import com.example.sweethome.hrhelper.presentation.screens.settings.view.SettingsActivity
 
 class EventActivityView(
     private var myActivity: AppCompatActivity?,
@@ -25,11 +29,12 @@ class EventActivityView(
     EventPresenter.EventPresenterContract,
     MemberListAdapter.MemberListAdapterContract {
     private val KEY_MEMBER_LIST = "member_list"
-    private lateinit var myEventPresenter: EventPresenter
     private var myMemberList: ArrayList<MemberDto>? = null
     private lateinit var recyclerView: RecyclerView
     private lateinit var progressBar: ProgressBar
     private lateinit var memberAdapter: MemberListAdapter
+    private lateinit var emptyTextView: TextView
+    private lateinit var myEventPresenter: EventPresenter
 
     fun onSaveInstanceState(outState: Bundle?) {
         outState?.putParcelableArrayList(KEY_MEMBER_LIST, myMemberList)
@@ -37,13 +42,14 @@ class EventActivityView(
 
     fun onCreate(savedInstanceState: Bundle?) {
         initToolbar()
+        emptyTextView = myActivity?.findViewById(R.id.empty_member_recycler_text_view) as TextView
         progressBar = myActivity?.findViewById(R.id.progress_bar_activity_event) as ProgressBar
-        myEventPresenter = EventPresenter(myActivity, this, myEvent)
+        myEventPresenter = EventPresenter(this, myEvent)
         if (savedInstanceState?.getParcelableArrayList<Event>(KEY_MEMBER_LIST) != null
             && savedInstanceState.getParcelableArrayList<Event>(KEY_MEMBER_LIST)?.size!! > 0
         ) {
             myMemberList = savedInstanceState.getParcelableArrayList<MemberDto>(KEY_MEMBER_LIST)
-            stopProgressBar()
+            hideProgressBar()
         } else {
             myMemberList = ArrayList()
             myEventPresenter.loadMembersListRx()
@@ -57,7 +63,7 @@ class EventActivityView(
 
     fun onResume(activity: AppCompatActivity) {
         myActivity = activity
-        myEventPresenter.attach(myActivity, this)
+        myEventPresenter.attach(this)
     }
 
     fun onPause() {
@@ -97,11 +103,11 @@ class EventActivityView(
         })
     }
 
-    fun onOptionsItemSelected(menuItem: MenuItem?) {
+    fun onOptionsItemSelected(menuItem: MenuItem?) =
         myEventPresenter.onOptionsItemSelected(menuItem)
-    }
 
-    override fun getMembersSuccess(memberList: List<MemberDto>?) {
+
+    override fun loadMembersSuccess(memberList: List<MemberDto>?) {
         if (memberList != null) {
             checkIsEmptyList(memberList)
             myMemberList?.clear()
@@ -113,28 +119,26 @@ class EventActivityView(
     private fun checkIsEmptyList(memberList: List<MemberDto>?) {
         if (memberList?.isEmpty()!!) {
             recyclerView.visibility = View.GONE
-            val emptyTextView = myActivity?.findViewById(R.id.empty_member_recycler_text_view) as TextView
             emptyTextView.visibility = View.VISIBLE
         } else {
             recyclerView.visibility = View.VISIBLE
-            val emptyTextView = myActivity?.findViewById(R.id.empty_member_recycler_text_view) as TextView
             emptyTextView.visibility = View.GONE
         }
     }
 
-    override fun getMembersFail() {
+    override fun loadMembersFail() =
         Toast.makeText(myActivity, myActivity?.getString(R.string.warning_load_members), Toast.LENGTH_SHORT).show()
-    }
+
 
     override fun onMemberClick(member: MemberDto?) {
         myEventPresenter.onMemberClick(member)
     }
 
-    override fun startProgressBar() {
+    override fun showProgressBar() {
         progressBar.visibility = View.VISIBLE
     }
 
-    override fun stopProgressBar() {
+    override fun hideProgressBar() {
         progressBar.visibility = View.GONE
     }
 
@@ -148,11 +152,33 @@ class EventActivityView(
         return arrivedList
     }
 
-    override fun showToast(message: String) {
-        Toast.makeText(myActivity, message, Toast.LENGTH_SHORT).show()
+    override fun showMessageSuccess(message: String) =
+        Toast.makeText(
+            myActivity,
+            myActivity?.getString(R.string.send_confirm_success) + message,
+            Toast.LENGTH_SHORT
+        ).show()
+
+    override fun showMessageFail(message: String) {
+        Toast.makeText(
+            myActivity,
+            myActivity?.getString(R.string.send_confirm_fail) + message,
+            Toast.LENGTH_SHORT
+        ).show()
     }
 
-    override fun onMemberArrivedStateChanged(memberId: Int, myIsArrived: Boolean) {
-        myEventPresenter.onMemberArrivedStateChanged(memberId, myIsArrived)
+    override fun onMemberArrivedStateChanged(member: MemberDto) =
+        myEventPresenter.onMemberArrivedStateChanged(member)
+
+    override fun startSettingsActivity() {
+        val settingsActivityIntent = SettingsActivity.newIntent(myActivity)
+        settingsActivityIntent.putExtra(KEY_CURRENT_EVENT, myEvent)
+        myActivity?.startActivity(settingsActivityIntent)
+    }
+
+    override fun startMemberInfoActivity(member: MemberDto?) {
+        val memberInfoActivityIntent = MemberInfoActivity.newIntent(myActivity)
+        memberInfoActivityIntent.putExtra(KEY_CURRENT_MEMBER, member)
+        myActivity?.startActivity(memberInfoActivityIntent)
     }
 }

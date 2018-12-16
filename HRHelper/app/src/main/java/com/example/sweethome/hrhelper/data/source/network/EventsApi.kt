@@ -17,5 +17,5 @@ interface EventsApi {
 
     @POST("Registration/members/event/{eventId}/confirmation?token=cftteamtest2018")
     @Headers("Accept: application/json", "Content-Type: application/json")
-    fun sendConfirmationMemberArrived(@Path("eventId") eventId: Int, @Body memberJSONArray: JsonArray): Observable<Example>
+    fun sendConfirmationMemberArrived(@Path("eventId") eventId: Int, @Body memberJSONArray: JsonArray): Observable<ServerResponse>
 }
